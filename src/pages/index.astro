@@ -1,10 +1,8 @@
 ---
 // src/pages/index.astro
 import Layout from '../layouts/Layout.astro';
-import Nav    from '../components/Nav.astro';
+import Nav from '../components/Nav.astro';
 import Ticker from '../components/Ticker.astro';
-
-// ── Static data (migrate to .json / MDX when ready) ─────────
 
 const kickoffs = [
   {
@@ -27,13 +25,11 @@ const kickoffs = [
   },
 ];
 
-// Next Kickoff — update date/URL manually or via CMS
 const nextKickoff = {
-  label: 'Next Kickoff',
   dayLabel: 'Mon, 13 Jan 2025',
   wat: '12:00 PM WAT',
   cst: '6:00 AM CST',
-  url: null, // null = not yet live
+  url: null,
 };
 
 const mediaItems = [
@@ -52,7 +48,7 @@ const mediaItems = [
   {
     type: 'article',
     title: 'Why WAT Is the New Trading Session You Should Watch',
-    excerpt: 'West African retail volume is quietly moving markets. Here\'s the data.',
+    excerpt: 'West African retail volume is quietly moving markets. Here’s the data.',
     url: 'https://twitter.com/leahbluewater/status/placeholder-3',
   },
 ];
@@ -60,84 +56,48 @@ const mediaItems = [
 const dogs = [
   { id: 1247, inscription: 'abc123def456', img: 'https://pbs.twimg.com/profile_images/2051967152333221897/eh5vDb7d.jpg' },
   { id: 3891, inscription: 'xyz789uvw012', img: 'https://pbs.twimg.com/profile_images/2051967152333221897/eh5vDb7d.jpg' },
-  { id: 512,  inscription: 'ghi345jkl678', img: 'https://pbs.twimg.com/profile_images/2051967152333221897/eh5vDb7d.jpg' },
+  { id: 512, inscription: 'ghi345jkl678', img: 'https://pbs.twimg.com/profile_images/2051967152333221897/eh5vDb7d.jpg' },
 ];
-
-const typeIconURL = 'https://pbs.twimg.com/profile_images/placeholder/typemedia.jpg';
 ---
 
 <Layout
   title="Leah Bluewater — Crypto & Finance Voice"
   description="Daily crypto commentary, The Kickoff X Space, and Doginal Dogs collector. 16K+ followers on X."
 >
-  <!-- Nav -->
   <Nav slot="nav" />
 
-  <!-- ════════════════════════════════════════════════════════
-       LANDING — above the fold
-       ════════════════════════════════════════════════════════ -->
   <section class="landing" aria-label="Introduction">
-
-    <!-- TypeMedia badge — top right -->
-    <a
-      href="https://typemedia.xyz"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="typemedia-badge badge badge-dark"
-      aria-label="TypeMedia affiliate"
-    >
-      TypeMedia
-    </a>
-
     <div class="landing-inner container">
       <div class="landing-identity">
-
-        <!-- PFP -->
-        <div class="pfp-wrap" aria-hidden="true">
-          <img
-            src="https://pbs.twimg.com/profile_images/2051967152333221897/eh5vDb7d.jpg"
-            alt="Leah Bluewater's Doginal Dog profile picture"
-            width="96"
-            height="96"
-            class="pfp"
-            loading="eager"
-            decoding="async"
-          />
-        </div>
-
-        <!-- Name + handle + bio -->
         <div class="landing-copy">
-          <h1 class="landing-name">Leah<br/>Bluewater</h1>
+          <h1 class="landing-name">
+            Leah<br />
+            Blue<span class="water-word" aria-label="water">
+              <span class="water-outline">water</span>
+              <span class="water-fill" aria-hidden="true">water</span>
+            </span>
+          </h1>
           <p class="landing-handle handle">@leahbluewater</p>
           <p class="landing-bio">
             Crypto &amp; finance voice. Daily markets. Host of The Kickoff.
             <span class="landing-followers mono-label">16K+ on X</span>
           </p>
         </div>
-
       </div>
     </div>
 
-    <!-- Ticker — full-width, below name -->
     <div class="ticker-slot">
       <Ticker />
     </div>
-
   </section>
 
-  <!-- ════════════════════════════════════════════════════════
-       001 — THE KICKOFF
-       ════════════════════════════════════════════════════════ -->
-  <section class="section" id="kickoff" aria-labelledby="kickoff-heading">
+  <section class="section kickoff-section" id="kickoff" aria-labelledby="kickoff-heading">
     <div class="container">
-
       <header class="section-header">
-        <span class="section-number">001</span>
         <h2 class="section-heading" id="kickoff-heading">The Kickoff</h2>
         <p class="section-sub mono-label">Daily X Space · 12PM WAT · 7AM CST</p>
       </header>
 
-      <!-- Next Kickoff card -->
       <div class="next-card" aria-label="Next Kickoff details">
         <div class="next-card-meta">
           <span class="mono-label-bold text-accent">NEXT</span>
@@ -148,18 +108,15 @@ const typeIconURL = 'https://pbs.twimg.com/profile_images/placeholder/typemedia.
           --:--:--
         </div>
         {nextKickoff.url
-          ? <a href={nextKickoff.url} target="_blank" rel="noopener noreferrer" class="btn btn-primary">
-              Join Space
-            </a>
+          ? <a href={nextKickoff.url} target="_blank" rel="noopener noreferrer" class="btn btn-primary">Join Space</a>
           : <span class="btn btn-ghost" aria-disabled="true">Not Yet Live</span>
         }
       </div>
 
-      <!-- Archive -->
       <div class="kickoff-archive" aria-label="Kickoff archive">
         <h3 class="archive-label mono-label-bold">Archive</h3>
         <ul class="kickoff-list" role="list">
-          {kickoffs.map(ep => (
+          {kickoffs.map((ep) => (
             <li class="kickoff-row">
               <span class="kickoff-date mono-label text-muted">{ep.date}</span>
               <span class="kickoff-title">{ep.title}</span>
@@ -178,207 +135,182 @@ const typeIconURL = 'https://pbs.twimg.com/profile_images/placeholder/typemedia.
         </ul>
       </div>
 
-      <!-- AI Summary — placeholder -->
       <p class="placeholder-note mono-label text-muted">
-        ✦ AI episode summaries via lurky.ai — coming soon
+        AI summary coming soon
       </p>
-
     </div>
   </section>
 
-  <!-- ════════════════════════════════════════════════════════
-       002 — MEDIA
-       ════════════════════════════════════════════════════════ -->
-  <section class="section" id="media" aria-labelledby="media-heading">
-    <div class="container">
+  <div class="h-scroll-shell" id="side-scroll-shell">
+    <div class="h-scroll-sticky">
+      <div class="h-scroll-track" id="side-scroll-track">
+        <section class="panel" id="media" aria-labelledby="media-heading">
+          <div class="panel-inner">
+            <div class="container">
+              <header class="section-header">
+                <h2 class="section-heading" id="media-heading">Media</h2>
+              </header>
 
-      <header class="section-header">
-        <span class="section-number">002</span>
-        <div class="media-heading-row">
-          <h2 class="section-heading" id="media-heading">Media</h2>
-          <span class="typemedia-inline badge badge-dark" aria-label="TypeMedia">TypeMedia</span>
-        </div>
-      </header>
+              <div class="media-grid">
+                {mediaItems.map((item) => (
+                  <article class="card media-card" data-type={item.type}>
+                    <span class="media-type-tag badge badge-accent">
+                      {item.type === 'day-in-finance' ? 'Day in Finance' : item.type === 'how-to' ? 'How-To' : 'Article'}
+                    </span>
 
-      <div class="media-grid">
-        {mediaItems.map(item => (
-          <article class="card media-card" data-type={item.type}>
-            <span class="media-type-tag badge badge-accent">
-              {item.type === 'day-in-finance' ? 'Day in Finance'
-               : item.type === 'how-to'       ? 'How-To'
-               :                                'Article'}
-            </span>
+                    {item.type === 'day-in-finance' && (
+                      <>
+                        <p class="media-date mono-label text-muted">{item.date}</p>
+                        <p class="media-headline">{item.headline}</p>
+                      </>
+                    )}
 
-            {item.type === 'day-in-finance' && (
-              <>
-                <p class="media-date mono-label text-muted">{item.date}</p>
-                <p class="media-headline">{item.headline}</p>
-              </>
-            )}
+                    {item.type === 'how-to' && (
+                      <>
+                        <h3 class="media-title">{item.title}</h3>
+                        <p class="media-desc text-muted">{item.desc}</p>
+                      </>
+                    )}
 
-            {item.type === 'how-to' && (
-              <>
-                <h3 class="media-title">{item.title}</h3>
-                <p class="media-desc text-muted">{item.desc}</p>
-              </>
-            )}
+                    {item.type === 'article' && (
+                      <>
+                        <h3 class="media-title">{item.title}</h3>
+                        <p class="media-desc text-muted">{item.excerpt}</p>
+                      </>
+                    )}
 
-            {item.type === 'article' && (
-              <>
-                <h3 class="media-title">{item.title}</h3>
-                <p class="media-desc text-muted">{item.excerpt}</p>
-              </>
-            )}
-
-            <a
-              href={item.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="link-accent media-cta"
-            >
-              Read on X ↗
-            </a>
-          </article>
-        ))}
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ════════════════════════════════════════════════════════
-       003 — COLLECTION
-       ════════════════════════════════════════════════════════ -->
-  <section class="section" id="collection" aria-labelledby="collection-heading">
-    <div class="container">
-
-      <header class="section-header">
-        <span class="section-number">003</span>
-        <h2 class="section-heading" id="collection-heading">Collection</h2>
-        <p class="section-sub mono-label">
-          Pixel-art dogs inscribed on the Dogecoin blockchain.
-          <a
-            href="https://market.doginaldogs.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="link-accent"
-          >
-            market.doginaldogs.com ↗
-          </a>
-        </p>
-      </header>
-
-      <div class="dogs-grid" aria-label="Leah's Doginal Dogs">
-        {dogs.map(dog => (
-          <article class="dog-card card">
-            <div class="dog-img-wrap">
-              <img
-                src={dog.img}
-                alt={`Doginal Dog #${dog.id}`}
-                width="200"
-                height="200"
-                class="dog-img"
-                loading="lazy"
-                decoding="async"
-              />
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="link-accent media-cta"
+                    >
+                      Read on X ↗
+                    </a>
+                  </article>
+                ))}
+              </div>
             </div>
-            <div class="dog-meta">
-              <span class="dog-num mono-label-bold">#{dog.id}</span>
-              <span class="dog-inscription mono-label text-muted" title={dog.inscription}>
-                {dog.inscription.slice(0, 8)}…
-              </span>
+          </div>
+        </section>
+
+        <section class="panel" id="collection" aria-labelledby="collection-heading">
+          <div class="panel-inner">
+            <div class="container">
+              <header class="section-header">
+                <h2 class="section-heading" id="collection-heading">Collection</h2>
+                <p class="section-sub mono-label">
+                  Pixel-art dogs inscribed on the Dogecoin blockchain.
+                  <a
+                    href="https://market.doginaldogs.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="link-accent"
+                  >
+                    market.doginaldogs.com ↗
+                  </a>
+                </p>
+              </header>
+
+              <div class="dogs-grid" aria-label="Leah's Doginal Dogs">
+                {dogs.map((dog) => (
+                  <article class="dog-card card">
+                    <div class="dog-img-wrap">
+                      <img
+                        src={dog.img}
+                        alt={`Doginal Dog #${dog.id}`}
+                        width="200"
+                        height="200"
+                        class="dog-img"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                    <div class="dog-meta">
+                      <span class="dog-num mono-label-bold">#{dog.id}</span>
+                      <span class="dog-inscription mono-label text-muted" title={dog.inscription}>
+                        {dog.inscription.slice(0, 8)}…
+                      </span>
+                    </div>
+                    <a
+                      href={`https://market.doginaldogs.com/inscription/${dog.inscription}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="btn btn-outline dog-btn"
+                    >
+                      View ↗
+                    </a>
+                  </article>
+                ))}
+              </div>
+
+              <p class="dogs-floor mono-label text-muted">
+                Floor: ~$5,000 · 10,000 supply · Dogecoin blockchain
+              </p>
             </div>
-            <a
-              href={`https://market.doginaldogs.com/inscription/${dog.inscription}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn btn-outline dog-btn"
-            >
-              View ↗
-            </a>
-          </article>
-        ))}
+          </div>
+        </section>
+
+        <section class="panel" id="connect" aria-labelledby="connect-heading">
+          <div class="panel-inner">
+            <div class="container-narrow">
+              <header class="section-header">
+                <h2 class="section-heading" id="connect-heading">Connect</h2>
+              </header>
+
+              <ul class="connect-list" role="list">
+                <li class="connect-row">
+                  <span class="connect-label mono-label text-muted">X / Twitter</span>
+                  <a
+                    href="https://twitter.com/leahbluewater"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="connect-link"
+                  >
+                    @leahbluewater ↗
+                  </a>
+                </li>
+                <li class="connect-row">
+                  <span class="connect-label mono-label text-muted">Community</span>
+                  <a
+                    href="https://twitter.com/doginaldogsx"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="connect-link"
+                  >
+                    @doginaldogsx ↗
+                  </a>
+                </li>
+                <li class="connect-row">
+                  <span class="connect-label mono-label text-muted">TypeMedia</span>
+                  <a
+                    href="https://typemedia.xyz"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="connect-link"
+                  >
+                    typemedia.xyz ↗
+                  </a>
+                </li>
+                <li class="connect-row">
+                  <span class="connect-label mono-label text-muted">DM</span>
+                  <span class="connect-link">Open on X — DMs on</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
       </div>
-
-      <p class="dogs-floor mono-label text-muted" style="margin-top: var(--space-5);">
-        Floor: ~$5,000 · 10,000 supply · Dogecoin blockchain
-      </p>
-
     </div>
-  </section>
-
-  <!-- ════════════════════════════════════════════════════════
-       004 — CONNECT
-       ════════════════════════════════════════════════════════ -->
-  <section class="section" id="connect" aria-labelledby="connect-heading">
-    <div class="container-narrow">
-
-      <header class="section-header">
-        <span class="section-number">004</span>
-        <h2 class="section-heading" id="connect-heading">Connect</h2>
-      </header>
-
-      <ul class="connect-list" role="list">
-        <li class="connect-row">
-          <span class="connect-label mono-label text-muted">X / Twitter</span>
-          <a
-            href="https://twitter.com/leahbluewater"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="connect-link"
-          >
-            @leahbluewater ↗
-          </a>
-        </li>
-        <li class="connect-row">
-          <span class="connect-label mono-label text-muted">Community</span>
-          <a
-            href="https://twitter.com/doginaldogsx"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="connect-link"
-          >
-            @doginaldogsx ↗
-          </a>
-        </li>
-        <li class="connect-row">
-          <span class="connect-label mono-label text-muted">TypeMedia</span>
-          <a
-            href="https://typemedia.xyz"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="connect-link"
-          >
-            typemedia.xyz ↗
-          </a>
-        </li>
-        <li class="connect-row">
-          <span class="connect-label mono-label text-muted">DM</span>
-          <span class="connect-link">Open on X — DMs on</span>
-        </li>
-      </ul>
-
-    </div>
-  </section>
-
+  </div>
 </Layout>
 
 <style>
-  /* ── Landing ─────────────────────────────────────────────── */
-
   .landing {
     position: relative;
-    padding-top: var(--space-10);
+    padding-top: var(--space-8);
     padding-bottom: 0;
     border-bottom: 1px solid var(--clr-border);
-  }
-
-  .typemedia-badge {
-    position: absolute;
-    top: calc(var(--nav-h, 64px) + var(--space-5));
-    right: var(--page-px);
-    font-size: var(--fs-xs);
-    text-decoration: none;
-    z-index: 1;
   }
 
   .landing-inner {
@@ -392,21 +324,6 @@ const typeIconURL = 'https://pbs.twimg.com/profile_images/placeholder/typemedia.
     flex-wrap: wrap;
   }
 
-  /* PFP */
-  .pfp-wrap {
-    flex-shrink: 0;
-  }
-
-  .pfp {
-    width: 96px;
-    height: 96px;
-    border-radius: 4px; /* pixel art stays crisp, slight rounding */
-    image-rendering: pixelated;
-    image-rendering: crisp-edges;
-    border: 2px solid var(--clr-border);
-  }
-
-  /* Name */
   .landing-copy {
     display: flex;
     flex-direction: column;
@@ -416,14 +333,16 @@ const typeIconURL = 'https://pbs.twimg.com/profile_images/placeholder/typemedia.
   .landing-name {
     font-family: var(--font-heading);
     font-weight: var(--fw-extrabold);
-    font-size: var(--fs-4xl);
-    line-height: 0.95;
-    letter-spacing: -0.04em;
-    animation: fade-in-up 0.6s var(--ease-out) both;
+    font-size: clamp(3rem, 7vw, 5.25rem);
+    line-height: 0.92;
+    letter-spacing: -0.05em;
+    transform: translateY(-0.35rem);
+    max-width: 11ch;
   }
 
   .landing-handle {
     animation: fade-in-up 0.6s var(--ease-out) 100ms both;
+    margin-top: -4px;
   }
 
   .landing-bio {
@@ -448,14 +367,50 @@ const typeIconURL = 'https://pbs.twimg.com/profile_images/placeholder/typemedia.
     animation: fade-in 0.6s var(--ease-out) 300ms both;
   }
 
-  /* ── Section shared ──────────────────────────────────────── */
+  .water-word {
+    position: relative;
+    display: inline-block;
+    vertical-align: baseline;
+    isolation: isolate;
+  }
+
+  .water-outline,
+  .water-fill {
+    font: inherit;
+    letter-spacing: inherit;
+    line-height: inherit;
+    display: inline-block;
+  }
+
+  .water-outline {
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(10, 10, 10, 0.34);
+    text-shadow: 0 0 0.01px rgba(10, 10, 10, 0.08);
+  }
+
+  .water-fill {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 0%;
+    overflow: hidden;
+    color: var(--clr-accent);
+    -webkit-text-stroke: 0 transparent;
+    filter: drop-shadow(0 0 10px rgba(0, 119, 182, 0.14));
+    animation: water-fill-cycle 4.4s ease-in-out infinite;
+  }
+
+  .kickoff-section {
+    position: relative;
+    z-index: 1;
+    background: var(--clr-bg);
+  }
 
   .section-sub {
     color: var(--clr-text-muted);
     margin-top: var(--space-2);
   }
-
-  /* ── 001 Kickoff ─────────────────────────────────────────── */
 
   .next-card {
     display: flex;
@@ -534,20 +489,6 @@ const typeIconURL = 'https://pbs.twimg.com/profile_images/placeholder/typemedia.
     text-align: center;
   }
 
-  /* ── 002 Media ───────────────────────────────────────────── */
-
-  .media-heading-row {
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
-  }
-
-  .typemedia-inline {
-    font-size: var(--fs-xs);
-    position: relative;
-    top: -4px;
-  }
-
   .media-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
@@ -558,6 +499,7 @@ const typeIconURL = 'https://pbs.twimg.com/profile_images/placeholder/typemedia.
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
+    min-height: 220px;
   }
 
   .media-type-tag {
@@ -588,8 +530,6 @@ const typeIconURL = 'https://pbs.twimg.com/profile_images/placeholder/typemedia.
   .media-cta {
     margin-top: auto;
   }
-
-  /* ── 003 Collection ──────────────────────────────────────── */
 
   .dogs-grid {
     display: grid;
@@ -645,7 +585,9 @@ const typeIconURL = 'https://pbs.twimg.com/profile_images/placeholder/typemedia.
     font-size: var(--fs-xs);
   }
 
-  /* ── 004 Connect ─────────────────────────────────────────── */
+  .dogs-floor {
+    margin-top: var(--space-5);
+  }
 
   .connect-list {
     display: flex;
@@ -679,11 +621,53 @@ const typeIconURL = 'https://pbs.twimg.com/profile_images/placeholder/typemedia.
     color: var(--clr-accent);
   }
 
-  /* ── Responsive ──────────────────────────────────────────── */
+  .h-scroll-shell {
+    position: relative;
+  }
+
+  .h-scroll-track {
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .panel {
+    border-top: 1px solid var(--clr-border);
+    background: var(--clr-bg);
+  }
+
+  .panel-inner {
+    padding-block: var(--space-8);
+  }
+
+  @keyframes water-fill-cycle {
+    0% {
+      height: 0%;
+    }
+    28% {
+      height: 66%;
+    }
+    46% {
+      height: 100%;
+    }
+    54% {
+      height: 100%;
+    }
+    78% {
+      height: 100%;
+    }
+    100% {
+      height: 0%;
+    }
+  }
 
   @media (max-width: 640px) {
     .landing-name {
-      font-size: clamp(3rem, 15vw, var(--fs-4xl));
+      font-size: clamp(2.6rem, 15vw, 4rem);
+    }
+
+    .next-card {
+      flex-direction: column;
+      align-items: flex-start;
     }
 
     .kickoff-row {
@@ -692,25 +676,22 @@ const typeIconURL = 'https://pbs.twimg.com/profile_images/placeholder/typemedia.
     }
 
     .kickoff-date { grid-column: 1; }
-    .kickoff-dur  { display: none; }
+    .kickoff-dur { display: none; }
     .kickoff-title { grid-column: 1 / -1; }
-
-    .next-card {
-      flex-direction: column;
-      align-items: flex-start;
-    }
 
     .connect-link {
       font-size: var(--fs-md);
+    }
+
+    .panel-inner {
+      padding-block: var(--space-6);
     }
   }
 </style>
 
 <script>
-  // ── Mirror ticker countdown in the next-card ─────────────
-  // Reuses same logic as Ticker.astro without duplication.
-  function getCountdown(): string {
-    const now    = new Date();
+  function getCountdown() {
+    const now = new Date();
     const watNow = new Date(now.getTime() + 60 * 60 * 1000);
     const target = new Date(watNow);
     target.setUTCHours(12, 0, 0, 0);
@@ -722,7 +703,7 @@ const typeIconURL = 'https://pbs.twimg.com/profile_images/placeholder/typemedia.
     const h = Math.floor(diff / 3_600_000);
     const m = Math.floor((diff % 3_600_000) / 60_000);
     const s = Math.floor((diff % 60_000) / 1_000);
-    const pad = (n: number) => String(n).padStart(2, '0');
+    const pad = (n) => String(n).padStart(2, '0');
     return `${pad(h)}:${pad(m)}:${pad(s)}`;
   }
 
@@ -731,5 +712,50 @@ const typeIconURL = 'https://pbs.twimg.com/profile_images/placeholder/typemedia.
     const tick = () => { cardCountdown.textContent = getCountdown(); };
     tick();
     setInterval(tick, 1000);
+  }
+
+  const shell = document.getElementById('side-scroll-shell');
+  const track = document.getElementById('side-scroll-track');
+
+  if (shell && track) {
+    let maxShift = 0;
+    let stickyHeight = 0;
+    let shellStart = 0;
+    let ticking = false;
+
+    const navH = 80;
+
+    const measure = () => {
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      stickyHeight = Math.max(0, viewportHeight - navH);
+      maxShift = Math.max(0, track.scrollWidth - viewportWidth);
+      shell.style.height = `${stickyHeight + maxShift}px`;
+      shellStart = window.scrollY + shell.getBoundingClientRect().top - navH;
+      update();
+    };
+
+    const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+    const update = () => {
+      ticking = false;
+      if (maxShift <= 0) {
+        track.style.transform = 'translate3d(0, 0, 0)';
+        return;
+      }
+
+      const progress = clamp((window.scrollY - shellStart) / maxShift, 0, 1);
+      track.style.transform = `translate3d(${-progress * maxShift}px, 0, 0)`;
+    };
+
+    const requestUpdate = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    };
+
+    measure();
+    window.addEventListener('resize', measure);
+    window.addEventListener('scroll', requestUpdate, { passive: true });
   }
 </script>
