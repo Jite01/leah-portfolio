@@ -22,7 +22,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
 <!doctype html>
 <html lang="en" data-theme="light">
   <head>
-    <!-- ── Meta ─────────────────────────────────────────────── -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
@@ -31,14 +30,12 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
 
-    <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
 
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@leahbluewater" />
     <meta name="twitter:creator" content="@leahbluewater" />
@@ -46,15 +43,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
 
-    <!-- Favicon placeholder -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-    <!-- ── Google Fonts ──────────────────────────────────────── -->
-    <!--
-      Syne ExtraBold (800) — headings, hero name
-      Space Mono Regular (400) + Bold (700) — labels, mono UI, ticker
-      Preconnect first for performance.
-    -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -64,64 +54,18 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
   </head>
 
   <body>
-    <!-- Nav slot — rendered by Nav.astro on each page -->
     <slot name="nav" />
 
-    <!-- Main content -->
     <main id="main-content">
       <slot />
     </main>
 
-    <!-- Footer slot — optional per-page override -->
-    <slot name="footer">
-      <footer class="site-footer">
-        <div class="footer-inner">
-          <span class="footer-handle mono-label">@leahbluewater</span>
-
-          <nav class="footer-links" aria-label="Footer navigation">
-            <a
-              href="https://twitter.com/leahbluewater"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="footer-link mono-label"
-            >
-              X / Twitter
-            </a>
-            <span class="footer-sep" aria-hidden="true">·</span>
-            <a
-              href="https://doginaldogsx.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="footer-link mono-label"
-            >
-              Doginal Dogs
-            </a>
-            <span class="footer-sep" aria-hidden="true">·</span>
-            <a
-              href="https://typemedia.xyz"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="footer-link mono-label"
-            >
-              TypeMedia
-            </a>
-          </nav>
-
-          <p class="footer-copy mono-label">
-            © {new Date().getFullYear()} Leah Bluewater. All rights reserved.
-          </p>
-        </div>
-      </footer>
-    </slot>
+    <slot name="footer" />
   </body>
 </html>
 
 <style is:global>
-  /* ─────────────────────────────────────────────────────────────
-     DESIGN TOKENS
-     ───────────────────────────────────────────────────────────── */
   :root {
-    /* Palette */
     --clr-bg:            #ffffff;
     --clr-bg-off:        #f7f7f7;
     --clr-text:          #0a0a0a;
@@ -136,7 +80,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     --clr-border:        #e0e0e0;
     --clr-border-strong: #b0b0b0;
 
-    /* Typography */
     --font-heading:  'Syne', sans-serif;
     --font-mono:     'Space Mono', monospace;
 
@@ -145,18 +88,16 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     --fw-bold:       700;
     --fw-extrabold:  800;
 
-    /* Type scale (fluid via clamp) */
-    --fs-xs:   clamp(0.625rem,  1vw,   0.75rem);   /* 10–12px  */
-    --fs-sm:   clamp(0.75rem,   1.2vw, 0.875rem);  /* 12–14px  */
-    --fs-base: clamp(0.875rem,  1.5vw, 1rem);      /* 14–16px  */
-    --fs-md:   clamp(1rem,      1.8vw, 1.125rem);  /* 16–18px  */
-    --fs-lg:   clamp(1.125rem,  2vw,   1.375rem);  /* 18–22px  */
-    --fs-xl:   clamp(1.375rem,  3vw,   1.75rem);   /* 22–28px  */
-    --fs-2xl:  clamp(1.75rem,   4vw,   2.5rem);    /* 28–40px  */
-    --fs-3xl:  clamp(2.5rem,    6vw,   4rem);      /* 40–64px  */
-    --fs-4xl:  clamp(3.5rem,    8vw,   6rem);      /* 56–96px  */
+    --fs-xs:   clamp(0.625rem,  1vw,   0.75rem);
+    --fs-sm:   clamp(0.75rem,   1.2vw, 0.875rem);
+    --fs-base: clamp(0.875rem,  1.5vw, 1rem);
+    --fs-md:   clamp(1rem,      1.8vw, 1.125rem);
+    --fs-lg:   clamp(1.125rem,  2vw,   1.375rem);
+    --fs-xl:   clamp(1.375rem,  3vw,   1.75rem);
+    --fs-2xl:  clamp(1.75rem,   4vw,   2.5rem);
+    --fs-3xl:  clamp(2.5rem,    6vw,   4rem);
+    --fs-4xl:  clamp(3.5rem,    8vw,   6rem);
 
-    /* Spacing */
     --space-1:   4px;
     --space-2:   8px;
     --space-3:   12px;
@@ -168,37 +109,30 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     --space-9:   96px;
     --space-10:  128px;
 
-    /* Layout */
     --max-w-content:  1200px;
     --max-w-narrow:   720px;
     --page-px:        clamp(1rem, 5vw, 3rem);
 
-    /* Borders */
     --radius-sm:  4px;
     --radius-md:  8px;
     --radius-lg:  16px;
 
-    /* Transitions */
     --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
     --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
     --dur-fast:    150ms;
     --dur-base:    250ms;
     --dur-slow:    400ms;
 
-    /* Z-index stack */
     --z-base:     0;
     --z-raised:   10;
     --z-nav:      100;
     --z-overlay:  200;
     --z-modal:    300;
     --z-toast:    400;
+
+    --nav-h: 80px;
   }
 
-  /* ─────────────────────────────────────────────────────────────
-     RESET & NORMALIZATION
-     ───────────────────────────────────────────────────────────── */
-
-  /* Box sizing */
   *,
   *::before,
   *::after {
@@ -207,7 +141,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     padding: 0;
   }
 
-  /* Root */
   html {
     font-size: 16px;
     scroll-behavior: smooth;
@@ -216,7 +149,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     hanging-punctuation: first last;
   }
 
-  /* Body */
   body {
     min-height: 100dvh;
     background-color: var(--clr-bg);
@@ -231,19 +163,13 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     overflow-x: hidden;
   }
 
-  /* Remove default list styles when list is inside nav */
   nav ul,
-  nav ol {
-    list-style: none;
-  }
-
-  /* Remove default list styles on ul/ol with role="list" */
+  nav ol,
   ul[role="list"],
   ol[role="list"] {
     list-style: none;
   }
 
-  /* Images */
   img,
   picture,
   video,
@@ -253,7 +179,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     max-width: 100%;
   }
 
-  /* Inherit fonts for form controls */
   input,
   button,
   textarea,
@@ -262,7 +187,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     color: inherit;
   }
 
-  /* Remove default button styles */
   button {
     background: none;
     border: none;
@@ -271,13 +195,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     appearance: none;
   }
 
-  /* Anchor base */
   a {
     color: inherit;
     text-decoration: none;
   }
 
-  /* Prevent overflow from long words */
   p,
   h1,
   h2,
@@ -288,44 +210,37 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     overflow-wrap: break-word;
   }
 
-  /* Table */
   table {
     border-collapse: collapse;
     border-spacing: 0;
   }
 
-  /* Remove default fieldset styles */
   fieldset {
     border: 0;
     padding: 0;
   }
 
-  /* HR */
   hr {
     border: none;
     border-top: 1px solid var(--clr-border);
     margin: var(--space-7) 0;
   }
 
-  /* Focus visible — accessible ring, not the ugly default */
   :focus-visible {
     outline: 2px solid var(--clr-accent);
     outline-offset: 3px;
     border-radius: var(--radius-sm);
   }
 
-  /* Remove focus ring from mouse/touch interactions */
   :focus:not(:focus-visible) {
     outline: none;
   }
 
-  /* Selection */
   ::selection {
     background-color: var(--clr-accent);
     color: #ffffff;
   }
 
-  /* Scrollbar — subtle */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -341,11 +256,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     background: var(--clr-text-muted);
   }
 
-  /* ─────────────────────────────────────────────────────────────
-     TYPOGRAPHY SYSTEM
-     ───────────────────────────────────────────────────────────── */
-
-  /* Headings default to Syne ExtraBold */
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
     font-weight: var(--fw-extrabold);
@@ -360,19 +270,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
   h5 { font-size: var(--fs-lg); }
   h6 { font-size: var(--fs-md); }
 
-  /* Section number label — e.g. "001 —" */
-  .section-number {
-    font-family: var(--font-mono);
-    font-size: var(--fs-xs);
-    font-weight: var(--fw-regular);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--clr-accent);
-    display: block;
-    margin-bottom: var(--space-3);
-  }
-
-  /* Section heading composite */
   .section-heading {
     font-family: var(--font-heading);
     font-weight: var(--fw-extrabold);
@@ -381,7 +278,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     letter-spacing: -0.025em;
   }
 
-  /* Mono label — for tags, handles, small UI text */
   .mono-label {
     font-family: var(--font-mono);
     font-size: var(--fs-sm);
@@ -390,7 +286,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     line-height: 1.4;
   }
 
-  /* Mono label bold variant */
   .mono-label-bold {
     font-family: var(--font-mono);
     font-size: var(--fs-sm);
@@ -398,7 +293,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     letter-spacing: 0.04em;
   }
 
-  /* Handle / @username style */
   .handle {
     font-family: var(--font-mono);
     font-size: var(--fs-sm);
@@ -406,11 +300,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     letter-spacing: 0.02em;
   }
 
-  /* ─────────────────────────────────────────────────────────────
-     LAYOUT UTILITIES
-     ───────────────────────────────────────────────────────────── */
-
-  /* Content wrapper — centered, padded */
   .container {
     width: 100%;
     max-width: var(--max-w-content);
@@ -418,7 +307,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     padding-inline: var(--page-px);
   }
 
-  /* Narrow container for text-heavy sections */
   .container-narrow {
     width: 100%;
     max-width: var(--max-w-narrow);
@@ -426,13 +314,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     padding-inline: var(--page-px);
   }
 
-  /* Full-bleed strip */
   .full-bleed {
     width: 100vw;
     margin-inline: calc(50% - 50vw);
   }
 
-  /* Section spacing */
   .section {
     padding-block: var(--space-10);
   }
@@ -441,26 +327,18 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     border-top: 1px solid var(--clr-border);
   }
 
-  /* Section inner header layout */
   .section-header {
     margin-bottom: var(--space-8);
   }
 
-  /* ─────────────────────────────────────────────────────────────
-     ACCENT / INTERACTIVE UTILITIES
-     ───────────────────────────────────────────────────────────── */
-
-  /* Accent text */
   .text-accent {
     color: var(--clr-accent);
   }
 
-  /* Muted text */
   .text-muted {
     color: var(--clr-text-muted);
   }
 
-  /* Underline link */
   .link-underline {
     border-bottom: 1px solid currentColor;
     transition: color var(--dur-fast) var(--ease-out),
@@ -471,7 +349,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     border-color: var(--clr-accent);
   }
 
-  /* Accent link (blue) */
   .link-accent {
     color: var(--clr-accent);
     font-family: var(--font-mono);
@@ -482,7 +359,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     color: var(--clr-accent-hover);
   }
 
-  /* Thin divider line */
   .divider {
     height: 1px;
     background: var(--clr-border);
@@ -490,7 +366,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     margin-block: var(--space-6);
   }
 
-  /* Dot separator */
   .dot-sep {
     display: inline-block;
     width: 4px;
@@ -500,10 +375,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     vertical-align: middle;
     margin-inline: var(--space-2);
   }
-
-  /* ─────────────────────────────────────────────────────────────
-     CARD BASE
-     ───────────────────────────────────────────────────────────── */
 
   .card {
     background: var(--clr-bg);
@@ -518,10 +389,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     border-color: var(--clr-accent);
     box-shadow: 0 0 0 1px var(--clr-accent);
   }
-
-  /* ─────────────────────────────────────────────────────────────
-     BADGE / TAG
-     ───────────────────────────────────────────────────────────── */
 
   .badge {
     display: inline-flex;
@@ -549,10 +416,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     background: transparent;
   }
 
-  /* ─────────────────────────────────────────────────────────────
-     BUTTON PRIMITIVES
-     ───────────────────────────────────────────────────────────── */
-
   .btn {
     display: inline-flex;
     align-items: center;
@@ -578,7 +441,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     transform: translateY(1px);
   }
 
-  /* Primary — solid accent */
   .btn-primary {
     background: var(--clr-accent);
     color: #ffffff;
@@ -589,7 +451,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     border-color: var(--clr-accent-hover);
   }
 
-  /* Secondary — outline accent */
   .btn-outline {
     background: transparent;
     color: var(--clr-accent);
@@ -599,7 +460,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     background: var(--clr-accent-wash);
   }
 
-  /* Ghost — text only */
   .btn-ghost {
     background: transparent;
     color: var(--clr-text);
@@ -608,10 +468,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
   .btn-ghost:hover {
     border-color: var(--clr-text);
   }
-
-  /* ─────────────────────────────────────────────────────────────
-     GRID UTILITIES
-     ───────────────────────────────────────────────────────────── */
 
   .grid-auto {
     display: grid;
@@ -644,18 +500,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     }
   }
 
-  /* ─────────────────────────────────────────────────────────────
-     MAIN CONTENT AREA
-     ───────────────────────────────────────────────────────────── */
-
   #main-content {
-    /* Push below fixed nav — Nav.astro will set --nav-h via JS/CSS */
-    padding-top: var(--nav-h, 64px);
+    padding-top: var(--nav-h, 80px);
   }
-
-  /* ─────────────────────────────────────────────────────────────
-     FOOTER
-     ───────────────────────────────────────────────────────────── */
 
   .site-footer {
     border-top: 1px solid var(--clr-border);
@@ -704,11 +551,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     margin-top: var(--space-2);
   }
 
-  /* ─────────────────────────────────────────────────────────────
-     ACCESSIBILITY UTILITIES
-     ───────────────────────────────────────────────────────────── */
-
-  /* Visually hidden but accessible to screen readers */
   .sr-only {
     position: absolute;
     width: 1px;
@@ -721,7 +563,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     border-width: 0;
   }
 
-  /* Skip to main content link */
   .skip-link {
     position: absolute;
     top: var(--space-3);
@@ -741,11 +582,46 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     transform: translateY(0);
   }
 
-  /* ─────────────────────────────────────────────────────────────
-     ANIMATION PRIMITIVES
-     Used by child components — defined here so they're available
-     globally without duplication.
-     ───────────────────────────────────────────────────────────── */
+  .h-scroll-shell {
+    position: relative;
+    width: 100%;
+  }
+
+  .h-scroll-sticky {
+    position: sticky;
+    top: var(--nav-h, 80px);
+    height: calc(100dvh - var(--nav-h, 80px));
+    overflow: hidden;
+    background: var(--clr-bg);
+  }
+
+  .h-scroll-track {
+    display: flex;
+    height: 100%;
+    width: max-content;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .panel {
+    min-width: 100vw;
+    width: 100vw;
+    height: 100%;
+    overflow: hidden;
+    border-top: 1px solid var(--clr-border);
+    background: var(--clr-bg);
+  }
+
+  .panel-inner {
+    height: 100%;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-block: var(--space-8);
+  }
+
+  .panel-inner .section {
+    padding-block: 0;
+  }
 
   @keyframes fade-in {
     from { opacity: 0; transform: translateY(12px); }
@@ -772,7 +648,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     50%       { opacity: 0; }
   }
 
-  /* Utility animation classes */
   .anim-fade-in {
     animation: fade-in var(--dur-slow) var(--ease-out) both;
   }
@@ -780,16 +655,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     animation: fade-in-up var(--dur-slow) var(--ease-out) both;
   }
 
-  /* Delay helpers */
   .delay-1 { animation-delay: 100ms; }
   .delay-2 { animation-delay: 200ms; }
   .delay-3 { animation-delay: 300ms; }
   .delay-4 { animation-delay: 400ms; }
   .delay-5 { animation-delay: 500ms; }
-
-  /* ─────────────────────────────────────────────────────────────
-     REDUCED MOTION
-     ───────────────────────────────────────────────────────────── */
 
   @media (prefers-reduced-motion: reduce) {
     *,
