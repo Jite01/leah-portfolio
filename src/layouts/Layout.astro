@@ -1,1 +1,804 @@
---- // src/layouts/Layout.astro // Base shell for leahbluewater.xyz // Fonts: Syne ExtraBold (headings) · Space Mono (labels/mono) // Palette: #FFFFFF bg · #0A0A0A type · #0077B6 accent interface Props { title?: string; description?: string; ogImage?: string; } const { title = "Leah Bluewater — Crypto & Finance Voice", description = "Daily crypto commentary, The Kickoff X Space, and Doginal Dogs collector. @leahbluewater on X.", ogImage = "/og-default.jpg", } = Astro.props; const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-portfolio-indol.vercel.app"); --- <!doctype html> <html lang="en" data-theme="light"> <head> <!-- ── Meta ─────────────────────────────────────────────── --> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <meta name="generator" content={Astro.generator} /> <title>{title}</title> <meta name="description" content={description} /> <link rel="canonical" href={canonicalURL} /> <!-- Open Graph --> <meta property="og:type" content="website" /> <meta property="og:url" content={canonicalURL} /> <meta property="og:title" content={title} /> <meta property="og:description" content={description} /> <meta property="og:image" content={ogImage} /> <!-- Twitter Card --> <meta name="twitter:card" content="summary_large_image" /> <meta name="twitter:site" content="@leahbluewater" /> <meta name="twitter:creator" content="@leahbluewater" /> <meta name="twitter:title" content={title} /> <meta name="twitter:description" content={description} /> <meta name="twitter:image" content={ogImage} /> <!-- Favicon placeholder --> <link rel="icon" type="image/svg+xml" href="/favicon.svg" /> <!-- ── Google Fonts ──────────────────────────────────────── --> <!-- Syne ExtraBold (800) — headings, hero name Space Mono Regular (400) + Bold (700) — labels, mono UI, ticker Preconnect first for performance. --> <link rel="preconnect" href="https://fonts.googleapis.com" /> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /> <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" /> </head> <body> <!-- Nav slot — rendered by Nav.astro on each page --> <slot name="nav" /> <!-- Main content --> <main id="main-content"> <slot /> </main> <!-- Footer slot — optional per-page override --> <slot name="footer"> <footer class="site-footer"> <div class="footer-inner"> <span class="footer-handle mono-label">@leahbluewater</span> <nav class="footer-links" aria-label="Footer navigation"> <a href="https://twitter.com/leahbluewater" target="_blank" rel="noopener noreferrer" class="footer-link mono-label" > X / Twitter </a> <span class="footer-sep" aria-hidden="true">·</span> <a href="https://doginaldogsx.com" target="_blank" rel="noopener noreferrer" class="footer-link mono-label" > Doginal Dogs </a> <span class="footer-sep" aria-hidden="true">·</span> <a href="https://typemedia.xyz" target="_blank" rel="noopener noreferrer" class="footer-link mono-label" > TypeMedia </a> </nav> <p class="footer-copy mono-label"> © {new Date().getFullYear()} Leah Bluewater. All rights reserved. </p> </div> </footer> </slot> </body> </html> <style is:global> /* ───────────────────────────────────────────────────────────── DESIGN TOKENS ───────────────────────────────────────────────────────────── */ :root { /* Palette */ --clr-bg: #ffffff; --clr-bg-off: #f7f7f7; --clr-text: #0a0a0a; --clr-text-muted: #555555; --clr-text-faint: #999999; --clr-accent: #0077b6; --clr-accent-hover: #005f99; --clr-accent-wash: #e8f4fd; --clr-accent-dark: #004e80; --clr-bor
+---
+// src/layouts/Layout.astro
+// Base shell for leahbluewater.xyz
+// Fonts: Syne ExtraBold (headings) · Space Mono (labels/mono)
+// Palette: #FFFFFF bg · #0A0A0A type · #0077B6 accent
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const {
+  title = "Leah Bluewater — Crypto & Finance Voice",
+  description = "Daily crypto commentary, The Kickoff X Space, and Doginal Dogs collector. @leahbluewater on X.",
+  ogImage = "/og-default.jpg",
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-portfolio-indol.vercel.app");
+---
+
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <!-- ── Meta ─────────────────────────────────────────────── -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@leahbluewater" />
+    <meta name="twitter:creator" content="@leahbluewater" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Favicon placeholder -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- ── Google Fonts ──────────────────────────────────────── -->
+    <!--
+      Syne ExtraBold (800) — headings, hero name
+      Space Mono Regular (400) + Bold (700) — labels, mono UI, ticker
+      Preconnect first for performance.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <!-- Nav slot — rendered by Nav.astro on each page -->
+    <slot name="nav" />
+
+    <!-- Main content -->
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <!-- Footer slot — optional per-page override -->
+    <slot name="footer">
+      <footer class="site-footer">
+        <div class="footer-inner">
+          <span class="footer-handle mono-label">@leahbluewater</span>
+
+          <nav class="footer-links" aria-label="Footer navigation">
+            <a
+              href="https://twitter.com/leahbluewater"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="footer-link mono-label"
+            >
+              X / Twitter
+            </a>
+            <span class="footer-sep" aria-hidden="true">·</span>
+            <a
+              href="https://doginaldogsx.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="footer-link mono-label"
+            >
+              Doginal Dogs
+            </a>
+            <span class="footer-sep" aria-hidden="true">·</span>
+            <a
+              href="https://typemedia.xyz"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="footer-link mono-label"
+            >
+              TypeMedia
+            </a>
+          </nav>
+
+          <p class="footer-copy mono-label">
+            © {new Date().getFullYear()} Leah Bluewater. All rights reserved.
+          </p>
+        </div>
+      </footer>
+    </slot>
+  </body>
+</html>
+
+<style is:global>
+  /* ─────────────────────────────────────────────────────────────
+     DESIGN TOKENS
+     ───────────────────────────────────────────────────────────── */
+  :root {
+    /* Palette */
+    --clr-bg:            #ffffff;
+    --clr-bg-off:        #f7f7f7;
+    --clr-text:          #0a0a0a;
+    --clr-text-muted:    #555555;
+    --clr-text-faint:    #999999;
+
+    --clr-accent:        #0077b6;
+    --clr-accent-hover:  #005f99;
+    --clr-accent-wash:   #e8f4fd;
+    --clr-accent-dark:   #004e80;
+
+    --clr-border:        #e0e0e0;
+    --clr-border-strong: #b0b0b0;
+
+    /* Typography */
+    --font-heading:  'Syne', sans-serif;
+    --font-mono:     'Space Mono', monospace;
+
+    --fw-regular:    400;
+    --fw-semibold:   600;
+    --fw-bold:       700;
+    --fw-extrabold:  800;
+
+    /* Type scale (fluid via clamp) */
+    --fs-xs:   clamp(0.625rem,  1vw,   0.75rem);   /* 10–12px  */
+    --fs-sm:   clamp(0.75rem,   1.2vw, 0.875rem);  /* 12–14px  */
+    --fs-base: clamp(0.875rem,  1.5vw, 1rem);      /* 14–16px  */
+    --fs-md:   clamp(1rem,      1.8vw, 1.125rem);  /* 16–18px  */
+    --fs-lg:   clamp(1.125rem,  2vw,   1.375rem);  /* 18–22px  */
+    --fs-xl:   clamp(1.375rem,  3vw,   1.75rem);   /* 22–28px  */
+    --fs-2xl:  clamp(1.75rem,   4vw,   2.5rem);    /* 28–40px  */
+    --fs-3xl:  clamp(2.5rem,    6vw,   4rem);      /* 40–64px  */
+    --fs-4xl:  clamp(3.5rem,    8vw,   6rem);      /* 56–96px  */
+
+    /* Spacing */
+    --space-1:   4px;
+    --space-2:   8px;
+    --space-3:   12px;
+    --space-4:   16px;
+    --space-5:   24px;
+    --space-6:   32px;
+    --space-7:   48px;
+    --space-8:   64px;
+    --space-9:   96px;
+    --space-10:  128px;
+
+    /* Layout */
+    --max-w-content:  1200px;
+    --max-w-narrow:   720px;
+    --page-px:        clamp(1rem, 5vw, 3rem);
+
+    /* Borders */
+    --radius-sm:  4px;
+    --radius-md:  8px;
+    --radius-lg:  16px;
+
+    /* Transitions */
+    --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    --dur-fast:    150ms;
+    --dur-base:    250ms;
+    --dur-slow:    400ms;
+
+    /* Z-index stack */
+    --z-base:     0;
+    --z-raised:   10;
+    --z-nav:      100;
+    --z-overlay:  200;
+    --z-modal:    300;
+    --z-toast:    400;
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     RESET & NORMALIZATION
+     ───────────────────────────────────────────────────────────── */
+
+  /* Box sizing */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Root */
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    hanging-punctuation: first last;
+  }
+
+  /* Body */
+  body {
+    min-height: 100dvh;
+    background-color: var(--clr-bg);
+    color: var(--clr-text);
+    font-family: var(--font-mono);
+    font-size: var(--fs-base);
+    font-weight: var(--fw-regular);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  /* Remove default list styles when list is inside nav */
+  nav ul,
+  nav ol {
+    list-style: none;
+  }
+
+  /* Remove default list styles on ul/ol with role="list" */
+  ul[role="list"],
+  ol[role="list"] {
+    list-style: none;
+  }
+
+  /* Images */
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  /* Inherit fonts for form controls */
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  /* Remove default button styles */
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  /* Anchor base */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* Prevent overflow from long words */
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    overflow-wrap: break-word;
+  }
+
+  /* Table */
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+
+  /* Remove default fieldset styles */
+  fieldset {
+    border: 0;
+    padding: 0;
+  }
+
+  /* HR */
+  hr {
+    border: none;
+    border-top: 1px solid var(--clr-border);
+    margin: var(--space-7) 0;
+  }
+
+  /* Focus visible — accessible ring, not the ugly default */
+  :focus-visible {
+    outline: 2px solid var(--clr-accent);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Remove focus ring from mouse/touch interactions */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Selection */
+  ::selection {
+    background-color: var(--clr-accent);
+    color: #ffffff;
+  }
+
+  /* Scrollbar — subtle */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--clr-border-strong);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--clr-text-muted);
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     TYPOGRAPHY SYSTEM
+     ───────────────────────────────────────────────────────────── */
+
+  /* Headings default to Syne ExtraBold */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: var(--fw-extrabold);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  h1 { font-size: var(--fs-4xl); }
+  h2 { font-size: var(--fs-3xl); }
+  h3 { font-size: var(--fs-2xl); }
+  h4 { font-size: var(--fs-xl); }
+  h5 { font-size: var(--fs-lg); }
+  h6 { font-size: var(--fs-md); }
+
+  /* Section number label — e.g. "001 —" */
+  .section-number {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-regular);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--clr-accent);
+    display: block;
+    margin-bottom: var(--space-3);
+  }
+
+  /* Section heading composite */
+  .section-heading {
+    font-family: var(--font-heading);
+    font-weight: var(--fw-extrabold);
+    font-size: var(--fs-2xl);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+  }
+
+  /* Mono label — for tags, handles, small UI text */
+  .mono-label {
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-regular);
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+  }
+
+  /* Mono label bold variant */
+  .mono-label-bold {
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.04em;
+  }
+
+  /* Handle / @username style */
+  .handle {
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    color: var(--clr-text-muted);
+    letter-spacing: 0.02em;
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     LAYOUT UTILITIES
+     ───────────────────────────────────────────────────────────── */
+
+  /* Content wrapper — centered, padded */
+  .container {
+    width: 100%;
+    max-width: var(--max-w-content);
+    margin-inline: auto;
+    padding-inline: var(--page-px);
+  }
+
+  /* Narrow container for text-heavy sections */
+  .container-narrow {
+    width: 100%;
+    max-width: var(--max-w-narrow);
+    margin-inline: auto;
+    padding-inline: var(--page-px);
+  }
+
+  /* Full-bleed strip */
+  .full-bleed {
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
+  }
+
+  /* Section spacing */
+  .section {
+    padding-block: var(--space-10);
+  }
+
+  .section + .section {
+    border-top: 1px solid var(--clr-border);
+  }
+
+  /* Section inner header layout */
+  .section-header {
+    margin-bottom: var(--space-8);
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     ACCENT / INTERACTIVE UTILITIES
+     ───────────────────────────────────────────────────────────── */
+
+  /* Accent text */
+  .text-accent {
+    color: var(--clr-accent);
+  }
+
+  /* Muted text */
+  .text-muted {
+    color: var(--clr-text-muted);
+  }
+
+  /* Underline link */
+  .link-underline {
+    border-bottom: 1px solid currentColor;
+    transition: color var(--dur-fast) var(--ease-out),
+                border-color var(--dur-fast) var(--ease-out);
+  }
+  .link-underline:hover {
+    color: var(--clr-accent);
+    border-color: var(--clr-accent);
+  }
+
+  /* Accent link (blue) */
+  .link-accent {
+    color: var(--clr-accent);
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .link-accent:hover {
+    color: var(--clr-accent-hover);
+  }
+
+  /* Thin divider line */
+  .divider {
+    height: 1px;
+    background: var(--clr-border);
+    border: none;
+    margin-block: var(--space-6);
+  }
+
+  /* Dot separator */
+  .dot-sep {
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--clr-text-faint);
+    vertical-align: middle;
+    margin-inline: var(--space-2);
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     CARD BASE
+     ───────────────────────────────────────────────────────────── */
+
+  .card {
+    background: var(--clr-bg);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-6);
+    transition: border-color var(--dur-base) var(--ease-out),
+                box-shadow  var(--dur-base) var(--ease-out);
+  }
+
+  .card:hover {
+    border-color: var(--clr-accent);
+    box-shadow: 0 0 0 1px var(--clr-accent);
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     BADGE / TAG
+     ───────────────────────────────────────────────────────────── */
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px var(--space-3);
+    border: 1px solid currentColor;
+    border-radius: 2px;
+  }
+
+  .badge-accent {
+    color: var(--clr-accent);
+    border-color: var(--clr-accent);
+    background: var(--clr-accent-wash);
+  }
+
+  .badge-dark {
+    color: var(--clr-text);
+    border-color: var(--clr-text);
+    background: transparent;
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     BUTTON PRIMITIVES
+     ───────────────────────────────────────────────────────────── */
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: var(--space-3) var(--space-5);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background var(--dur-fast) var(--ease-out),
+                color     var(--dur-fast) var(--ease-out),
+                transform var(--dur-fast) var(--ease-out);
+    border: 1px solid transparent;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+
+  .btn:active {
+    transform: translateY(1px);
+  }
+
+  /* Primary — solid accent */
+  .btn-primary {
+    background: var(--clr-accent);
+    color: #ffffff;
+    border-color: var(--clr-accent);
+  }
+  .btn-primary:hover {
+    background: var(--clr-accent-hover);
+    border-color: var(--clr-accent-hover);
+  }
+
+  /* Secondary — outline accent */
+  .btn-outline {
+    background: transparent;
+    color: var(--clr-accent);
+    border-color: var(--clr-accent);
+  }
+  .btn-outline:hover {
+    background: var(--clr-accent-wash);
+  }
+
+  /* Ghost — text only */
+  .btn-ghost {
+    background: transparent;
+    color: var(--clr-text);
+    border-color: var(--clr-border);
+  }
+  .btn-ghost:hover {
+    border-color: var(--clr-text);
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     GRID UTILITIES
+     ───────────────────────────────────────────────────────────── */
+
+  .grid-auto {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+    gap: var(--space-5);
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-5);
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+  }
+
+  @media (max-width: 768px) {
+    .grid-2,
+    .grid-3 {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .grid-3 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     MAIN CONTENT AREA
+     ───────────────────────────────────────────────────────────── */
+
+  #main-content {
+    /* Push below fixed nav — Nav.astro will set --nav-h via JS/CSS */
+    padding-top: var(--nav-h, 64px);
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     FOOTER
+     ───────────────────────────────────────────────────────────── */
+
+  .site-footer {
+    border-top: 1px solid var(--clr-border);
+    padding-block: var(--space-7);
+    margin-top: var(--space-10);
+  }
+
+  .footer-inner {
+    max-width: var(--max-w-content);
+    margin-inline: auto;
+    padding-inline: var(--page-px);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4) var(--space-6);
+  }
+
+  .footer-handle {
+    color: var(--clr-accent);
+    font-weight: var(--fw-bold);
+    margin-right: auto;
+  }
+
+  .footer-links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .footer-link {
+    color: var(--clr-text-muted);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .footer-link:hover {
+    color: var(--clr-accent);
+  }
+
+  .footer-sep {
+    color: var(--clr-border-strong);
+  }
+
+  .footer-copy {
+    width: 100%;
+    color: var(--clr-text-faint);
+    font-size: var(--fs-xs);
+    margin-top: var(--space-2);
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     ACCESSIBILITY UTILITIES
+     ───────────────────────────────────────────────────────────── */
+
+  /* Visually hidden but accessible to screen readers */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  /* Skip to main content link */
+  .skip-link {
+    position: absolute;
+    top: var(--space-3);
+    left: var(--space-3);
+    z-index: var(--z-toast);
+    padding: var(--space-3) var(--space-5);
+    background: var(--clr-accent);
+    color: #ffffff;
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-bold);
+    border-radius: var(--radius-sm);
+    transform: translateY(-200%);
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     ANIMATION PRIMITIVES
+     Used by child components — defined here so they're available
+     globally without duplication.
+     ───────────────────────────────────────────────────────────── */
+
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fade-in-scale {
+    from { opacity: 0; transform: scale(0.97); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes slide-in-left {
+    from { opacity: 0; transform: translateX(-24px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+
+  /* Utility animation classes */
+  .anim-fade-in {
+    animation: fade-in var(--dur-slow) var(--ease-out) both;
+  }
+  .anim-fade-in-up {
+    animation: fade-in-up var(--dur-slow) var(--ease-out) both;
+  }
+
+  /* Delay helpers */
+  .delay-1 { animation-delay: 100ms; }
+  .delay-2 { animation-delay: 200ms; }
+  .delay-3 { animation-delay: 300ms; }
+  .delay-4 { animation-delay: 400ms; }
+  .delay-5 { animation-delay: 500ms; }
+
+  /* ─────────────────────────────────────────────────────────────
+     REDUCED MOTION
+     ───────────────────────────────────────────────────────────── */
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+</style>
