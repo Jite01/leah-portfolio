@@ -1,0 +1,132 @@
+---
+// src/components/Ticker.astro
+// Horizontal auto-scrolling ticker with live HH:MM:SS countdown
+// to next 12PM WAT (UTC+1). Loops seamlessly via duplicated track.
+---
+
+<div class="ticker-wrap" aria-label="The Kickoff countdown ticker" role="marquee">
+  <div class="ticker-track" id="ticker-track">
+    <!-- Items duplicated in JS for seamless loop -->
+    <span class="ticker-item">
+      THE KICKOFF
+      <span class="ticker-sep">·</span>
+      12PM WAT
+      <span class="ticker-sep">·</span>
+      7AM CST
+      <span class="ticker-sep">·</span>
+      STARTS IN
+      <span class="ticker-countdown" id="ticker-countdown">--:--:--</span>
+    </span>
+    <span class="ticker-item" aria-hidden="true">
+      THE KICKOFF
+      <span class="ticker-sep">·</span>
+      12PM WAT
+      <span class="ticker-sep">·</span>
+      7AM CST
+      <span class="ticker-sep">·</span>
+      STARTS IN
+      <span class="ticker-countdown ticker-countdown-clone">--:--:--</span>
+    </span>
+  </div>
+</div>
+
+<style>
+  .ticker-wrap {
+    width: 100%;
+    overflow: hidden;
+    background: var(--clr-accent);
+    border-top: 1px solid var(--clr-accent-dark);
+    border-bottom: 1px solid var(--clr-accent-dark);
+    padding-block: 10px;
+    /* Prevent text selection during scroll */
+    user-select: none;
+  }
+
+  .ticker-track {
+    display: flex;
+    width: max-content;
+    animation: ticker-scroll 28s linear infinite;
+    will-change: transform;
+  }
+
+  .ticker-track:hover {
+    animation-play-state: paused;
+  }
+
+  .ticker-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    padding-inline: 48px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #ffffff;
+    white-space: nowrap;
+  }
+
+  .ticker-sep {
+    color: rgba(255, 255, 255, 0.45);
+    font-weight: var(--fw-regular);
+  }
+
+  .ticker-countdown {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.08em;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 2px 8px;
+    border-radius: 2px;
+  }
+
+  @keyframes ticker-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticker-track {
+      animation: none;
+      justify-content: center;
+    }
+    .ticker-item:last-child {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  // ── Countdown to next 12:00 WAT (UTC+1 = UTC+60min) ─────────
+  function getCountdown(): string {
+    const now    = new Date();
+    // WAT offset: UTC+1
+    const watNow = new Date(now.getTime() + 60 * 60 * 1000);
+    const target = new Date(watNow);
+    target.setUTCHours(12, 0, 0, 0);
+
+    // If 12PM WAT already passed today, aim for tomorrow
+    if (watNow >= target) {
+      target.setUTCDate(target.getUTCDate() + 1);
+    }
+
+    const diff = target.getTime() - watNow.getTime();
+    if (diff <= 0) return 'LIVE NOW';
+
+    const h = Math.floor(diff / 3_600_000);
+    const m = Math.floor((diff % 3_600_000) / 60_000);
+    const s = Math.floor((diff % 60_000) / 1_000);
+
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${pad(h)}:${pad(m)}:${pad(s)}`;
+  }
+
+  function tick() {
+    const val = getCountdown();
+    document.querySelectorAll<HTMLElement>('.ticker-countdown, .ticker-countdown-clone')
+      .forEach(el => { el.textContent = val; });
+  }
+
+  tick();
+  setInterval(tick, 1000);
+</script>

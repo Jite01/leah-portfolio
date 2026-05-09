@@ -1,0 +1,401 @@
+---
+// src/components/Nav.astro
+// Hamburger → diagonal-bar X → fullscreen white overlay
+// Beach photo (hero.jpg) dimmed at ~15% behind links
+// Links: The Kickoff · Media · Collection · Connect
+---
+
+<a href="#main-content" class="skip-link">Skip to content</a>
+
+<header class="nav-bar" id="nav-bar">
+  <div class="nav-inner">
+
+    <!-- Wordmark -->
+    <a href="/" class="nav-wordmark" aria-label="Leah Bluewater — home">
+      <span class="nav-wordmark-name">LEAH</span>
+      <span class="nav-wordmark-handle mono-label">@leahbluewater</span>
+    </a>
+
+    <!-- Hamburger button -->
+    <button
+      class="hamburger"
+      id="hamburger"
+      aria-controls="nav-overlay"
+      aria-expanded="false"
+      aria-label="Open navigation"
+    >
+      <span class="bar bar-1"></span>
+      <span class="bar bar-2"></span>
+      <span class="bar bar-3"></span>
+    </button>
+
+  </div>
+</header>
+
+<!-- Fullscreen overlay -->
+<div class="nav-overlay" id="nav-overlay" aria-hidden="true">
+
+  <!-- Beach photo dimmed layer -->
+  <div class="overlay-photo" aria-hidden="true"></div>
+
+  <!-- Close button (top-right, same position as hamburger) -->
+  <button
+    class="overlay-close"
+    id="overlay-close"
+    aria-label="Close navigation"
+  >
+    <span class="bar bar-1"></span>
+    <span class="bar bar-2"></span>
+  </button>
+
+  <nav class="overlay-nav" aria-label="Main navigation">
+    <ol class="overlay-links">
+      <li class="overlay-item">
+        <a href="/#kickoff" class="overlay-link" data-index="001">
+          <span class="link-num">001</span>
+          <span class="link-text">The Kickoff</span>
+        </a>
+      </li>
+      <li class="overlay-item">
+        <a href="/#media" class="overlay-link" data-index="002">
+          <span class="link-num">002</span>
+          <span class="link-text">Media</span>
+        </a>
+      </li>
+      <li class="overlay-item">
+        <a href="/#collection" class="overlay-link" data-index="003">
+          <span class="link-num">003</span>
+          <span class="link-text">Collection</span>
+        </a>
+      </li>
+      <li class="overlay-item">
+        <a href="/#connect" class="overlay-link" data-index="004">
+          <span class="link-num">004</span>
+          <span class="link-text">Connect</span>
+        </a>
+      </li>
+    </ol>
+
+    <!-- Footer row inside overlay -->
+    <div class="overlay-footer">
+      <span class="mono-label" style="color: var(--clr-text-faint);">@leahbluewater · TypeMedia · Doginal Dogs</span>
+    </div>
+  </nav>
+
+</div>
+
+<style>
+  /* ── Nav bar ──────────────────────────────────────────────── */
+
+  .nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: var(--z-nav);
+    height: 64px;
+    background: var(--clr-bg);
+    border-bottom: 1px solid var(--clr-border);
+    /* Expose height for #main-content padding-top */
+    --nav-h: 64px;
+  }
+
+  /* Write --nav-h into :root so Layout.astro can read it */
+  :root { --nav-h: 64px; }
+
+  .nav-inner {
+    max-width: var(--max-w-content);
+    margin-inline: auto;
+    padding-inline: var(--page-px);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* Wordmark */
+  .nav-wordmark {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .nav-wordmark-name {
+    font-family: var(--font-heading);
+    font-weight: var(--fw-extrabold);
+    font-size: 1.1rem;
+    letter-spacing: -0.01em;
+    color: var(--clr-text);
+  }
+
+  .nav-wordmark-handle {
+    color: var(--clr-text-faint);
+    font-size: 0.7rem;
+  }
+
+  /* ── Hamburger ────────────────────────────────────────────── */
+
+  .hamburger {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 5px;
+    padding: 4px;
+    position: relative;
+    z-index: calc(var(--z-overlay) + 10);
+    /* Hidden once overlay opens — close btn takes over */
+    transition: opacity var(--dur-base) var(--ease-out);
+  }
+
+  .hamburger .bar {
+    display: block;
+    height: 1.5px;
+    background: var(--clr-text);
+    border-radius: 1px;
+    transform-origin: center;
+    transition:
+      width     var(--dur-base) var(--ease-out),
+      transform var(--dur-base) var(--ease-out),
+      opacity   var(--dur-base) var(--ease-out);
+  }
+
+  .hamburger .bar-1 { width: 24px; }
+  .hamburger .bar-2 { width: 16px; }
+  .hamburger .bar-3 { width: 20px; }
+
+  /* ── Overlay ──────────────────────────────────────────────── */
+
+  .nav-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-overlay);
+    background: var(--clr-bg);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-inline: var(--page-px);
+
+    /* Hidden state */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--dur-slow) var(--ease-out);
+  }
+
+  .nav-overlay.is-open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* Beach photo dimmed layer — hero.jpg as background */
+  .overlay-photo {
+    position: absolute;
+    inset: 0;
+    background-image: url('/hero.jpg');
+    background-size: cover;
+    background-position: center 30%;
+    opacity: 0.15;
+    pointer-events: none;
+  }
+
+  /* ── Close button ─────────────────────────────────────────── */
+
+  .overlay-close {
+    position: absolute;
+    top: calc((64px - 36px) / 2);
+    right: var(--page-px);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    z-index: 1;
+  }
+
+  /* Two bars that form an X */
+  .overlay-close .bar {
+    display: block;
+    position: absolute;
+    width: 24px;
+    height: 1.5px;
+    background: var(--clr-text);
+    border-radius: 1px;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  .overlay-close .bar-1 {
+    transform: rotate(45deg);
+  }
+
+  .overlay-close .bar-2 {
+    transform: rotate(-45deg);
+  }
+
+  /* ── Nav links ────────────────────────────────────────────── */
+
+  .overlay-nav {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: var(--max-w-content);
+    margin-inline: auto;
+  }
+
+  .overlay-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .overlay-item {
+    border-top: 1px solid var(--clr-border);
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity   var(--dur-slow) var(--ease-out),
+      transform var(--dur-slow) var(--ease-out);
+  }
+
+  .overlay-item:last-child {
+    border-bottom: 1px solid var(--clr-border);
+  }
+
+  /* Stagger delays */
+  .overlay-item:nth-child(1) { transition-delay: 60ms;  }
+  .overlay-item:nth-child(2) { transition-delay: 120ms; }
+  .overlay-item:nth-child(3) { transition-delay: 180ms; }
+  .overlay-item:nth-child(4) { transition-delay: 240ms; }
+
+  .nav-overlay.is-open .overlay-item {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .overlay-link {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-5);
+    padding-block: clamp(1rem, 3vw, 1.75rem);
+    text-decoration: none;
+    color: var(--clr-text);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+
+  .overlay-link:hover {
+    color: var(--clr-accent);
+  }
+
+  .overlay-link:hover .link-num {
+    color: var(--clr-accent);
+  }
+
+  .link-num {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-regular);
+    letter-spacing: 0.1em;
+    color: var(--clr-text-faint);
+    transition: color var(--dur-fast) var(--ease-out);
+    min-width: 2.5rem;
+  }
+
+  .link-text {
+    font-family: var(--font-heading);
+    font-weight: var(--fw-extrabold);
+    font-size: clamp(2rem, 7vw, 4.5rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  /* Overlay footer */
+  .overlay-footer {
+    margin-top: var(--space-7);
+    opacity: 0;
+    transition: opacity var(--dur-slow) var(--ease-out) 300ms;
+  }
+
+  .nav-overlay.is-open .overlay-footer {
+    opacity: 1;
+  }
+
+  /* ── Reduced motion ───────────────────────────────────────── */
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-overlay,
+    .overlay-item,
+    .overlay-footer,
+    .hamburger .bar,
+    .overlay-close .bar {
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+  const hamburger   = document.getElementById('hamburger')!;
+  const overlay     = document.getElementById('nav-overlay')!;
+  const closeBtn    = document.getElementById('overlay-close')!;
+  const overlayLinks = overlay.querySelectorAll('.overlay-link');
+
+  function openNav() {
+    overlay.classList.add('is-open');
+    overlay.setAttribute('aria-hidden', 'false');
+    hamburger.setAttribute('aria-expanded', 'true');
+    hamburger.setAttribute('aria-label', 'Close navigation');
+    document.body.style.overflow = 'hidden';
+    // Move focus to close button
+    closeBtn.focus();
+  }
+
+  function closeNav() {
+    overlay.classList.remove('is-open');
+    overlay.setAttribute('aria-hidden', 'true');
+    hamburger.setAttribute('aria-expanded', 'false');
+    hamburger.setAttribute('aria-label', 'Open navigation');
+    document.body.style.overflow = '';
+    hamburger.focus();
+  }
+
+  hamburger.addEventListener('click', openNav);
+  closeBtn.addEventListener('click', closeNav);
+
+  // Close on link click
+  overlayLinks.forEach(link => {
+    link.addEventListener('click', closeNav);
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.classList.contains('is-open')) {
+      closeNav();
+    }
+  });
+
+  // Trap focus inside overlay
+  overlay.addEventListener('keydown', (e) => {
+    if (!overlay.classList.contains('is-open')) return;
+    if (e.key !== 'Tab') return;
+
+    const focusable = Array.from(
+      overlay.querySelectorAll<HTMLElement>(
+        'button, a[href], [tabindex]:not([tabindex="-1"])'
+      )
+    ).filter(el => !el.closest('[aria-hidden="true"]'));
+
+    const first = focusable[0];
+    const last  = focusable[focusable.length - 1];
+
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
+</script>
