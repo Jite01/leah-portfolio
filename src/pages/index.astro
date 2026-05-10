@@ -41,7 +41,8 @@ const nextKickoff = {
   <Nav slot="nav" />
 
   <section class="landing" aria-label="Introduction">
-    <div class="landing-inner container">
+<div class="hero-bg" aria-hidden="true"></div>
+<div class="landing-inner container">
       <div class="landing-identity">
         <div class="landing-copy">
           <h1 class="landing-name">
@@ -116,6 +117,34 @@ const nextKickoff = {
 </Layout>
 
 <style>
+.landing {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url('https://i.imgur.com/3S4HfHp.png');
+  background-size: cover;
+  background-position: center center;
+  opacity: 0.02;
+  animation: hero-breathe 10s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes hero-breathe {
+  0%, 100% { opacity: 0.02; }
+  50% { opacity: 0.29; }
+}
+
+.landing-inner,
+.ticker-slot {
+  position: relative;
+  z-index: 1;
+}
+
   .landing {
     position: relative;
     padding-top: var(--space-10);
