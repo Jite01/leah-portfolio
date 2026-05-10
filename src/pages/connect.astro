@@ -3,45 +3,97 @@ import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 ---
 
-<Layout title="Connect — Leah Bluewater" description="Get in touch with Leah Bluewater.">
+<Layout
+  title="Connect — Leah Bluewater"
+  description="Connect with Leah Bluewater. Crypto & finance voice on X."
+>
   <Nav slot="nav" />
-  <main class="fade-in" id="main-content">
-    <header class="section-header">
-      <h1 class="section-heading">Connect</h1>
-    </header>
-    <ul class="connect-list" role="list">
-      <li class="connect-row">
-        <span class="connect-label mono-label text-muted">X / Twitter</span>
-        <a href="https://twitter.com/leahbluewater" target="_blank" rel="noopener noreferrer" class="connect-link">
-          @leahbluewater ↗
-        </a>
-      </li>
-      <li class="connect-row">
-        <span class="connect-label mono-label text-muted">Community</span>
-        <a href="https://twitter.com/doginaldogsx" target="_blank" rel="noopener noreferrer" class="connect-link">
-          @doginaldogsx ↗
-        </a>
-      </li>
-      <li class="connect-row">
-        <span class="connect-label mono-label text-muted">TypeMedia</span>
-        <a href="https://typemedia.xyz" target="_blank" rel="noopener noreferrer" class="connect-link">
-          typemedia.xyz ↗
-        </a>
-      </li>
-      <li class="connect-row">
-        <span class="connect-label mono-label text-muted">DM</span>
-        <span class="connect-link">Open on X — DMs on</span>
-      </li>
-    </ul>
-  </main>
+
+  <section class="section" aria-labelledby="connect-heading">
+    <div class="container-narrow">
+      <header class="section-header">
+        <h2 class="section-heading" id="connect-heading">Connect</h2>
+      </header>
+
+      <ul class="connect-list" role="list">
+        <li class="connect-row">
+          <span class="connect-label mono-label text-muted">X / Twitter</span>
+          <a
+            href="https://twitter.com/leahbluewater"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="connect-link"
+          >
+            @leahbluewater ↗
+          </a>
+        </li>
+        <li class="connect-row">
+          <span class="connect-label mono-label text-muted">Community</span>
+          <a
+            href="https://twitter.com/doginaldogsx"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="connect-link"
+          >
+            @doginaldogsx ↗
+          </a>
+        </li>
+        <li class="connect-row">
+          <span class="connect-label mono-label text-muted">TypeMedia</span>
+          <a
+            href="https://typemedia.xyz"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="connect-link"
+          >
+            typemedia.xyz ↗
+          </a>
+        </li>
+        <li class="connect-row">
+          <span class="connect-label mono-label text-muted">DM</span>
+          <span class="connect-link">Open on X — DMs on</span>
+        </li>
+      </ul>
+    </div>
+  </section>
 </Layout>
 
-<style is:global>
-.fade-in {
-  animation: fade-in-page 0.37s var(--ease-out) both;
-}
-@keyframes fade-in-page {
-  from {opacity:0;}
-  to {opacity:1;}
-}
+<style>
+  .connect-list {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--clr-border);
+  }
+
+  .connect-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+    padding-block: var(--space-5);
+    border-bottom: 1px solid var(--clr-border);
+  }
+
+  .connect-label {
+    min-width: 100px;
+  }
+
+  .connect-link {
+    font-family: var(--font-heading);
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-lg);
+    letter-spacing: -0.02em;
+    color: var(--clr-text);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+
+  a.connect-link:hover {
+    color: var(--clr-accent);
+  }
+
+  @media (max-width: 640px) {
+    .connect-link {
+      font-size: var(--fs-md);
+    }
+  }
 </style>
