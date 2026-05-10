@@ -227,38 +227,76 @@ const nextKickoff = {
     margin-top: var(--space-2);
   }
 
-  .next-card {
+.next-card {
   position: relative;
   display: flex;
   align-items: center;
   gap: var(--space-6);
   flex-wrap: wrap;
   padding: var(--space-5) var(--space-6);
-  border: 1px solid var(--clr-accent);
   border-radius: var(--radius-md);
   background: var(--clr-accent-wash);
   margin-bottom: var(--space-8);
   overflow: visible;
 }
 
+/* Metallic ring */
 .next-card::before {
-  content: "🏈";
-  position: absolute;
-  font-size: 1.2rem;
-  z-index: 2;
-  animation: orbit-ball 18s linear infinite;
-  filter: drop-shadow(0 0 6px rgba(0, 119, 182, 0.6));
-}
-
-.next-card::after {
   content: "";
   position: absolute;
-  inset: -4px;
-  border-radius: calc(var(--radius-md) + 4px);
-  border: 1px solid transparent;
-  animation: halo-trail 18s linear infinite;
+  inset: -2px;
+  border-radius: calc(var(--radius-md) + 2px);
+  padding: 2px;
+  background: conic-gradient(
+    from var(--ring-angle, 0deg),
+    rgba(180,190,200,0.3),
+    rgba(220,230,240,0.8),
+    rgba(160,170,180,0.4),
+    rgba(200,210,220,0.9),
+    rgba(140,150,160,0.3),
+    rgba(180,190,200,0.3)
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: ring-shimmer 12s linear infinite;
   pointer-events: none;
+  filter: drop-shadow(0 0 8px rgba(180,200,220,0.4))
+          drop-shadow(0 0 20px rgba(0,119,182,0.15));
 }
+
+@property --ring-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes ring-shimmer {
+  to { --ring-angle: 360deg; }
+}
+
+/* Centered football emblem */
+.next-card::after {
+  content: "🏈";
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.1rem;
+  z-index: 2;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
+  background: var(--clr-bg);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
 
 @keyframes orbit-ball {
   0%   { top: -0.6rem; left: -0.6rem; }
