@@ -1,162 +1,249 @@
 ---
-// src/components/WaterCanvas.astro
-// Renders canvas with animated wave inside transparent text cutout
 ---
 
-<canvas id="water-canvas" class="water-canvas" width="400" height="160"></canvas>
+<span class="water-canvas-wrap" aria-hidden="true">
+  <canvas id="water-canvas" class="water-canvas"></canvas>
+  <span class="water-text">water</span>
+</span>
 
 <style>
+  .water-canvas-wrap {
+    position: relative;
+    display: inline-block;
+    vertical-align: baseline;
+    line-height: 1;
+    font-family: var(--font-heading);
+    font-weight: var(--fw-extrabold);
+    font-size: inherit;
+    letter-spacing: inherit;
+  }
+
   .water-canvas {
     position: absolute;
-    left: 0;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    display: block;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .water-text {
+    position: relative;
+    z-index: 2;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
   }
 </style>
 
 <script>
-  class WaterAnimation {
-    constructor(canvas) {
-      this.canvas = canvas;
-      this.ctx = canvas.getContext('2d');
-      this.time = 0;
-      this.animationId = null;
-      this.isAnimating = false;
-      this.fillLevel = 0; // 0 to 1
-      this.fillDirection = 1; // 1 for fill, -1 for drain
-      this.fillDuration = 1500; // ms to fill
-      this.drainDuration = 800; // ms to drain
-      this.pauseDuration = 500; // ms pause between cycles
-      this.lastCycleTime = 0;
-      this.cyclePhase = 'pause'; // 'pause', 'fill', 'drain'
+  (function() {
+    const wrap = document.querySelector('.water-canvas-wrap');
+    const canvas = document.getElementById('water-canvas');
+    if (!wrap || !canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    const textEl = wrap.querySelector('.water-text');
+    if (!ctx || !textEl) return;
+
+    let width, height, dpr;
+    let animId;
+    let time = 0;
+    
+    const WAVE_COUNT = 5;
+    const WAVE_SPEED = 0.02;
+    const FILL_SPEED = 0.003;
+    const DRAIN_SPEED = 0.008;
+    
+    let fillLevel = 0;
+    let phase = 'filling';
+    let phaseTimer = 0;
+    
+    function resize() {
+      const rect = wrap.getBoundingClientRect();
+      dpr = window.devicePixelRatio || 1;
+      width = rect.width;
+      height = rect.height;
       
-      this.waveAmplitude = 8;
-      this.waveFrequency = 0.02;
-      this.waveSpeed = 0.05;
-      this.waterColor = '#0077B6';
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
       
-      this.resize();
-      this.start();
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
-
-    resize() {
-      const rect = this.canvas.parentElement?.getBoundingClientRect();
-      if (rect) {
-        this.canvas.width = rect.width;
-        this.canvas.height = rect.height;
-      }
+    
+    function drawTextMask() {
+      const maskCanvas = document.createElement('canvas');
+      const mctx = maskCanvas.getContext('2d');
+      maskCanvas.width = width * dpr;
+      maskCanvas.height = height * dpr;
+      mctx.scale(dpr, dpr);
+      
+      const styles = window.getComputedStyle(textEl);
+      const fontSize = parseFloat(styles.fontSize);
+      const fontFamily = styles.fontFamily;
+      
+      mctx.fillStyle = '#ffffff';
+      mctx.font = `800 ${fontSize}px ${fontFamily.split(',')[0].replace(/["']/g, '')}`;
+      mctx.textBaseline = 'alphabetic';
+      
+      const metrics = mctx.measureText('water');
+      const x = (width - metrics.width) / 2;
+      const y = height * 0.78;
+      
+      mctx.fillText('water', x, y);
+      
+      const dataURL = maskCanvas.toDataURL();
+      canvas.style.webkitMaskImage = `url(${dataURL})`;
+      canvas.style.maskImage = `url(${dataURL})`;
+      canvas.style.webkitMaskSize = `${width}px ${height}px`;
+      canvas.style.maskSize = `${width}px ${height}px`;
+      canvas.style.webkitMaskRepeat = 'no-repeat';
+      canvas.style.maskRepeat = 'no-repeat';
+      canvas.style.webkitMaskPosition = 'center';
+      canvas.style.maskPosition = 'center';
     }
-
-    start() {
-      if (this.isAnimating) return;
-      this.isAnimating = true;
-      this.time = 0;
-      this.lastCycleTime = Date.now();
-      this.cyclePhase = 'pause';
-      this.animate();
-    }
-
-    stop() {
-      if (this.animationId) {
-        cancelAnimationFrame(this.animationId);
-      }
-      this.isAnimating = false;
-    }
-
-    animate() {
-      if (!this.isAnimating) return;
-
-      const now = Date.now();
-      const elapsed = now - this.lastCycleTime;
-
-      // State machine for fill/drain cycle
-      if (this.cyclePhase === 'pause') {
-        if (elapsed > this.pauseDuration) {
-          this.cyclePhase = 'fill';
-          this.lastCycleTime = now;
-        }
-      } else if (this.cyclePhase === 'fill') {
-        if (elapsed > this.fillDuration) {
-          this.cyclePhase = 'drain';
-          this.lastCycleTime = now;
-        } else {
-          this.fillLevel = (elapsed / this.fillDuration) * 1.0;
-        }
-      } else if (this.cyclePhase === 'drain') {
-        if (elapsed > this.drainDuration) {
-          this.cyclePhase = 'pause';
-          this.lastCycleTime = now;
-          this.fillLevel = 0;
-        } else {
-          this.fillLevel = Math.max(0, 1.0 - (elapsed / this.drainDuration));
-        }
-      }
-
-      this.draw();
-      this.time += this.waveSpeed;
-      this.animationId = requestAnimationFrame(() => this.animate());
-    }
-
-    draw() {
-      const { canvas, ctx } = this;
-      const width = canvas.width;
-      const height = canvas.height;
-
-      // Clear canvas
+    
+    function drawWater(t) {
       ctx.clearRect(0, 0, width, height);
-
-      // Draw animated water wave
-      const waterHeight = height * (1 - this.fillLevel);
-
-      ctx.fillStyle = this.waterColor;
+      
+      const waterHeight = height * fillLevel;
+      const waterY = height - waterHeight;
+      
+      if (waterHeight <= 0.5) return;
+      
+      const grad = ctx.createLinearGradient(0, waterY, 0, height);
+      grad.addColorStop(0, 'rgba(0, 180, 220, 0.95)');
+      grad.addColorStop(0.3, 'rgba(0, 140, 200, 0.9)');
+      grad.addColorStop(0.6, 'rgba(0, 100, 180, 0.95)');
+      grad.addColorStop(1, 'rgba(0, 80, 160, 1)');
+      
       ctx.beginPath();
-      ctx.moveTo(0, waterHeight);
-
-      // Generate wave path
-      for (let x = 0; x <= width; x += 2) {
-        const waveY = waterHeight +
-          Math.sin(x * this.waveFrequency + this.time) * this.waveAmplitude;
-        ctx.lineTo(x, waveY);
+      ctx.moveTo(0, height);
+      
+      for (let x = 0; x <= width; x += 1) {
+        let y = waterY;
+        for (let i = 0; i < WAVE_COUNT; i++) {
+          const amp = 2 + i * 1.2;
+          const freq = 0.015 + i * 0.008;
+          const spd = WAVE_SPEED * (1 + i * 0.3);
+          const ph = i * Math.PI / 3;
+          y += Math.sin(x * freq + t * spd * 60 + ph) * amp;
+        }
+        ctx.lineTo(x, y);
       }
-
+      
       ctx.lineTo(width, height);
       ctx.lineTo(0, height);
       ctx.closePath();
+      ctx.fillStyle = grad;
       ctx.fill();
-
-      // Optional: Add subtle wave highlights for depth
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-      ctx.lineWidth = 1;
+      
       ctx.beginPath();
-      ctx.moveTo(0, waterHeight + 2);
-      for (let x = 0; x <= width; x += 2) {
-        const waveY = waterHeight + 2 +
-          Math.sin(x * this.waveFrequency + this.time) * (this.waveAmplitude * 0.5);
-        ctx.lineTo(x, waveY);
+      for (let x = 0; x <= width; x += 1) {
+        let y = waterY;
+        for (let i = 0; i < WAVE_COUNT; i++) {
+          const amp = 2 + i * 1.2;
+          const freq = 0.015 + i * 0.008;
+          const spd = WAVE_SPEED * (1 + i * 0.3);
+          const ph = i * Math.PI / 3;
+          y += Math.sin(x * freq + t * spd * 60 + ph) * amp;
+        }
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
       }
+      ctx.strokeStyle = 'rgba(120, 230, 255, 0.7)';
+      ctx.lineWidth = 1.5;
       ctx.stroke();
-    }
-  }
-
-  // Initialize when canvas is ready
-  const canvas = document.getElementById('water-canvas');
-  if (canvas) {
-    const waterAnim = new WaterAnimation(canvas);
-
-    // Handle visibility change
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        waterAnim.stop();
-      } else {
-        waterAnim.start();
+      
+      const bubbleCount = Math.floor(fillLevel * 15);
+      for (let i = 0; i < bubbleCount; i++) {
+        const bx = (Math.sin(t * 0.5 + i * 2.5) * 0.5 + 0.5) * width;
+        const by = waterY + Math.random() * waterHeight * 0.7;
+        const br = 0.8 + Math.sin(t + i) * 0.7;
+        ctx.beginPath();
+        ctx.arc(bx, by, Math.max(0.3, br), 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(200, 245, 255, 0.5)';
+        ctx.fill();
       }
-    });
-
-    // Handle window resize
+      
+      ctx.globalCompositeOperation = 'screen';
+      for (let i = 0; i < 6; i++) {
+        const cx = (Math.sin(t * 0.3 + i * 1.2) * 0.5 + 0.5) * width;
+        const cy = waterY + (Math.cos(t * 0.2 + i * 0.8) * 0.5 + 0.5) * waterHeight;
+        const cr = 25 + Math.sin(t + i) * 12;
+        const cgrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, cr);
+        cgrad.addColorStop(0, 'rgba(140, 235, 255, 0.2)');
+        cgrad.addColorStop(1, 'rgba(140, 235, 255, 0)');
+        ctx.beginPath();
+        ctx.arc(cx, cy, cr, 0, Math.PI * 2);
+        ctx.fillStyle = cgrad;
+        ctx.fill();
+      }
+      ctx.globalCompositeOperation = 'source-over';
+    }
+    
+    function updatePhase(dt) {
+      phaseTimer += dt;
+      switch (phase) {
+        case 'filling':
+          fillLevel += FILL_SPEED * dt * 60;
+          if (fillLevel >= 1) { fillLevel = 1; phase = 'full'; phaseTimer = 0; }
+          break;
+        case 'full':
+          if (phaseTimer > 120) { phase = 'draining'; phaseTimer = 0; }
+          break;
+        case 'draining':
+          fillLevel -= DRAIN_SPEED * dt * 60;
+          if (fillLevel <= 0) { fillLevel = 0; phase = 'empty'; phaseTimer = 0; }
+          break;
+        case 'empty':
+          if (phaseTimer > 60) { phase = 'filling'; phaseTimer = 0; }
+          break;
+      }
+    }
+    
+    let lastTime = 0;
+    function animate(timestamp) {
+      if (!lastTime) lastTime = timestamp;
+      const dt = (timestamp - lastTime) / 16.67;
+      lastTime = timestamp;
+      time += 0.016;
+      updatePhase(dt);
+      drawWater(time);
+      animId = requestAnimationFrame(animate);
+    }
+    
+    function init() {
+      resize();
+      drawTextMask();
+      animId = requestAnimationFrame(animate);
+    }
+    
+    function cleanup() {
+      if (animId) cancelAnimationFrame(animId);
+    }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+    
+    let resizeTimeout;
     window.addEventListener('resize', () => {
-      waterAnim.resize();
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        cleanup();
+        resize();
+        drawTextMask();
+        animId = requestAnimationFrame(animate);
+      }, 150);
     });
-  }
+    
+    document.addEventListener('astro:before-preparation', cleanup);
+    document.addEventListener('astro:page-load', init);
+  })();
 </script>
