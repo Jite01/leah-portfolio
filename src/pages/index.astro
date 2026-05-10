@@ -41,8 +41,8 @@ const nextKickoff = {
   <Nav slot="nav" />
 
   <section class="landing" aria-label="Introduction">
-    <div class="hero-bg" aria-hidden="true"></div>
-    <div class="landing-inner container">
+<div class="hero-bg" aria-hidden="true"></div>
+<div class="landing-inner container">
       <div class="landing-identity">
         <div class="landing-copy">
           <h1 class="landing-name">
@@ -73,6 +73,14 @@ const nextKickoff = {
       </header>
 
       <div class="next-card" aria-label="Next Kickoff details">
+
+        <!-- ═══ Premium metallic halo badge ═══ -->
+        <div class="kickoff-badge" aria-hidden="true">
+          <div class="kickoff-badge-halo"></div>
+          <div class="kickoff-badge-halo kickoff-badge-halo--outer"></div>
+          <div class="kickoff-badge-face">🏈</div>
+        </div>
+
         <div class="next-card-meta">
           <span class="mono-label-bold text-accent">NEXT</span>
           <span class="mono-label">{nextKickoff.dayLabel}</span>
@@ -117,38 +125,46 @@ const nextKickoff = {
 </Layout>
 
 <style>
+.landing {
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url('https://i.imgur.com/3S4HfHp.png');
+  background-size: cover;
+  background-position: center center;
+  opacity: 0.29;
+  animation: hero-breathe 10s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes hero-breathe {
+  0%, 100% { opacity: 0.59; }
+  50% { opacity: 0.99; }
+}
+
+.landing-inner,
+.ticker-slot {
+  position: relative;
+  z-index: 1;
+}
+
   .landing {
     position: relative;
-    overflow: hidden;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     padding-top: var(--space-3);
     padding-bottom: 0;
     border-bottom: 1px solid var(--clr-border);
   }
 
-  .hero-bg {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background-image: url('https://i.imgur.com/3S4HfHp.png');
-    background-size: cover;
-    background-position: center center;
-    opacity: 0.29;
-    animation: hero-breathe 10s ease-in-out infinite;
-    pointer-events: none;
-  }
-
-  @keyframes hero-breathe {
-    0%, 100% { opacity: 0.59; }
-    50% { opacity: 0.99; }
-  }
-
   .landing-inner {
-    position: relative;
-    z-index: 1;
     padding-bottom: var(--space-6);
   }
 
@@ -211,8 +227,6 @@ const nextKickoff = {
   }
 
   .ticker-slot {
-    position: relative;
-    z-index: 1;
     animation: fade-in 0.6s var(--ease-out) 600ms both;
   }
 
@@ -221,70 +235,170 @@ const nextKickoff = {
     margin-top: var(--space-2);
   }
 
-  .next-card {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: var(--space-6);
-    flex-wrap: wrap;
-    padding: var(--space-5) var(--space-6);
-    border-radius: var(--radius-md);
-    background: var(--clr-accent-wash);
-    margin-bottom: var(--space-8);
-    overflow: visible;
-  }
+/* ═══════════════════════════════════════════
+   NEXT CARD
+═══════════════════════════════════════════ */
+.next-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+  padding: var(--space-5) var(--space-6);
+  padding-top: calc(var(--space-5) + 18px); /* room for badge */
+  border-radius: var(--radius-md);
+  background: var(--clr-accent-wash);
+  margin-bottom: var(--space-8);
+  overflow: visible;
+}
 
-  /* Metallic ring - uses transform rotate for universal browser support */
-  .next-card::before {
-    content: "";
-    position: absolute;
-    inset: -2px;
-    border-radius: calc(var(--radius-md) + 2px);
-    padding: 2px;
-    background: conic-gradient(
-      from 0deg,
-      rgba(180,190,200,0.3),
-      rgba(220,230,240,0.8),
-      rgba(160,170,180,0.4),
-      rgba(200,210,220,0.9),
-      rgba(140,150,160,0.3),
-      rgba(180,190,200,0.3)
-    );
-    -webkit-mask:
-      linear-gradient(#fff 0 0) content-box,
-      linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    animation: ring-shimmer 12s linear infinite;
-    pointer-events: none;
-    filter: drop-shadow(0 0 8px rgba(180,200,220,0.4))
-            drop-shadow(0 0 20px rgba(0,119,182,0.15));
-  }
+/* Card-edge metallic ring border */
+.next-card::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: calc(var(--radius-md) + 2px);
+  padding: 2px;
+  background: conic-gradient(
+    from var(--ring-angle, 0deg),
+    rgba(180,190,200,0.3),
+    rgba(220,230,240,0.8),
+    rgba(160,170,180,0.4),
+    rgba(200,210,220,0.9),
+    rgba(140,150,160,0.3),
+    rgba(180,190,200,0.3)
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: ring-shimmer 12s linear infinite;
+  pointer-events: none;
+  filter: drop-shadow(0 0 8px rgba(180,200,220,0.4))
+          drop-shadow(0 0 20px rgba(0,119,182,0.15));
+}
 
-  @keyframes ring-shimmer {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-  }
+@property --ring-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
 
-  /* Centered football emblem */
-  .next-card::after {
-    content: "🏈";
-    position: absolute;
-    top: -14px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 1.1rem;
-    z-index: 2;
-    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
-    background: var(--clr-bg);
-    border-radius: 50%;
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-  }
+@keyframes ring-shimmer {
+  to { --ring-angle: 360deg; }
+}
+
+/* ═══════════════════════════════════════════
+   KICKOFF BADGE — premium metallic halo
+═══════════════════════════════════════════ */
+
+.kickoff-badge {
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48px;
+  height: 48px;
+  z-index: 10;
+  /* Lift the whole badge with a subtle ambient glow */
+  filter:
+    drop-shadow(0 0 10px rgba(140, 185, 230, 0.55))
+    drop-shadow(0 0 24px rgba(60, 130, 200, 0.28))
+    drop-shadow(0 2px 6px rgba(0, 0, 0, 0.45));
+}
+
+/* ── Inner ring (fast shimmer, sharp chrome highlights) ── */
+.kickoff-badge-halo {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  /*
+    Conic gradient simulates a brushed-metal / chrome arc:
+    dark steel → bright highlight → mid silver → hot white → mid silver → dark steel
+  */
+  background: conic-gradient(
+    from var(--halo-angle, 0deg),
+    rgba(70,  85, 100, 0.20),
+    rgba(180, 198, 215, 0.75),
+    rgba(235, 245, 255, 1.00),
+    rgba(255, 255, 255, 1.00),
+    rgba(200, 215, 228, 0.80),
+    rgba(150, 168, 185, 0.55),
+    rgba(100, 118, 135, 0.30),
+    rgba(70,  85, 100, 0.20)
+  );
+  padding: 3px;                       /* ring thickness */
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: halo-spin 9s linear infinite;
+}
+
+/* ── Outer ring (slower counter-rotation, wider, more diffuse) ── */
+.kickoff-badge-halo--outer {
+  inset: -4px;
+  padding: 2px;
+  background: conic-gradient(
+    from var(--halo-outer-angle, 180deg),
+    rgba(60,  80, 110, 0.00),
+    rgba(100, 150, 200, 0.35),
+    rgba(180, 210, 240, 0.60),
+    rgba(100, 150, 200, 0.35),
+    rgba(60,  80, 110, 0.00)
+  );
+  animation: halo-spin-reverse 14s linear infinite;
+  /* slightly blurred for a diffuse outer halo */
+  filter: blur(0.6px);
+}
+
+/* ── Flat circular face: dark bg + football emoji ── */
+.kickoff-badge-face {
+  position: absolute;
+  inset: 3px;                         /* matches inner ring padding */
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 38% 36%,
+    rgba(28, 34, 42, 1) 0%,
+    rgba(16, 20, 26, 1) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  line-height: 1;
+  /* Inner bevel: tiny highlight at top-left, shadow at bottom-right */
+  box-shadow:
+    inset 0  1px  2px rgba(255, 255, 255, 0.12),
+    inset 0 -1px  2px rgba(0,   0,   0,   0.55);
+  user-select: none;
+}
+
+/* CSS custom properties for animated conic gradients */
+@property --halo-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@property --halo-outer-angle {
+  syntax: "<angle>";
+  initial-value: 180deg;
+  inherits: false;
+}
+
+@keyframes halo-spin {
+  to { --halo-angle: 360deg; }
+}
+
+@keyframes halo-spin-reverse {
+  to { --halo-outer-angle: -180deg; }
+}
+
+
+/* ─── card body (unchanged below) ─── */
 
   .next-card-meta {
     display: flex;
@@ -376,14 +490,14 @@ const nextKickoff = {
   const handleText = '@leahbluewater';
   const handleEl = document.getElementById('typewriter-handle');
   let charIndex = 0;
-
+  
   function typeWriter() {
     if (handleEl && charIndex < handleText.length) {
       handleEl.textContent = handleText.substring(0, charIndex + 1);
       charIndex++;
       setTimeout(typeWriter, 80 + Math.random() * 40);
     } else if (handleEl) {
-      handleEl.innerHTML = handleText + '<span class="cursor">|</span>';
+      handleEl.innerHTML = handleText + '<span class=\"cursor\">|</span>';
       const cursor = handleEl.querySelector('.cursor');
       if (cursor) {
         cursor.style.animation = 'blink 1s step-end infinite';
@@ -391,7 +505,7 @@ const nextKickoff = {
       }
     }
   }
-
+  
   setTimeout(typeWriter, 800);
 
   function getCountdown() {
@@ -400,17 +514,17 @@ const nextKickoff = {
     const target = new Date(watNow);
     target.setUTCHours(12, 0, 0, 0);
     if (watNow >= target) target.setUTCDate(target.getUTCDate() + 1);
-
+    
     const diff = target.getTime() - watNow.getTime();
     if (diff <= 0) return 'LIVE NOW';
-
+    
     const h = Math.floor(diff / 3600000);
     const m = Math.floor((diff % 3600000) / 60000);
     const s = Math.floor((diff % 60000) / 1000);
     const pad = (n) => String(n).padStart(2, '0');
     return `${pad(h)}:${pad(m)}:${pad(s)}`;
   }
-
+  
   const cardCountdown = document.getElementById('next-card-countdown');
   if (cardCountdown) {
     const tick = () => { cardCountdown.textContent = getCountdown(); };
