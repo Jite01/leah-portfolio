@@ -1,1 +1,76 @@
 
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+
+// Static data for dogs (replace with import as needed)
+const dogs = [
+  { id: 1247, inscription: 'abc123def456', img: 'https://pbs.twimg.com/profile_images/2051967152333221897/eh5vDb7d.jpg' },
+  { id: 3891, inscription: 'xyz789uvw012', img: 'https://pbs.twimg.com/profile_images/2051967152333221897/eh5vDb7d.jpg' },
+  { id: 512, inscription: 'ghi345jkl678', img: 'https://pbs.twimg.com/profile_images/2051967152333221897/eh5vDb7d.jpg' },
+];
+---
+
+<Layout title="Collection — Leah Bluewater" description="Pixel-art Doginal Dogs collection by Leah Bluewater.">
+  <Nav slot="nav" />
+  <main class="fade-in" id="main-content">
+    <header class="section-header">
+      <h1 class="section-heading">Collection</h1>
+      <p class="section-sub mono-label">
+        Pixel-art dogs inscribed on the Dogecoin blockchain.
+        <a
+          href="https://market.doginaldogs.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="link-accent"
+        >
+          market.doginaldogs.com ↗
+        </a>
+      </p>
+    </header>
+    <div class="dogs-grid" aria-label="Leah's Doginal Dogs">
+      {dogs.map(dog => (
+        <article class="dog-card card">
+          <div class="dog-img-wrap">
+            <img
+              src={dog.img}
+              alt={`Doginal Dog #${dog.id}`}
+              width="200"
+              height="200"
+              class="dog-img"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div class="dog-meta">
+            <span class="dog-num mono-label-bold">#{dog.id}</span>
+            <span class="dog-inscription mono-label text-muted" title={dog.inscription}>
+              {dog.inscription.slice(0, 8)}…
+            </span>
+          </div>
+          <a
+            href={`https://market.doginaldogs.com/inscription/${dog.inscription}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-outline dog-btn"
+          >
+            View ↗
+          </a>
+        </article>
+      ))}
+    </div>
+    <p class="dogs-floor mono-label text-muted" style="margin-top: var(--space-5);">
+      Floor: ~$5,000 · 10,000 supply · Dogecoin blockchain
+    </p>
+  </main>
+</Layout>
+
+<style is:global>
+.fade-in {
+  animation: fade-in-page 0.37s var(--ease-out) both;
+}
+@keyframes fade-in-page {
+  from {opacity:0;}
+  to {opacity:1;}
+}
+</style>
