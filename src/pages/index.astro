@@ -1,9 +1,10 @@
 ---
-// src/pages/index.astro
 import Layout from '../layouts/Layout.astro';
-import Nav from '../components/Nav.astro';
+import Nav    from '../components/Nav.astro';
 import Ticker from '../components/Ticker.astro';
+import WaterName from '../components/WaterName.react.jsx';
 
+// Data for The Kickoff section (as before)
 const kickoffs = [
   {
     date: '2025-01-10',
@@ -25,79 +26,46 @@ const kickoffs = [
   },
 ];
 
+// Next Kickoff — update date/URL manually or via CMS
 const nextKickoff = {
+  label: 'Next Kickoff',
   dayLabel: 'Mon, 13 Jan 2025',
   wat: '12:00 PM WAT',
   cst: '6:00 AM CST',
-  url: null,
+  url: null, // null = not yet live
 };
-
-const mediaItems = [
-  {
-    type: 'day-in-finance',
-    date: '2025-01-10',
-    headline: 'BTC holds $96K as ETF inflows hit $500M weekly',
-    url: 'https://twitter.com/leahbluewater/status/placeholder-1',
-  },
-  {
-    type: 'how-to',
-    title: 'Buy Doginal Dogs in Under 5 Minutes',
-    desc: 'Step-by-step guide to your first inscription purchase on Dogecoin.',
-    url: 'https://twitter.com/leahbluewater/status/placeholder-2',
-  },
-  {
-    type: 'article',
-    title: 'Why WAT Is the New Trading Session You Should Watch',
-    excerpt: 'West African retail volume is quietly moving markets. Here’s the data.',
-    url: 'https://twitter.com/leahbluewater/status/placeholder-3',
-  },
-];
-
-const dogs = [
-  { id: 1247, inscription: 'abc123def456', img: 'https://pbs.twimg.com/profile_images/2051967152333221897/eh5vDb7d.jpg' },
-  { id: 3891, inscription: 'xyz789uvw012', img: 'https://pbs.twimg.com/profile_images/2051967152333221897/eh5vDb7d.jpg' },
-  { id: 512, inscription: 'ghi345jkl678', img: 'https://pbs.twimg.com/profile_images/2051967152333221897/eh5vDb7d.jpg' },
-];
 ---
 
 <Layout
   title="Leah Bluewater — Crypto & Finance Voice"
   description="Daily crypto commentary, The Kickoff X Space, and Doginal Dogs collector. 16K+ followers on X."
 >
+  <!-- Nav -->
   <Nav slot="nav" />
 
+  <!-- ════════════════════════════════════════════════════════  
+       LANDING — WaterName animated main title  
+       ════════════════════════════════════════════════════════ -->
   <section class="landing" aria-label="Introduction">
     <div class="landing-inner container">
-      <div class="landing-identity">
-        <div class="landing-copy">
-          <h1 class="landing-name">
-            Leah<br />
-            Blue<span class="water-word" aria-label="water">
-              <span class="water-outline">water</span>
-              <span class="water-fill" aria-hidden="true">water</span>
-            </span>
-          </h1>
-          <p class="landing-handle handle">@leahbluewater</p>
-          <p class="landing-bio">
-            Crypto &amp; finance voice. Daily markets. Host of The Kickoff.
-            <span class="landing-followers mono-label">16K+ on X</span>
-          </p>
-        </div>
-      </div>
+      <WaterName client:load />
     </div>
-
     <div class="ticker-slot">
       <Ticker />
     </div>
   </section>
 
-  <section class="section kickoff-section" id="kickoff" aria-labelledby="kickoff-heading">
+  <!-- ════════════════════════════════════════════════════════  
+       THE KICKOFF (archive and next Space)
+       ════════════════════════════════════════════════════════ -->
+  <section class="section" id="kickoff" aria-labelledby="kickoff-heading">
     <div class="container">
       <header class="section-header">
         <h2 class="section-heading" id="kickoff-heading">The Kickoff</h2>
         <p class="section-sub mono-label">Daily X Space · 12PM WAT · 7AM CST</p>
       </header>
 
+      <!-- Next Kickoff card -->
       <div class="next-card" aria-label="Next Kickoff details">
         <div class="next-card-meta">
           <span class="mono-label-bold text-accent">NEXT</span>
@@ -108,15 +76,18 @@ const dogs = [
           --:--:--
         </div>
         {nextKickoff.url
-          ? <a href={nextKickoff.url} target="_blank" rel="noopener noreferrer" class="btn btn-primary">Join Space</a>
+          ? <a href={nextKickoff.url} target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+              Join Space
+            </a>
           : <span class="btn btn-ghost" aria-disabled="true">Not Yet Live</span>
         }
       </div>
 
+      <!-- Archive -->
       <div class="kickoff-archive" aria-label="Kickoff archive">
         <h3 class="archive-label mono-label-bold">Archive</h3>
         <ul class="kickoff-list" role="list">
-          {kickoffs.map((ep) => (
+          {kickoffs.map(ep => (
             <li class="kickoff-row">
               <span class="kickoff-date mono-label text-muted">{ep.date}</span>
               <span class="kickoff-title">{ep.title}</span>
@@ -135,627 +106,54 @@ const dogs = [
         </ul>
       </div>
 
+      <!-- AI Summary — placeholder -->
       <p class="placeholder-note mono-label text-muted">
-        AI summary coming soon
+        ✦ AI episode summaries via lurky.ai — coming soon
       </p>
     </div>
   </section>
-
-  <div class="h-scroll-shell" id="side-scroll-shell">
-    <div class="h-scroll-sticky">
-      <div class="h-scroll-track" id="side-scroll-track">
-        <section class="panel" id="media" aria-labelledby="media-heading">
-          <div class="panel-inner">
-            <div class="container">
-              <header class="section-header">
-                <h2 class="section-heading" id="media-heading">Media</h2>
-              </header>
-
-              <div class="media-grid">
-                {mediaItems.map((item) => (
-                  <article class="card media-card" data-type={item.type}>
-                    <span class="media-type-tag badge badge-accent">
-                      {item.type === 'day-in-finance' ? 'Day in Finance' : item.type === 'how-to' ? 'How-To' : 'Article'}
-                    </span>
-
-                    {item.type === 'day-in-finance' && (
-                      <>
-                        <p class="media-date mono-label text-muted">{item.date}</p>
-                        <p class="media-headline">{item.headline}</p>
-                      </>
-                    )}
-
-                    {item.type === 'how-to' && (
-                      <>
-                        <h3 class="media-title">{item.title}</h3>
-                        <p class="media-desc text-muted">{item.desc}</p>
-                      </>
-                    )}
-
-                    {item.type === 'article' && (
-                      <>
-                        <h3 class="media-title">{item.title}</h3>
-                        <p class="media-desc text-muted">{item.excerpt}</p>
-                      </>
-                    )}
-
-                    <a
-                      href={item.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="link-accent media-cta"
-                    >
-                      Read on X ↗
-                    </a>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="panel" id="collection" aria-labelledby="collection-heading">
-          <div class="panel-inner">
-            <div class="container">
-              <header class="section-header">
-                <h2 class="section-heading" id="collection-heading">Collection</h2>
-                <p class="section-sub mono-label">
-                  Pixel-art dogs inscribed on the Dogecoin blockchain.
-                  <a
-                    href="https://market.doginaldogs.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="link-accent"
-                  >
-                    market.doginaldogs.com ↗
-                  </a>
-                </p>
-              </header>
-
-              <div class="dogs-grid" aria-label="Leah's Doginal Dogs">
-                {dogs.map((dog) => (
-                  <article class="dog-card card">
-                    <div class="dog-img-wrap">
-                      <img
-                        src={dog.img}
-                        alt={`Doginal Dog #${dog.id}`}
-                        width="200"
-                        height="200"
-                        class="dog-img"
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </div>
-                    <div class="dog-meta">
-                      <span class="dog-num mono-label-bold">#{dog.id}</span>
-                      <span class="dog-inscription mono-label text-muted" title={dog.inscription}>
-                        {dog.inscription.slice(0, 8)}…
-                      </span>
-                    </div>
-                    <a
-                      href={`https://market.doginaldogs.com/inscription/${dog.inscription}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="btn btn-outline dog-btn"
-                    >
-                      View ↗
-                    </a>
-                  </article>
-                ))}
-              </div>
-
-              <p class="dogs-floor mono-label text-muted">
-                Floor: ~$5,000 · 10,000 supply · Dogecoin blockchain
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section class="panel" id="connect" aria-labelledby="connect-heading">
-          <div class="panel-inner">
-            <div class="container-narrow">
-              <header class="section-header">
-                <h2 class="section-heading" id="connect-heading">Connect</h2>
-              </header>
-
-              <ul class="connect-list" role="list">
-                <li class="connect-row">
-                  <span class="connect-label mono-label text-muted">X / Twitter</span>
-                  <a
-                    href="https://twitter.com/leahbluewater"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="connect-link"
-                  >
-                    @leahbluewater ↗
-                  </a>
-                </li>
-                <li class="connect-row">
-                  <span class="connect-label mono-label text-muted">Community</span>
-                  <a
-                    href="https://twitter.com/doginaldogsx"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="connect-link"
-                  >
-                    @doginaldogsx ↗
-                  </a>
-                </li>
-                <li class="connect-row">
-                  <span class="connect-label mono-label text-muted">TypeMedia</span>
-                  <a
-                    href="https://typemedia.xyz"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="connect-link"
-                  >
-                    typemedia.xyz ↗
-                  </a>
-                </li>
-                <li class="connect-row">
-                  <span class="connect-label mono-label text-muted">DM</span>
-                  <span class="connect-link">Open on X — DMs on</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </section>
-      </div>
-    </div>
-  </div>
 </Layout>
 
 <style>
-  .landing {
-    position: relative;
-    padding-top: var(--space-8);
-    padding-bottom: 0;
-    border-bottom: 1px solid var(--clr-border);
-  }
-
-  .landing-inner {
-    padding-bottom: var(--space-8);
-  }
-
-  .landing-identity {
-    display: flex;
-    align-items: center;
-    gap: var(--space-6);
-    flex-wrap: wrap;
-  }
-
-  .landing-copy {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-  }
-
-  .landing-name {
-    font-family: var(--font-heading);
-    font-weight: var(--fw-extrabold);
-    font-size: clamp(3rem, 7vw, 5.25rem);
-    line-height: 0.92;
-    letter-spacing: -0.05em;
-    transform: translateY(-0.35rem);
-    max-width: 11ch;
-  }
-
-  .landing-handle {
-    animation: fade-in-up 0.6s var(--ease-out) 100ms both;
-    margin-top: -4px;
-  }
-
-  .landing-bio {
-    font-family: var(--font-mono);
-    font-size: var(--fs-sm);
-    color: var(--clr-text-muted);
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    flex-wrap: wrap;
-    animation: fade-in-up 0.6s var(--ease-out) 200ms both;
-  }
-
-  .landing-followers {
-    color: var(--clr-accent);
-    background: var(--clr-accent-wash);
-    padding: 2px 8px;
-    border-radius: 2px;
-  }
-
-  .ticker-slot {
-    animation: fade-in 0.6s var(--ease-out) 300ms both;
-  }
-
-  .water-word {
-    position: relative;
-    display: inline-block;
-    vertical-align: baseline;
-    isolation: isolate;
-  }
-
-  .water-outline,
-  .water-fill {
-    font: inherit;
-    letter-spacing: inherit;
-    line-height: inherit;
-    display: inline-block;
-  }
-
-  .water-outline {
-    color: transparent;
-    -webkit-text-stroke: 1.5px rgba(10, 10, 10, 0.34);
-    text-shadow: 0 0 0.01px rgba(10, 10, 10, 0.08);
-  }
-
-  .water-fill {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 0%;
-    overflow: hidden;
-    color: var(--clr-accent);
-    -webkit-text-stroke: 0 transparent;
-    filter: drop-shadow(0 0 10px rgba(0, 119, 182, 0.14));
-    animation: water-fill-cycle 4.4s ease-in-out infinite;
-  }
-
-  .kickoff-section {
-    position: relative;
-    z-index: 1;
-    background: var(--clr-bg);
-  }
-
-  .section-sub {
-    color: var(--clr-text-muted);
-    margin-top: var(--space-2);
-  }
-
-  .next-card {
-    display: flex;
-    align-items: center;
-    gap: var(--space-6);
-    flex-wrap: wrap;
-    padding: var(--space-5) var(--space-6);
-    border: 1px solid var(--clr-accent);
-    border-radius: var(--radius-md);
-    background: var(--clr-accent-wash);
-    margin-bottom: var(--space-8);
-  }
-
-  .next-card-meta {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    flex: 1;
-    min-width: 180px;
-  }
-
-  .next-card-countdown {
-    font-variant-numeric: tabular-nums;
-    font-size: var(--fs-xl);
-    font-weight: var(--fw-bold);
-    color: var(--clr-accent);
-    letter-spacing: 0.04em;
-    min-width: 120px;
-  }
-
-  .archive-label {
-    margin-bottom: var(--space-4);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--clr-text-faint);
-  }
-
-  .kickoff-list {
-    display: flex;
-    flex-direction: column;
-    border-top: 1px solid var(--clr-border);
-  }
-
-  .kickoff-row {
-    display: grid;
-    grid-template-columns: 110px 1fr 60px auto;
-    align-items: center;
-    gap: var(--space-4);
-    padding-block: var(--space-4);
-    border-bottom: 1px solid var(--clr-border);
-    transition: background var(--dur-fast) var(--ease-out);
-  }
-
-  .kickoff-row:hover {
-    background: var(--clr-bg-off);
-    padding-inline: var(--space-3);
-    border-radius: var(--radius-sm);
-    margin-inline: calc(-1 * var(--space-3));
-  }
-
-  .kickoff-title {
-    font-family: var(--font-mono);
-    font-size: var(--fs-sm);
-    line-height: 1.4;
-  }
-
-  .kickoff-dur {
-    text-align: right;
-  }
-
-  .placeholder-note {
-    margin-top: var(--space-6);
-    padding: var(--space-4);
-    border: 1px dashed var(--clr-border);
-    border-radius: var(--radius-sm);
-    text-align: center;
-  }
-
-  .media-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
-    gap: var(--space-5);
-  }
-
-  .media-card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    min-height: 220px;
-  }
-
-  .media-type-tag {
-    align-self: flex-start;
-  }
-
-  .media-date {
-    font-size: var(--fs-xs);
-  }
-
-  .media-headline,
-  .media-title {
-    font-family: var(--font-heading);
-    font-size: var(--fs-md);
-    font-weight: var(--fw-bold);
-    line-height: 1.3;
-    letter-spacing: -0.01em;
-    flex: 1;
-  }
-
-  .media-desc {
-    font-family: var(--font-mono);
-    font-size: var(--fs-sm);
-    line-height: 1.5;
-    flex: 1;
-  }
-
-  .media-cta {
-    margin-top: auto;
-  }
-
-  .dogs-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr));
-    gap: var(--space-5);
-  }
-
-  .dog-card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    padding: var(--space-4);
-  }
-
-  .dog-img-wrap {
-    background: var(--clr-bg-off);
-    border-radius: var(--radius-sm);
-    overflow: hidden;
-    aspect-ratio: 1;
-  }
-
-  .dog-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    image-rendering: pixelated;
-    image-rendering: crisp-edges;
-    transition: transform var(--dur-slow) var(--ease-out);
-  }
-
-  .dog-card:hover .dog-img {
-    transform: scale(1.04);
-  }
-
-  .dog-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-  }
-
-  .dog-num {
-    font-size: var(--fs-base);
-  }
-
-  .dog-inscription {
-    font-size: var(--fs-xs);
-  }
-
-  .dog-btn {
-    width: 100%;
-    justify-content: center;
-    padding-block: var(--space-2);
-    font-size: var(--fs-xs);
-  }
-
-  .dogs-floor {
-    margin-top: var(--space-5);
-  }
-
-  .connect-list {
-    display: flex;
-    flex-direction: column;
-    border-top: 1px solid var(--clr-border);
-  }
-
-  .connect-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-5);
-    padding-block: var(--space-5);
-    border-bottom: 1px solid var(--clr-border);
-  }
-
-  .connect-label {
-    min-width: 100px;
-  }
-
-  .connect-link {
-    font-family: var(--font-heading);
-    font-weight: var(--fw-bold);
-    font-size: var(--fs-lg);
-    letter-spacing: -0.02em;
-    color: var(--clr-text);
-    transition: color var(--dur-fast) var(--ease-out);
-  }
-
-  a.connect-link:hover {
-    color: var(--clr-accent);
-  }
-
-  .h-scroll-shell {
-    position: relative;
-  }
-
-  .h-scroll-track {
-    will-change: transform;
-    transform: translate3d(0, 0, 0);
-  }
-
-  .panel {
-    border-top: 1px solid var(--clr-border);
-    background: var(--clr-bg);
-  }
-
-  .panel-inner {
-    padding-block: var(--space-8);
-  }
-
-  @keyframes water-fill-cycle {
-    0% {
-      height: 0%;
-    }
-    28% {
-      height: 66%;
-    }
-    46% {
-      height: 100%;
-    }
-    54% {
-      height: 100%;
-    }
-    78% {
-      height: 100%;
-    }
-    100% {
-      height: 0%;
-    }
-  }
-
-  @media (max-width: 640px) {
-    .landing-name {
-      font-size: clamp(2.6rem, 15vw, 4rem);
-    }
-
-    .next-card {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .kickoff-row {
-      grid-template-columns: 1fr auto;
-      grid-template-rows: auto auto;
-    }
-
-    .kickoff-date { grid-column: 1; }
-    .kickoff-dur { display: none; }
-    .kickoff-title { grid-column: 1 / -1; }
-
-    .connect-link {
-      font-size: var(--fs-md);
-    }
-
-    .panel-inner {
-      padding-block: var(--space-6);
-    }
-  }
+/* You may want to adjust landing section margins/sizes for new layout */
+.landing {
+  position: relative;
+  padding-top: var(--space-10);
+  padding-bottom: 0;
+  border-bottom: 1px solid var(--clr-border);
+}
+.landing-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  padding-bottom: var(--space-8);
+}
+.ticker-slot {
+  animation: fade-in 0.6s var(--ease-out) 300ms both;
+  width: 100%;
+}
 </style>
-
 <script>
-  function getCountdown() {
-    const now = new Date();
-    const watNow = new Date(now.getTime() + 60 * 60 * 1000);
-    const target = new Date(watNow);
-    target.setUTCHours(12, 0, 0, 0);
-    if (watNow >= target) target.setUTCDate(target.getUTCDate() + 1);
-
-    const diff = target.getTime() - watNow.getTime();
-    if (diff <= 0) return 'LIVE NOW';
-
-    const h = Math.floor(diff / 3_600_000);
-    const m = Math.floor((diff % 3_600_000) / 60_000);
-    const s = Math.floor((diff % 60_000) / 1_000);
-    const pad = (n) => String(n).padStart(2, '0');
-    return `${pad(h)}:${pad(m)}:${pad(s)}`;
-  }
-
-  const cardCountdown = document.getElementById('next-card-countdown');
-  if (cardCountdown) {
-    const tick = () => { cardCountdown.textContent = getCountdown(); };
-    tick();
-    setInterval(tick, 1000);
-  }
-
-  const shell = document.getElementById('side-scroll-shell');
-  const track = document.getElementById('side-scroll-track');
-
-  if (shell && track) {
-    let maxShift = 0;
-    let stickyHeight = 0;
-    let shellStart = 0;
-    let ticking = false;
-
-    const navH = 80;
-
-    const measure = () => {
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
-      stickyHeight = Math.max(0, viewportHeight - navH);
-      maxShift = Math.max(0, track.scrollWidth - viewportWidth);
-      shell.style.height = `${stickyHeight + maxShift}px`;
-      shellStart = window.scrollY + shell.getBoundingClientRect().top - navH;
-      update();
-    };
-
-    const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
-
-    const update = () => {
-      ticking = false;
-      if (maxShift <= 0) {
-        track.style.transform = 'translate3d(0, 0, 0)';
-        return;
-      }
-
-      const progress = clamp((window.scrollY - shellStart) / maxShift, 0, 1);
-      track.style.transform = `translate3d(${-progress * maxShift}px, 0, 0)`;
-    };
-
-    const requestUpdate = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(update);
-    };
-
-    measure();
-    window.addEventListener('resize', measure);
-    window.addEventListener('scroll', requestUpdate, { passive: true });
-  }
+// Mirror ticker countdown in the next-card
+function getCountdown() {
+  const now = new Date();
+  const watNow = new Date(now.getTime() + 60 * 60 * 1000);
+  const target = new Date(watNow);
+  target.setUTCHours(12, 0, 0, 0);
+  if (watNow >= target) target.setUTCDate(target.getUTCDate() + 1);
+  const diff = target.getTime() - watNow.getTime();
+  if (diff <= 0) return 'LIVE NOW';
+  const h = Math.floor(diff / 3_600_000);
+  const m = Math.floor((diff % 3_600_000) / 60_000);
+  const s = Math.floor((diff % 60_000) / 1_000);
+  const pad = n => String(n).padStart(2, '0');
+  return `${pad(h)}:${pad(m)}:${pad(s)}`;
+}
+const cardCountdown = document.getElementById('next-card-countdown');
+if (cardCountdown) {
+  const tick = () => { cardCountdown.textContent = getCountdown(); };
+  tick();
+  setInterval(tick, 1000);
+}
 </script>
