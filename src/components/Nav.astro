@@ -1,8 +1,4 @@
 ---
-// src/components/Nav.astro
-// Hamburger → diagonal-bar X → fullscreen white overlay
-// Beach photo dimmed at ~15% behind links
-// Links: The Kickoff · Media · Collection · Connect
 ---
 
 <a href="#main-content" class="skip-link">Skip to content</a>
@@ -10,10 +6,8 @@
 <header class="nav-bar" id="nav-bar">
   <div class="nav-inner">
     <a href="/" class="nav-wordmark" aria-label="Leah Bluewater — home">
-      <span class="nav-wordmark-stack">
-        <span class="nav-wordmark-name">LEAH</span>
-        <span class="nav-wordmark-handle mono-label">@leahbluewater</span>
-      </span>
+      <span class="nav-wordmark-name">LEAH</span>
+      <span class="nav-wordmark-handle mono-label">@leahbluewater</span>
     </a>
 
     <button
@@ -22,7 +16,6 @@
       aria-controls="nav-overlay"
       aria-expanded="false"
       aria-label="Open navigation"
-      type="button"
     >
       <span class="bar bar-1"></span>
       <span class="bar bar-2"></span>
@@ -33,12 +26,21 @@
 
 <div class="nav-overlay" id="nav-overlay" aria-hidden="true">
   <div class="overlay-photo" aria-hidden="true"></div>
+  
+  <button
+    class="overlay-close"
+    id="overlay-close"
+    aria-label="Close navigation"
+  >
+    <span class="bar bar-1"></span>
+    <span class="bar bar-2"></span>
+  </button>
 
   <nav class="overlay-nav" aria-label="Main navigation">
     <ol class="overlay-links">
       <li class="overlay-item">
         <a href="/" class="overlay-link">
-          <span class="link-text">The Kickoff</span>
+          <span class="link-text">Home</span>
         </a>
       </li>
       <li class="overlay-item">
@@ -57,9 +59,8 @@
         </a>
       </li>
     </ol>
-
     <div class="overlay-footer">
-      <span class="mono-label overlay-footnote">@leahbluewater · Doginal Dogs</span>
+      <span class="mono-label" style="color: var(--clr-text-faint);">@leahbluewater · TypeMedia · Doginal Dogs</span>
     </div>
   </nav>
 </div>
@@ -71,10 +72,12 @@
     left: 0;
     right: 0;
     z-index: var(--z-nav);
-    height: var(--nav-h, 80px);
+    height: 64px;
     background: var(--clr-bg);
     border-bottom: 1px solid var(--clr-border);
   }
+
+  :root { --nav-h: 64px; }
 
   .nav-inner {
     max-width: var(--max-w-content);
@@ -84,44 +87,32 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-4);
   }
 
   .nav-wordmark {
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-  }
-
-  .nav-wordmark-stack {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 2px;
+    text-decoration: none;
     line-height: 1;
   }
 
   .nav-wordmark-name {
     font-family: var(--font-heading);
     font-weight: var(--fw-extrabold);
-    font-size: 1rem;
-    letter-spacing: -0.02em;
+    font-size: 1.1rem;
+    letter-spacing: -0.01em;
     color: var(--clr-text);
-    transform: translateY(1px);
+    line-height: 1;
   }
 
   .nav-wordmark-handle {
-    display: inline-block;
     color: var(--clr-text-faint);
-    font-size: 0.68rem;
-    letter-spacing: 0.08em;
-    white-space: nowrap;
-    overflow: hidden;
-    width: 0;
-    border-right: 1px solid var(--clr-accent);
-    animation:
-      typing 1.8s steps(16, end) 180ms forwards,
-      caret 900ms step-end infinite;
+    font-size: 0.65rem;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    margin-top: 1px;
   }
 
   .hamburger {
@@ -144,30 +135,14 @@
     background: var(--clr-text);
     border-radius: 1px;
     transform-origin: center;
-    transition:
-      width     var(--dur-base) var(--ease-out),
-      transform var(--dur-base) var(--ease-out),
-      opacity   var(--dur-base) var(--ease-out);
+    transition: width var(--dur-base) var(--ease-out),
+                transform var(--dur-base) var(--ease-out),
+                opacity var(--dur-base) var(--ease-out);
   }
 
   .hamburger .bar-1 { width: 24px; }
   .hamburger .bar-2 { width: 16px; }
   .hamburger .bar-3 { width: 20px; }
-
-  .hamburger.is-open .bar-1 {
-    width: 24px;
-    transform: translateY(6.5px) rotate(45deg);
-  }
-
-  .hamburger.is-open .bar-2 {
-    opacity: 0;
-    transform: translateX(8px);
-  }
-
-  .hamburger.is-open .bar-3 {
-    width: 24px;
-    transform: translateY(-6.5px) rotate(-45deg);
-  }
 
   .nav-overlay {
     position: fixed;
@@ -198,6 +173,32 @@
     pointer-events: none;
   }
 
+  .overlay-close {
+    position: absolute;
+    top: calc((64px - 36px) / 2);
+    right: var(--page-px);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    z-index: 1;
+  }
+
+  .overlay-close .bar {
+    display: block;
+    position: absolute;
+    width: 24px;
+    height: 1.5px;
+    background: var(--clr-text);
+    border-radius: 1px;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  .overlay-close .bar-1 { transform: rotate(45deg); }
+  .overlay-close .bar-2 { transform: rotate(-45deg); }
+
   .overlay-nav {
     position: relative;
     z-index: 1;
@@ -217,9 +218,8 @@
     border-top: 1px solid var(--clr-border);
     opacity: 0;
     transform: translateY(16px);
-    transition:
-      opacity   var(--dur-slow) var(--ease-out),
-      transform var(--dur-slow) var(--ease-out);
+    transition: opacity var(--dur-slow) var(--ease-out),
+                transform var(--dur-slow) var(--ease-out);
   }
 
   .overlay-item:last-child {
@@ -268,33 +268,10 @@
     opacity: 1;
   }
 
-  .overlay-footnote {
-    color: var(--clr-text-faint);
-  }
-
-  @keyframes typing {
-    from { width: 0; }
-    to { width: 16ch; }
-  }
-
-  @keyframes caret {
-    0%, 100% { border-color: var(--clr-accent); }
-    50% { border-color: transparent; }
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .nav-overlay,
-    .overlay-item,
-    .overlay-footer,
-    .hamburger .bar,
-    .nav-wordmark-handle {
+    .nav-overlay, .overlay-item, .overlay-footer,
+    .hamburger .bar, .overlay-close .bar {
       transition: none !important;
-      animation: none !important;
-    }
-
-    .nav-wordmark-handle {
-      width: auto;
-      border-right: 0;
     }
   }
 </style>
@@ -302,68 +279,57 @@
 <script>
   const hamburger = document.getElementById('hamburger');
   const overlay = document.getElementById('nav-overlay');
-  const overlayLinks = overlay ? overlay.querySelectorAll('.overlay-link') : [];
+  const closeBtn = document.getElementById('overlay-close');
+  const overlayLinks = overlay.querySelectorAll('.overlay-link');
 
-  if (hamburger && overlay) {
-    function openNav() {
-      overlay.classList.add('is-open');
-      overlay.setAttribute('aria-hidden', 'false');
-      hamburger.classList.add('is-open');
-      hamburger.setAttribute('aria-expanded', 'true');
-      hamburger.setAttribute('aria-label', 'Close navigation');
-      document.body.style.overflow = 'hidden';
-      const firstLink = overlay.querySelector('.overlay-link');
-      if (firstLink) firstLink.focus();
-    }
-
-    function closeNav() {
-      overlay.classList.remove('is-open');
-      overlay.setAttribute('aria-hidden', 'true');
-      hamburger.classList.remove('is-open');
-      hamburger.setAttribute('aria-expanded', 'false');
-      hamburger.setAttribute('aria-label', 'Open navigation');
-      document.body.style.overflow = '';
-      hamburger.focus();
-    }
-
-    hamburger.addEventListener('click', () => {
-      if (overlay.classList.contains('is-open')) {
-        closeNav();
-      } else {
-        openNav();
-      }
-    });
-
-    overlayLinks.forEach((link) => {
-      link.addEventListener('click', closeNav);
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && overlay.classList.contains('is-open')) {
-        closeNav();
-      }
-    });
-
-    overlay.addEventListener('keydown', (e) => {
-      if (!overlay.classList.contains('is-open')) return;
-      if (e.key !== 'Tab') return;
-
-      const focusable = Array.from(
-        overlay.querySelectorAll('button, a[href], [tabindex]:not([tabindex="-1"])')
-      ).filter((el) => !el.closest('[aria-hidden="true"]'));
-
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-
-      if (!first || !last) return;
-
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    });
+  function openNav() {
+    overlay.classList.add('is-open');
+    overlay.setAttribute('aria-hidden', 'false');
+    hamburger.setAttribute('aria-expanded', 'true');
+    hamburger.setAttribute('aria-label', 'Close navigation');
+    document.body.style.overflow = 'hidden';
+    closeBtn.focus();
   }
+
+  function closeNav() {
+    overlay.classList.remove('is-open');
+    overlay.setAttribute('aria-hidden', 'true');
+    hamburger.setAttribute('aria-expanded', 'false');
+    hamburger.setAttribute('aria-label', 'Open navigation');
+    document.body.style.overflow = '';
+    hamburger.focus();
+  }
+
+  hamburger.addEventListener('click', openNav);
+  closeBtn.addEventListener('click', closeNav);
+
+  overlayLinks.forEach(link => {
+    link.addEventListener('click', closeNav);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.classList.contains('is-open')) {
+      closeNav();
+    }
+  });
+
+  overlay.addEventListener('keydown', (e) => {
+    if (!overlay.classList.contains('is-open')) return;
+    if (e.key !== 'Tab') return;
+
+    const focusable = Array.from(
+      overlay.querySelectorAll('button, a[href], [tabindex]:not([tabindex="-1"])')
+    ).filter(el => !el.closest('[aria-hidden="true"]'));
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
 </script>
