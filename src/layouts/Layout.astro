@@ -1,8 +1,5 @@
 ---
-// src/layouts/Layout.astro
-// Base shell for leahbluewater.xyz
-// Fonts: Syne ExtraBold (headings) · Space Mono (labels/mono)
-// Palette: #FFFFFF bg · #0A0A0A type · #0077B6 accent
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
   title?: string;
@@ -19,123 +16,128 @@ const {
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-portfolio-indol.vercel.app");
 ---
 
-<!doctype html>
-<html lang="en" data-theme="light">
+<!DOCTYPE html>
+<html lang="en" data-theme="light" transition:animate="fade">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
-
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
-
+    
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
-
+    
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@leahbluewater" />
     <meta name="twitter:creator" content="@leahbluewater" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
-
+    
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-
+    
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+    
+    <ClientRouter />
   </head>
-
   <body>
     <slot name="nav" />
-
     <main id="main-content">
       <slot />
     </main>
-
-    <slot name="footer" />
+    <slot name="footer">
+      <footer class="site-footer">
+        <div class="footer-inner">
+          <span class="footer-handle mono-label">@leahbluewater</span>
+          <nav class="footer-links" aria-label="Footer navigation">
+            <a href="https://twitter.com/leahbluewater" target="_blank" rel="noopener noreferrer" class="footer-link mono-label">X / Twitter</a>
+            <span class="footer-sep" aria-hidden="true">·</span>
+            <a href="https://doginaldogsx.com" target="_blank" rel="noopener noreferrer" class="footer-link mono-label">Doginal Dogs</a>
+            <span class="footer-sep" aria-hidden="true">·</span>
+            <a href="https://typemedia.xyz" target="_blank" rel="noopener noreferrer" class="footer-link mono-label">TypeMedia</a>
+          </nav>
+          <p class="footer-copy mono-label">© {new Date().getFullYear()} Leah Bluewater. All rights reserved.</p>
+        </div>
+      </footer>
+    </slot>
   </body>
 </html>
 
 <style is:global>
   :root {
-    --clr-bg:            #ffffff;
-    --clr-bg-off:        #f7f7f7;
-    --clr-text:          #0a0a0a;
-    --clr-text-muted:    #555555;
-    --clr-text-faint:    #999999;
-
-    --clr-accent:        #0077b6;
-    --clr-accent-hover:  #005f99;
-    --clr-accent-wash:   #e8f4fd;
-    --clr-accent-dark:   #004e80;
-
-    --clr-border:        #e0e0e0;
+    --clr-bg: #ffffff;
+    --clr-bg-off: #f7f7f7;
+    --clr-text: #0a0a0a;
+    --clr-text-muted: #555555;
+    --clr-text-faint: #999999;
+    --clr-accent: #0077b6;
+    --clr-accent-hover: #005f99;
+    --clr-accent-wash: #e8f4fd;
+    --clr-accent-dark: #004e80;
+    --clr-border: #e0e0e0;
     --clr-border-strong: #b0b0b0;
-
-    --font-heading:  'Syne', sans-serif;
-    --font-mono:     'Space Mono', monospace;
-
-    --fw-regular:    400;
-    --fw-semibold:   600;
-    --fw-bold:       700;
-    --fw-extrabold:  800;
-
-    --fs-xs:   clamp(0.625rem,  1vw,   0.75rem);
-    --fs-sm:   clamp(0.75rem,   1.2vw, 0.875rem);
-    --fs-base: clamp(0.875rem,  1.5vw, 1rem);
-    --fs-md:   clamp(1rem,      1.8vw, 1.125rem);
-    --fs-lg:   clamp(1.125rem,  2vw,   1.375rem);
-    --fs-xl:   clamp(1.375rem,  3vw,   1.75rem);
-    --fs-2xl:  clamp(1.75rem,   4vw,   2.5rem);
-    --fs-3xl:  clamp(2.5rem,    6vw,   4rem);
-    --fs-4xl:  clamp(3.5rem,    8vw,   6rem);
-
-    --space-1:   4px;
-    --space-2:   8px;
-    --space-3:   12px;
-    --space-4:   16px;
-    --space-5:   24px;
-    --space-6:   32px;
-    --space-7:   48px;
-    --space-8:   64px;
-    --space-9:   96px;
-    --space-10:  128px;
-
-    --max-w-content:  1200px;
-    --max-w-narrow:   720px;
-    --page-px:        clamp(1rem, 5vw, 3rem);
-
-    --radius-sm:  4px;
-    --radius-md:  8px;
-    --radius-lg:  16px;
-
-    --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+    
+    --font-heading: 'Syne', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+    
+    --fw-regular: 400;
+    --fw-semibold: 600;
+    --fw-bold: 700;
+    --fw-extrabold: 800;
+    
+    --fs-xs: clamp(0.625rem, 1vw, 0.75rem);
+    --fs-sm: clamp(0.75rem, 1.2vw, 0.875rem);
+    --fs-base: clamp(0.875rem, 1.5vw, 1rem);
+    --fs-md: clamp(1rem, 1.8vw, 1.125rem);
+    --fs-lg: clamp(1.125rem, 2vw, 1.375rem);
+    --fs-xl: clamp(1.375rem, 3vw, 1.75rem);
+    --fs-2xl: clamp(1.75rem, 4vw, 2.5rem);
+    --fs-3xl: clamp(2.5rem, 6vw, 4rem);
+    --fs-4xl: clamp(3.5rem, 8vw, 6rem);
+    --fs-5xl: clamp(4rem, 10vw, 7rem);
+    
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 32px;
+    --space-7: 48px;
+    --space-8: 64px;
+    --space-9: 96px;
+    --space-10: 128px;
+    
+    --max-w-content: 1200px;
+    --max-w-narrow: 720px;
+    --page-px: clamp(1rem, 5vw, 3rem);
+    
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 16px;
+    
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
     --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-    --dur-fast:    150ms;
-    --dur-base:    250ms;
-    --dur-slow:    400ms;
-
-    --z-base:     0;
-    --z-raised:   10;
-    --z-nav:      100;
-    --z-overlay:  200;
-    --z-modal:    300;
-    --z-toast:    400;
-
-    --nav-h: 80px;
+    --dur-fast: 150ms;
+    --dur-base: 250ms;
+    --dur-slow: 400ms;
+    
+    --z-base: 0;
+    --z-raised: 10;
+    --z-nav: 100;
+    --z-overlay: 200;
+    --z-modal: 300;
+    --z-toast: 400;
+    --z-water: 50;
   }
 
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -146,7 +148,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
-    hanging-punctuation: first last;
   }
 
   body {
@@ -163,26 +164,16 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     overflow-x: hidden;
   }
 
-  nav ul,
-  nav ol,
-  ul[role="list"],
-  ol[role="list"] {
+  nav ul, nav ol, ul[role="list"], ol[role="list"] {
     list-style: none;
   }
 
-  img,
-  picture,
-  video,
-  canvas,
-  svg {
+  img, picture, video, canvas, svg {
     display: block;
     max-width: 100%;
   }
 
-  input,
-  button,
-  textarea,
-  select {
+  input, button, textarea, select {
     font: inherit;
     color: inherit;
   }
@@ -200,13 +191,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     text-decoration: none;
   }
 
-  p,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  p, h1, h2, h3, h4, h5, h6 {
     overflow-wrap: break-word;
   }
 
@@ -270,14 +255,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
   h5 { font-size: var(--fs-lg); }
   h6 { font-size: var(--fs-md); }
 
-  .section-heading {
-    font-family: var(--font-heading);
-    font-weight: var(--fw-extrabold);
-    font-size: var(--fs-2xl);
-    line-height: 1.05;
-    letter-spacing: -0.025em;
-  }
-
   .mono-label {
     font-family: var(--font-mono);
     font-size: var(--fs-sm);
@@ -314,11 +291,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     padding-inline: var(--page-px);
   }
 
-  .full-bleed {
-    width: 100vw;
-    margin-inline: calc(50% - 50vw);
-  }
-
   .section {
     padding-block: var(--space-10);
   }
@@ -331,23 +303,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     margin-bottom: var(--space-8);
   }
 
-  .text-accent {
-    color: var(--clr-accent);
-  }
-
-  .text-muted {
-    color: var(--clr-text-muted);
-  }
-
-  .link-underline {
-    border-bottom: 1px solid currentColor;
-    transition: color var(--dur-fast) var(--ease-out),
-                border-color var(--dur-fast) var(--ease-out);
-  }
-  .link-underline:hover {
-    color: var(--clr-accent);
-    border-color: var(--clr-accent);
-  }
+  .text-accent { color: var(--clr-accent); }
+  .text-muted { color: var(--clr-text-muted); }
 
   .link-accent {
     color: var(--clr-accent);
@@ -359,32 +316,14 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     color: var(--clr-accent-hover);
   }
 
-  .divider {
-    height: 1px;
-    background: var(--clr-border);
-    border: none;
-    margin-block: var(--space-6);
-  }
-
-  .dot-sep {
-    display: inline-block;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: var(--clr-text-faint);
-    vertical-align: middle;
-    margin-inline: var(--space-2);
-  }
-
   .card {
     background: var(--clr-bg);
     border: 1px solid var(--clr-border);
     border-radius: var(--radius-md);
     padding: var(--space-6);
     transition: border-color var(--dur-base) var(--ease-out),
-                box-shadow  var(--dur-base) var(--ease-out);
+                box-shadow var(--dur-base) var(--ease-out);
   }
-
   .card:hover {
     border-color: var(--clr-accent);
     box-shadow: 0 0 0 1px var(--clr-accent);
@@ -430,16 +369,13 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     border-radius: var(--radius-sm);
     cursor: pointer;
     transition: background var(--dur-fast) var(--ease-out),
-                color     var(--dur-fast) var(--ease-out),
+                color var(--dur-fast) var(--ease-out),
                 transform var(--dur-fast) var(--ease-out);
     border: 1px solid transparent;
     white-space: nowrap;
     text-decoration: none;
   }
-
-  .btn:active {
-    transform: translateY(1px);
-  }
+  .btn:active { transform: translateY(1px); }
 
   .btn-primary {
     background: var(--clr-accent);
@@ -488,20 +424,15 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
   }
 
   @media (max-width: 768px) {
-    .grid-2,
-    .grid-3 {
-      grid-template-columns: 1fr;
-    }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
   }
 
   @media (min-width: 769px) and (max-width: 1024px) {
-    .grid-3 {
-      grid-template-columns: repeat(2, 1fr);
-    }
+    .grid-3 { grid-template-columns: repeat(2, 1fr); }
   }
 
   #main-content {
-    padding-top: var(--nav-h, 80px);
+    padding-top: var(--nav-h, 64px);
   }
 
   .site-footer {
@@ -582,47 +513,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     transform: translateY(0);
   }
 
-  .h-scroll-shell {
-    position: relative;
-    width: 100%;
-  }
-
-  .h-scroll-sticky {
-    position: sticky;
-    top: var(--nav-h, 80px);
-    height: calc(100dvh - var(--nav-h, 80px));
-    overflow: hidden;
-    background: var(--clr-bg);
-  }
-
-  .h-scroll-track {
-    display: flex;
-    height: 100%;
-    width: max-content;
-    will-change: transform;
-    transform: translate3d(0, 0, 0);
-  }
-
-  .panel {
-    min-width: 100vw;
-    width: 100vw;
-    height: 100%;
-    overflow: hidden;
-    border-top: 1px solid var(--clr-border);
-    background: var(--clr-bg);
-  }
-
-  .panel-inner {
-    height: 100%;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    padding-block: var(--space-8);
-  }
-
-  .panel-inner .section {
-    padding-block: 0;
-  }
-
   @keyframes fade-in {
     from { opacity: 0; transform: translateY(12px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -648,6 +538,16 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
     50%       { opacity: 0; }
   }
 
+  @keyframes typewriter {
+    from { width: 0; }
+    to   { width: 100%; }
+  }
+
+  @keyframes typewriter-caret {
+    from, to { border-color: transparent; }
+    50% { border-color: var(--clr-accent); }
+  }
+
   .anim-fade-in {
     animation: fade-in var(--dur-slow) var(--ease-out) both;
   }
@@ -662,9 +562,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
   .delay-5 { animation-delay: 500ms; }
 
   @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
+    *, *::before, *::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
