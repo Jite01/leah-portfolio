@@ -1,0 +1,47 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+---
+
+<Layout title="Connect — Leah Bluewater" description="Get in touch with Leah Bluewater.">
+  <Nav slot="nav" />
+  <main class="fade-in" id="main-content">
+    <header class="section-header">
+      <h1 class="section-heading">Connect</h1>
+    </header>
+    <ul class="connect-list" role="list">
+      <li class="connect-row">
+        <span class="connect-label mono-label text-muted">X / Twitter</span>
+        <a href="https://twitter.com/leahbluewater" target="_blank" rel="noopener noreferrer" class="connect-link">
+          @leahbluewater ↗
+        </a>
+      </li>
+      <li class="connect-row">
+        <span class="connect-label mono-label text-muted">Community</span>
+        <a href="https://twitter.com/doginaldogsx" target="_blank" rel="noopener noreferrer" class="connect-link">
+          @doginaldogsx ↗
+        </a>
+      </li>
+      <li class="connect-row">
+        <span class="connect-label mono-label text-muted">TypeMedia</span>
+        <a href="https://typemedia.xyz" target="_blank" rel="noopener noreferrer" class="connect-link">
+          typemedia.xyz ↗
+        </a>
+      </li>
+      <li class="connect-row">
+        <span class="connect-label mono-label text-muted">DM</span>
+        <span class="connect-link">Open on X — DMs on</span>
+      </li>
+    </ul>
+  </main>
+</Layout>
+
+<style is:global>
+.fade-in {
+  animation: fade-in-page 0.37s var(--ease-out) both;
+}
+@keyframes fade-in-page {
+  from {opacity:0;}
+  to {opacity:1;}
+}
+</style>
