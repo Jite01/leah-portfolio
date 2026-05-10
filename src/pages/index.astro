@@ -308,17 +308,13 @@ const nextKickoff = {
     drop-shadow(0 2px 6px rgba(0, 0, 0, 0.45));
 }
 
-/* ── Inner ring (fast shimmer, sharp chrome highlights) ── */
+/* ── Inner ring (chrome shimmer, rotates via transform) ── */
 .kickoff-badge-halo {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  /*
-    Conic gradient simulates a brushed-metal / chrome arc:
-    dark steel → bright highlight → mid silver → hot white → mid silver → dark steel
-  */
   background: conic-gradient(
-    from var(--halo-angle, 0deg),
+    from 0deg,
     rgba(70,  85, 100, 0.20),
     rgba(180, 198, 215, 0.75),
     rgba(235, 245, 255, 1.00),
@@ -328,30 +324,31 @@ const nextKickoff = {
     rgba(100, 118, 135, 0.30),
     rgba(70,  85, 100, 0.20)
   );
-  padding: 3px;                       /* ring thickness */
+  padding: 3px;
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
-  animation: halo-spin 9s linear infinite;
+  animation: halo-spin 18s linear infinite;
+  will-change: transform;
 }
 
-/* ── Outer ring (slower counter-rotation, wider, more diffuse) ── */
+/* ── Outer ring (slower counter-rotation, wide diffuse blue halo) ── */
 .kickoff-badge-halo--outer {
   inset: -4px;
   padding: 2px;
   background: conic-gradient(
-    from var(--halo-outer-angle, 180deg),
+    from 180deg,
     rgba(60,  80, 110, 0.00),
     rgba(100, 150, 200, 0.35),
     rgba(180, 210, 240, 0.60),
     rgba(100, 150, 200, 0.35),
     rgba(60,  80, 110, 0.00)
   );
-  animation: halo-spin-reverse 14s linear infinite;
-  /* slightly blurred for a diffuse outer halo */
+  animation: halo-spin-reverse 27s linear infinite;
   filter: blur(0.6px);
+  will-change: transform;
 }
 
 /* ── Flat circular face: dark bg + football emoji ── */
@@ -376,25 +373,14 @@ const nextKickoff = {
   user-select: none;
 }
 
-/* CSS custom properties for animated conic gradients */
-@property --halo-angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
-}
-
-@property --halo-outer-angle {
-  syntax: "<angle>";
-  initial-value: 180deg;
-  inherits: false;
-}
-
 @keyframes halo-spin {
-  to { --halo-angle: 360deg; }
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
 
 @keyframes halo-spin-reverse {
-  to { --halo-outer-angle: -180deg; }
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
 }
 
 
