@@ -1,0 +1,162 @@
+---
+// src/components/WaterCanvas.astro
+// Renders canvas with animated wave inside transparent text cutout
+---
+
+<canvas id="water-canvas" class="water-canvas" width="400" height="160"></canvas>
+
+<style>
+  .water-canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+</style>
+
+<script>
+  class WaterAnimation {
+    constructor(canvas) {
+      this.canvas = canvas;
+      this.ctx = canvas.getContext('2d');
+      this.time = 0;
+      this.animationId = null;
+      this.isAnimating = false;
+      this.fillLevel = 0; // 0 to 1
+      this.fillDirection = 1; // 1 for fill, -1 for drain
+      this.fillDuration = 1500; // ms to fill
+      this.drainDuration = 800; // ms to drain
+      this.pauseDuration = 500; // ms pause between cycles
+      this.lastCycleTime = 0;
+      this.cyclePhase = 'pause'; // 'pause', 'fill', 'drain'
+      
+      this.waveAmplitude = 8;
+      this.waveFrequency = 0.02;
+      this.waveSpeed = 0.05;
+      this.waterColor = '#0077B6';
+      
+      this.resize();
+      this.start();
+    }
+
+    resize() {
+      const rect = this.canvas.parentElement?.getBoundingClientRect();
+      if (rect) {
+        this.canvas.width = rect.width;
+        this.canvas.height = rect.height;
+      }
+    }
+
+    start() {
+      if (this.isAnimating) return;
+      this.isAnimating = true;
+      this.time = 0;
+      this.lastCycleTime = Date.now();
+      this.cyclePhase = 'pause';
+      this.animate();
+    }
+
+    stop() {
+      if (this.animationId) {
+        cancelAnimationFrame(this.animationId);
+      }
+      this.isAnimating = false;
+    }
+
+    animate() {
+      if (!this.isAnimating) return;
+
+      const now = Date.now();
+      const elapsed = now - this.lastCycleTime;
+
+      // State machine for fill/drain cycle
+      if (this.cyclePhase === 'pause') {
+        if (elapsed > this.pauseDuration) {
+          this.cyclePhase = 'fill';
+          this.lastCycleTime = now;
+        }
+      } else if (this.cyclePhase === 'fill') {
+        if (elapsed > this.fillDuration) {
+          this.cyclePhase = 'drain';
+          this.lastCycleTime = now;
+        } else {
+          this.fillLevel = (elapsed / this.fillDuration) * 1.0;
+        }
+      } else if (this.cyclePhase === 'drain') {
+        if (elapsed > this.drainDuration) {
+          this.cyclePhase = 'pause';
+          this.lastCycleTime = now;
+          this.fillLevel = 0;
+        } else {
+          this.fillLevel = Math.max(0, 1.0 - (elapsed / this.drainDuration));
+        }
+      }
+
+      this.draw();
+      this.time += this.waveSpeed;
+      this.animationId = requestAnimationFrame(() => this.animate());
+    }
+
+    draw() {
+      const { canvas, ctx } = this;
+      const width = canvas.width;
+      const height = canvas.height;
+
+      // Clear canvas
+      ctx.clearRect(0, 0, width, height);
+
+      // Draw animated water wave
+      const waterHeight = height * (1 - this.fillLevel);
+
+      ctx.fillStyle = this.waterColor;
+      ctx.beginPath();
+      ctx.moveTo(0, waterHeight);
+
+      // Generate wave path
+      for (let x = 0; x <= width; x += 2) {
+        const waveY = waterHeight +
+          Math.sin(x * this.waveFrequency + this.time) * this.waveAmplitude;
+        ctx.lineTo(x, waveY);
+      }
+
+      ctx.lineTo(width, height);
+      ctx.lineTo(0, height);
+      ctx.closePath();
+      ctx.fill();
+
+      // Optional: Add subtle wave highlights for depth
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, waterHeight + 2);
+      for (let x = 0; x <= width; x += 2) {
+        const waveY = waterHeight + 2 +
+          Math.sin(x * this.waveFrequency + this.time) * (this.waveAmplitude * 0.5);
+        ctx.lineTo(x, waveY);
+      }
+      ctx.stroke();
+    }
+  }
+
+  // Initialize when canvas is ready
+  const canvas = document.getElementById('water-canvas');
+  if (canvas) {
+    const waterAnim = new WaterAnimation(canvas);
+
+    // Handle visibility change
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        waterAnim.stop();
+      } else {
+        waterAnim.start();
+      }
+    });
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      waterAnim.resize();
+    });
+  }
+</script>
