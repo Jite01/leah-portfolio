@@ -2,9 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import Nav    from '../components/Nav.astro';
 import Ticker from '../components/Ticker.astro';
-import WaterName from '../components/WaterName.react.jsx';
+import WaterCanvas from '../components/WaterCanvas.astro';
 
-// Data for The Kickoff section (as before)
 const kickoffs = [
   {
     date: '2025-01-10',
@@ -26,13 +25,12 @@ const kickoffs = [
   },
 ];
 
-// Next Kickoff — update date/URL manually or via CMS
 const nextKickoff = {
   label: 'Next Kickoff',
   dayLabel: 'Mon, 13 Jan 2025',
   wat: '12:00 PM WAT',
   cst: '6:00 AM CST',
-  url: null, // null = not yet live
+  url: null,
 };
 ---
 
@@ -40,24 +38,32 @@ const nextKickoff = {
   title="Leah Bluewater — Crypto & Finance Voice"
   description="Daily crypto commentary, The Kickoff X Space, and Doginal Dogs collector. 16K+ followers on X."
 >
-  <!-- Nav -->
   <Nav slot="nav" />
 
-  <!-- ════════════════════════════════════════════════════════  
-       LANDING — WaterName animated main title  
-       ════════════════════════════════════════════════════════ -->
   <section class="landing" aria-label="Introduction">
     <div class="landing-inner container">
-      <WaterName client:load />
+      <div class="landing-identity">
+        <div class="landing-copy">
+          <h1 class="landing-name">
+            Leah<br/>
+            <span class="name-line-2">
+              <span class="name-blue">Blue</span><WaterCanvas />
+            </span>
+          </h1>
+          <p class="landing-handle typewriter-handle" id="typewriter-handle"></p>
+          <p class="landing-bio">
+            Crypto &amp; finance voice. Daily markets. Host of The Kickoff.
+            <span class="landing-followers mono-label">16K+ on X</span>
+          </p>
+        </div>
+      </div>
     </div>
+
     <div class="ticker-slot">
       <Ticker />
     </div>
   </section>
 
-  <!-- ════════════════════════════════════════════════════════  
-       THE KICKOFF (archive and next Space)
-       ════════════════════════════════════════════════════════ -->
   <section class="section" id="kickoff" aria-labelledby="kickoff-heading">
     <div class="container">
       <header class="section-header">
@@ -65,7 +71,6 @@ const nextKickoff = {
         <p class="section-sub mono-label">Daily X Space · 12PM WAT · 7AM CST</p>
       </header>
 
-      <!-- Next Kickoff card -->
       <div class="next-card" aria-label="Next Kickoff details">
         <div class="next-card-meta">
           <span class="mono-label-bold text-accent">NEXT</span>
@@ -76,14 +81,11 @@ const nextKickoff = {
           --:--:--
         </div>
         {nextKickoff.url
-          ? <a href={nextKickoff.url} target="_blank" rel="noopener noreferrer" class="btn btn-primary">
-              Join Space
-            </a>
+          ? <a href={nextKickoff.url} target="_blank" rel="noopener noreferrer" class="btn btn-primary">Join Space</a>
           : <span class="btn btn-ghost" aria-disabled="true">Not Yet Live</span>
         }
       </div>
 
-      <!-- Archive -->
       <div class="kickoff-archive" aria-label="Kickoff archive">
         <h3 class="archive-label mono-label-bold">Archive</h3>
         <ul class="kickoff-list" role="list">
@@ -106,7 +108,6 @@ const nextKickoff = {
         </ul>
       </div>
 
-      <!-- AI Summary — placeholder -->
       <p class="placeholder-note mono-label text-muted">
         ✦ AI episode summaries via lurky.ai — coming soon
       </p>
@@ -115,45 +116,225 @@ const nextKickoff = {
 </Layout>
 
 <style>
-/* You may want to adjust landing section margins/sizes for new layout */
-.landing {
-  position: relative;
-  padding-top: var(--space-10);
-  padding-bottom: 0;
-  border-bottom: 1px solid var(--clr-border);
-}
-.landing-inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-4);
-  padding-bottom: var(--space-8);
-}
-.ticker-slot {
-  animation: fade-in 0.6s var(--ease-out) 300ms both;
-  width: 100%;
-}
+  .landing {
+    position: relative;
+    padding-top: var(--space-7);
+    padding-bottom: 0;
+    border-bottom: 1px solid var(--clr-border);
+  }
+
+  .landing-inner {
+    padding-bottom: var(--space-6);
+  }
+
+  .landing-identity {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-6);
+  }
+
+  .landing-copy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .landing-name {
+    font-family: var(--font-heading);
+    font-weight: var(--fw-extrabold);
+    font-size: var(--fs-3xl);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    animation: fade-in-up 0.6s var(--ease-out) both;
+  }
+
+  .name-line-2 {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0;
+  }
+
+  .name-blue {
+    color: var(--clr-text);
+  }
+
+  .typewriter-handle {
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    color: var(--clr-text-muted);
+    letter-spacing: 0.02em;
+    min-height: 1.5em;
+    animation: fade-in 0.6s var(--ease-out) 400ms both;
+  }
+
+  .landing-bio {
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    color: var(--clr-text-muted);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    animation: fade-in-up 0.6s var(--ease-out) 500ms both;
+  }
+
+  .landing-followers {
+    color: var(--clr-accent);
+    background: var(--clr-accent-wash);
+    padding: 2px 8px;
+    border-radius: 2px;
+  }
+
+  .ticker-slot {
+    animation: fade-in 0.6s var(--ease-out) 600ms both;
+  }
+
+  .section-sub {
+    color: var(--clr-text-muted);
+    margin-top: var(--space-2);
+  }
+
+  .next-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+    padding: var(--space-5) var(--space-6);
+    border: 1px solid var(--clr-accent);
+    border-radius: var(--radius-md);
+    background: var(--clr-accent-wash);
+    margin-bottom: var(--space-8);
+  }
+
+  .next-card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    flex: 1;
+    min-width: 180px;
+  }
+
+  .next-card-countdown {
+    font-variant-numeric: tabular-nums;
+    font-size: var(--fs-xl);
+    font-weight: var(--fw-bold);
+    color: var(--clr-accent);
+    letter-spacing: 0.04em;
+    min-width: 120px;
+  }
+
+  .archive-label {
+    margin-bottom: var(--space-4);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--clr-text-faint);
+  }
+
+  .kickoff-list {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--clr-border);
+  }
+
+  .kickoff-row {
+    display: grid;
+    grid-template-columns: 110px 1fr 60px auto;
+    align-items: center;
+    gap: var(--space-4);
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--clr-border);
+    transition: background var(--dur-fast) var(--ease-out);
+  }
+
+  .kickoff-row:hover {
+    background: var(--clr-bg-off);
+    padding-inline: var(--space-3);
+    border-radius: var(--radius-sm);
+    margin-inline: calc(-1 * var(--space-3));
+  }
+
+  .kickoff-title {
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    line-height: 1.4;
+  }
+
+  .kickoff-dur {
+    text-align: right;
+  }
+
+  .placeholder-note {
+    margin-top: var(--space-6);
+    padding: var(--space-4);
+    border: 1px dashed var(--clr-border);
+    border-radius: var(--radius-sm);
+    text-align: center;
+  }
+
+  @media (max-width: 640px) {
+    .landing-name {
+      font-size: clamp(2.5rem, 12vw, var(--fs-3xl));
+    }
+
+    .kickoff-row {
+      grid-template-columns: 1fr auto;
+      grid-template-rows: auto auto;
+    }
+
+    .kickoff-date { grid-column: 1; }
+    .kickoff-dur  { display: none; }
+    .kickoff-title { grid-column: 1 / -1; }
+
+    .next-card {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
 </style>
+
 <script>
-// Mirror ticker countdown in the next-card
-function getCountdown() {
-  const now = new Date();
-  const watNow = new Date(now.getTime() + 60 * 60 * 1000);
-  const target = new Date(watNow);
-  target.setUTCHours(12, 0, 0, 0);
-  if (watNow >= target) target.setUTCDate(target.getUTCDate() + 1);
-  const diff = target.getTime() - watNow.getTime();
-  if (diff <= 0) return 'LIVE NOW';
-  const h = Math.floor(diff / 3_600_000);
-  const m = Math.floor((diff % 3_600_000) / 60_000);
-  const s = Math.floor((diff % 60_000) / 1_000);
-  const pad = n => String(n).padStart(2, '0');
-  return `${pad(h)}:${pad(m)}:${pad(s)}`;
-}
-const cardCountdown = document.getElementById('next-card-countdown');
-if (cardCountdown) {
-  const tick = () => { cardCountdown.textContent = getCountdown(); };
-  tick();
-  setInterval(tick, 1000);
-}
+  const handleText = '@leahbluewater';
+  const handleEl = document.getElementById('typewriter-handle');
+  let charIndex = 0;
+  
+  function typeWriter() {
+    if (handleEl && charIndex < handleText.length) {
+      handleEl.textContent = handleText.substring(0, charIndex + 1);
+      charIndex++;
+      setTimeout(typeWriter, 80 + Math.random() * 40);
+    } else if (handleEl) {
+      handleEl.innerHTML = handleText + '<span class=\"cursor\">|</span>';
+      const cursor = handleEl.querySelector('.cursor');
+      if (cursor) {
+        cursor.style.animation = 'blink 1s step-end infinite';
+        cursor.style.color = 'var(--clr-accent)';
+      }
+    }
+  }
+  
+  setTimeout(typeWriter, 800);
+
+  function getCountdown() {
+    const now = new Date();
+    const watNow = new Date(now.getTime() + 60 * 60 * 1000);
+    const target = new Date(watNow);
+    target.setUTCHours(12, 0, 0, 0);
+    if (watNow >= target) target.setUTCDate(target.getUTCDate() + 1);
+    
+    const diff = target.getTime() - watNow.getTime();
+    if (diff <= 0) return 'LIVE NOW';
+    
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${pad(h)}:${pad(m)}:${pad(s)}`;
+  }
+  
+  const cardCountdown = document.getElementById('next-card-countdown');
+  if (cardCountdown) {
+    const tick = () => { cardCountdown.textContent = getCountdown(); };
+    tick();
+    setInterval(tick, 1000);
+  }
 </script>
