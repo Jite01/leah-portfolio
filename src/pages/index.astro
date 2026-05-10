@@ -41,8 +41,8 @@ const nextKickoff = {
   <Nav slot="nav" />
 
   <section class="landing" aria-label="Introduction">
-    <div class="hero-bg" aria-hidden="true"></div>
-    <div class="landing-inner container">
+<div class="hero-bg" aria-hidden="true"></div>
+<div class="landing-inner container">
       <div class="landing-identity">
         <div class="landing-copy">
           <h1 class="landing-name">
@@ -69,7 +69,7 @@ const nextKickoff = {
     <div class="container">
       <header class="section-header">
         <h2 class="section-heading" id="kickoff-heading">The Kickoff</h2>
-        <p class="section-sub mono-label">Daily X Space · 12PM WAT · 7AM CST</p>
+        <p class="section-sub mono-label">Daily X Space · 10AM UTC · 5AM EST</p>
       </header>
 
       <div class="next-card" aria-label="Next Kickoff details">
@@ -117,39 +117,46 @@ const nextKickoff = {
 </Layout>
 
 <style>
+.landing {
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url('https://i.imgur.com/3S4HfHp.png');
+  background-size: cover;
+  background-position: center center;
+  opacity: 0.29;
+  animation: hero-breathe 10s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes hero-breathe {
+  0%, 100% { opacity: 0.59; }
+  50% { opacity: 0.99; }
+}
+
+.landing-inner,
+.ticker-slot {
+  position: relative;
+  z-index: 1;
+}
+
   .landing {
     position: relative;
-    overflow: hidden;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-top: var(--space-10);
+    padding-top: var(--space-3);
     padding-bottom: 0;
     border-bottom: 1px solid var(--clr-border);
   }
 
-  .hero-bg {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background-image: url('https://i.imgur.com/3S4HfHp.png');
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    opacity: 0.29;
-    animation: hero-breathe 10s ease-in-out infinite;
-    pointer-events: none;
-  }
-
-  @keyframes hero-breathe {
-    0%, 100% { opacity: 0.29; }
-    50% { opacity: 0.55; }
-  }
-
   .landing-inner {
-    position: relative;
-    z-index: 1;
     padding-bottom: var(--space-6);
   }
 
@@ -212,8 +219,6 @@ const nextKickoff = {
   }
 
   .ticker-slot {
-    position: relative;
-    z-index: 1;
     animation: fade-in 0.6s var(--ease-out) 600ms both;
   }
 
@@ -222,85 +227,161 @@ const nextKickoff = {
     margin-top: var(--space-2);
   }
 
-  .next-card {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: var(--space-6);
-    flex-wrap: wrap;
-    padding: var(--space-5) var(--space-6);
-    border-radius: var(--radius-md);
-    background: var(--clr-accent-wash);
-    margin-bottom: var(--space-8);
-    overflow: visible;
-  }
+.next-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-md);
+  background: var(--clr-accent-wash);
+  margin-bottom: var(--space-8);
+  overflow: visible;
+}
 
-  .next-card::before {
-    content: "";
-    position: absolute;
-    inset: -2px;
-    border-radius: calc(var(--radius-md) + 2px);
-    padding: 2px;
-    background: conic-gradient(
-      from 0deg,
-      rgba(180,190,200,0.3),
-      rgba(220,230,240,0.8),
-      rgba(160,170,180,0.4),
-      rgba(200,210,220,0.9),
-      rgba(140,150,160,0.3),
-      rgba(180,190,200,0.3)
-    );
-    -webkit-mask:
-      linear-gradient(#fff 0 0) content-box,
-      linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    animation: ring-shimmer 12s linear infinite;
-    pointer-events: none;
-    filter: drop-shadow(0 0 8px rgba(180,200,220,0.4))
-            drop-shadow(0 0 20px rgba(0,119,182,0.15));
-  }
+/* Metallic ring */
+.next-card::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: calc(var(--radius-md) + 2px);
+  padding: 2px;
+  background: conic-gradient(
+    from var(--ring-angle, 0deg),
+    rgba(180,190,200,0.3),
+    rgba(220,230,240,0.8),
+    rgba(160,170,180,0.4),
+    rgba(200,210,220,0.9),
+    rgba(140,150,160,0.3),
+    rgba(180,190,200,0.3)
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: ring-shimmer 12s linear infinite;
+  pointer-events: none;
+  filter: drop-shadow(0 0 8px rgba(180,200,220,0.4))
+          drop-shadow(0 0 20px rgba(0,119,182,0.15));
+}
 
-  @keyframes ring-shimmer {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-  }
+@property --ring-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
 
-  .next-card::after {
-    content: "🏈";
-    position: absolute;
-    top: -14px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 1.1rem;
-    z-index: 2;
-    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
-    background: var(--clr-bg);
-    border-radius: 50%;
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
-  }
+@keyframes ring-shimmer {
+  to { --ring-angle: 360deg; }
+}
+
+/* Centered football emblem */
+.next-card::after {
+  content: "🏈";
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.1rem;
+  z-index: 2;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
+  background: var(--clr-bg);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+
+@keyframes orbit-ball {
+  0%   { top: -0.6rem; left: -0.6rem; }
+  25%  { top: -0.6rem; left: calc(100% - 0.6rem); }
+  50%  { top: calc(100% - 0.6rem); left: calc(100% - 0.6rem); }
+  75%  { top: calc(100% - 0.6rem); left: -0.6rem; }
+  100% { top: -0.6rem; left: -0.6rem; }
+}
+
+@keyframes halo-trail {
+  0%   { box-shadow: 0 0 0 0 rgba(0, 119, 182, 0); }
+  25%  { box-shadow: 4px 0 12px -2px rgba(0, 119, 182, 0.3); }
+  50%  { box-shadow: 0 4px 12px -2px rgba(0, 119, 182, 0.3); }
+  75%  { box-shadow: -4px 0 12px -2px rgba(0, 119, 182, 0.3); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 119, 182, 0); }
+}
+
 
   .next-card-meta {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    flex: 1;
-    min-width: 180px;
-  }
+.next-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-md);
+  background: var(--clr-accent-wash);
+  margin-bottom: var(--space-8);
+  overflow: visible;
+}
 
-  .next-card-countdown {
-    font-variant-numeric: tabular-nums;
-    font-size: var(--fs-xl);
-    font-weight: var(--fw-bold);
-    color: var(--clr-accent);
-    letter-spacing: 0.04em;
-    min-width: 120px;
-  }
+/* Metallic ring */
+.next-card::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: calc(var(--radius-md) + 2px);
+  padding: 2px;
+  background: conic-gradient(
+    from 0deg,
+    rgba(180,190,200,0.3),
+    rgba(220,230,240,0.8),
+    rgba(160,170,180,0.4),
+    rgba(200,210,220,0.9),
+    rgba(140,150,160,0.3),
+    rgba(180,190,200,0.3)
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: ring-shimmer 12s linear infinite;
+  pointer-events: none;
+  filter: drop-shadow(0 0 8px rgba(180,200,220,0.4))
+          drop-shadow(0 0 20px rgba(0,119,182,0.15));
+}
+
+@keyframes ring-shimmer {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Centered football emblem */
+.next-card::after {
+  content: "🏈";
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.1rem;
+  z-index: 2;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
+  background: var(--clr-bg);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
 
   .archive-label {
     margin-bottom: var(--space-4);
@@ -352,7 +433,7 @@ const nextKickoff = {
 
   @media (max-width: 640px) {
     .landing-name {
-      font-size: clamp(2.5rem, 12vw, var(--fs-4xl));
+      font-size: clamp(2.5rem, 12vw, var(--fs-3xl));
     }
 
     .kickoff-row {
@@ -375,14 +456,14 @@ const nextKickoff = {
   const handleText = '@leahbluewater';
   const handleEl = document.getElementById('typewriter-handle');
   let charIndex = 0;
-
+  
   function typeWriter() {
     if (handleEl && charIndex < handleText.length) {
       handleEl.textContent = handleText.substring(0, charIndex + 1);
       charIndex++;
       setTimeout(typeWriter, 80 + Math.random() * 40);
     } else if (handleEl) {
-      handleEl.innerHTML = handleText + '<span class="cursor">|</span>';
+      handleEl.innerHTML = handleText + '<span class=\"cursor\">|</span>';
       const cursor = handleEl.querySelector('.cursor');
       if (cursor) {
         cursor.style.animation = 'blink 1s step-end infinite';
@@ -390,7 +471,7 @@ const nextKickoff = {
       }
     }
   }
-
+  
   setTimeout(typeWriter, 800);
 
   function getCountdown() {
@@ -399,17 +480,17 @@ const nextKickoff = {
     const target = new Date(watNow);
     target.setUTCHours(12, 0, 0, 0);
     if (watNow >= target) target.setUTCDate(target.getUTCDate() + 1);
-
+    
     const diff = target.getTime() - watNow.getTime();
     if (diff <= 0) return 'LIVE NOW';
-
+    
     const h = Math.floor(diff / 3600000);
     const m = Math.floor((diff % 3600000) / 60000);
     const s = Math.floor((diff % 60000) / 1000);
     const pad = (n) => String(n).padStart(2, '0');
     return `${pad(h)}:${pad(m)}:${pad(s)}`;
   }
-
+  
   const cardCountdown = document.getElementById('next-card-countdown');
   if (cardCountdown) {
     const tick = () => { cardCountdown.textContent = getCountdown(); };
