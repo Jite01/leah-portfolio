@@ -118,26 +118,29 @@ async def find_space_url():
 
     # Scan recent tweets for Space URLs
     async for tweet in api.user_tweets(user.id, limit=30):
-        urls = []
+        # Check tweet's own permalink — sometimes Spaces appear here
+        if tweet.url and "twitter.com/i/spaces/" in tweet.url:
+            return tweet.url
+        if tweet.url and "x.com/i/spaces/" in tweet.url:
+            return tweet.url
 
-        # Entities URLs
-        if tweet.urls:
-            urls.extend(tweet.urls)
-
-        # Card URL (Spaces often appear as cards)
-        card_url = getattr(tweet.card, "url", None) if tweet.card else None
-        if card_url:
-            urls.append(card_url)
-
-        # Raw content regex fallback
+        # Check raw content for space links
         if tweet.rawContent:
-            m = re.search(r'https?://(?:twitter|x)\.com/i/spaces/([a-zA-Z0-9]+)', tweet.rawContent)
+            m = re.search(
+                r'https?://(?:twitter|x)\.com/i/spaces/([a-zA-Z0-9]+)',
+                tweet.rawContent
+            )
             if m:
-                urls.append(f"https://twitter.com/i/spaces/{m.group(1)}")
+                return f"https://twitter.com/i/spaces/{m.group(1)}"
 
-        for url in urls:
-            if "twitter.com/i/spaces/" in url or "x.com/i/spaces/" in url:
-                return url
+        # Check entities if available
+        entities = getattr(tweet, 'entities', None)
+        if entities:
+            urls = getattr(entities, 'urls', [])
+            for u in urls:
+                expanded = getattr(u, 'expanded_url', '') or getattr(u, 'url', '')
+                if "twitter.com/i/spaces/" in expanded or "x.com/i/spaces/" in expanded:
+                    return expanded
 
     return None
 
