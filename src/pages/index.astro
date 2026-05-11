@@ -97,7 +97,7 @@ const targetIso = `${nextKickoff.date}T11:00:00+01:00`;
         </ul>
       </div>
 
-      <p class="placeholder-note mono-label text-muted">✦ AI episode summaries via lurky.ai</p>
+      <p class="placeholder-note mono-label text-muted">✦ Episode summaries auto-generated from metadata</p>
     </div>
   </section>
 </Layout>
@@ -352,6 +352,12 @@ const targetIso = `${nextKickoff.date}T11:00:00+01:00`;
     color: var(--clr-accent);
     letter-spacing: 0.04em;
     min-width: 120px;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+  }
+
+  .next-card-countdown.is-live {
+    color: #ff4444;
+    text-shadow: 0 0 12px rgba(255, 68, 68, 0.6);
   }
 
   .archive-label {
@@ -531,24 +537,29 @@ const targetIso = `${nextKickoff.date}T11:00:00+01:00`;
   const countdownEl  = document.getElementById('next-card-countdown');
 
   function getCountdown() {
-    if (!targetIso) return '--:--:--';
+    if (!targetIso) return { text: '--:--:--', live: false };
     const now    = new Date();
     const target = new Date(targetIso);
     const diff   = target - now;
 
     if (diff <= 0) {
-      return hasUrl ? 'LIVE NOW' : 'STARTING SOON';
+      if (hasUrl) return { text: 'LIVE', live: true };
+      return { text: 'STARTING SOON', live: false };
     }
 
     const h   = Math.floor(diff / 3600000);
     const m   = Math.floor((diff % 3600000) / 60000);
     const s   = Math.floor((diff % 60000) / 1000);
     const pad = (n) => String(n).padStart(2, '0');
-    return `${pad(h)}:${pad(m)}:${pad(s)}`;
+    return { text: `${pad(h)}:${pad(m)}:${pad(s)}`, live: false };
   }
 
   if (countdownEl) {
-    const tickCd = () => { countdownEl.textContent = getCountdown(); };
+    const tickCd = () => {
+      const { text, live } = getCountdown();
+      countdownEl.textContent = text;
+      countdownEl.classList.toggle('is-live', live);
+    };
     tickCd();
     setInterval(tickCd, 1000);
   }
