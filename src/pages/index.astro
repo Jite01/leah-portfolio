@@ -72,7 +72,7 @@ const nextKickoff = {
       </header>
 
       <div class="next-card" aria-label="Next Kickoff details">
-        <!-- ═══ Rotating metallic ring ═══ -->
+        <!-- ═══ Orbiting comet ring ═══ -->
         <div class="next-card-ring" aria-hidden="true">
           <div class="next-card-ring-halo"></div>
           <div class="next-card-ring-face"></div>
@@ -260,14 +260,19 @@ const nextKickoff = {
     overflow: visible;
   }
 
-  /* ── Rotating metallic ring (mask-free face-plate technique) ── */
+  /* ── Orbiting comet ring ── */
+  /* The halo is a conic-gradient with a narrow bright arc and a long comet tail,
+     rest transparent. The face-plate (inset 2px) covers the centre so only the
+     2px perimeter ring is visible. As the halo rotates, the bright arc appears
+     to physically travel around the card border — 18 s full orbit via RAF. */
   .next-card-ring {
     position: absolute;
     inset: -2px;
     border-radius: calc(var(--radius-md) + 2px);
     overflow: hidden;
     pointer-events: none;
-    filter: drop-shadow(0 0 8px rgba(180,200,220,0.4)) drop-shadow(0 0 20px rgba(0,119,182,0.15));
+    /* dim ambient glow so the comet head pops */
+    filter: drop-shadow(0 0 6px rgba(140, 185, 230, 0.25));
     z-index: 0;
   }
 
@@ -275,14 +280,19 @@ const nextKickoff = {
     position: absolute;
     inset: 0;
     border-radius: inherit;
+    /* Comet head at ~357-360 deg, tapering tail back through ~60 deg, rest transparent.
+       RAF rotates this every 18 s so the bright head physically chases around the edge. */
     background: conic-gradient(
       from 0deg,
-      rgba(180,190,200,0.3),
-      rgba(220,230,240,0.8),
-      rgba(160,170,180,0.4),
-      rgba(200,210,220,0.9),
-      rgba(140,150,160,0.3),
-      rgba(180,190,200,0.3)
+      transparent 0deg,
+      transparent 280deg,
+      rgba(100, 140, 180, 0.08) 295deg,
+      rgba(150, 185, 220, 0.20) 310deg,
+      rgba(195, 215, 235, 0.45) 325deg,
+      rgba(220, 235, 250, 0.70) 340deg,
+      rgba(240, 248, 255, 0.90) 352deg,
+      rgba(255, 255, 255, 1.00) 357deg,
+      rgba(240, 248, 255, 0.90) 360deg
     );
   }
 
@@ -488,7 +498,7 @@ const nextKickoff = {
   if (haloInner || haloOuter || cardRing) {
     const INNER_MS = 18000; // 18s full rotation
     const OUTER_MS = 27000; // 27s counter-rotation
-    const CARD_MS = 18000; // 18s card ring rotation
+    const CARD_MS  = 18000; // 18s comet orbit around card
 
     let rafStart = null;
 
