@@ -1,7 +1,18 @@
 ---
+import kickoffData from '../data/kickoffs.json';
+
+const { nextKickoff } = kickoffData;
+const targetIso = `${nextKickoff.date}T11:00:00+01:00`;
+const hasUrl = nextKickoff.url ? 'true' : 'false';
 ---
 
-<div class="ticker-wrap" aria-label="The Kickoff countdown ticker" role="marquee">
+<div
+  class="ticker-wrap"
+  aria-label="The Kickoff countdown ticker"
+  role="marquee"
+  data-target={targetIso}
+  data-has-url={hasUrl}
+>
   <div class="ticker-track" id="ticker-track">
     <span class="ticker-item">
       THE KICKOFF
@@ -10,7 +21,7 @@
       <span class="ticker-sep">·</span>
       5AM EST
       <span class="ticker-sep">·</span>
-      10AM GMT
+      4AM CST
       <span class="ticker-sep">·</span>
       11AM WAT
       <span class="ticker-sep">·</span>
@@ -20,9 +31,13 @@
     <span class="ticker-item" aria-hidden="true">
       THE KICKOFF
       <span class="ticker-sep">·</span>
-      12PM WAT
+      10AM UTC
       <span class="ticker-sep">·</span>
-      7AM CST
+      5AM EST
+      <span class="ticker-sep">·</span>
+      4AM CST
+      <span class="ticker-sep">·</span>
+      11AM WAT
       <span class="ticker-sep">·</span>
       STARTS IN
       <span class="ticker-countdown ticker-countdown-clone">--:--:--</span>
@@ -77,6 +92,13 @@
     background: rgba(0, 0, 0, 0.2);
     padding: 2px 8px;
     border-radius: 2px;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+  }
+
+  .ticker-countdown.is-live {
+    color: #ff4444;
+    text-shadow: 0 0 10px rgba(255, 68, 68, 0.7);
+    background: rgba(0, 0, 0, 0.35);
   }
 
   @keyframes ticker-scroll {
@@ -96,31 +118,34 @@
 </style>
 
 <script>
+  const wrap = document.querySelector('.ticker-wrap');
+  const targetIso = wrap.dataset.target;
+  const hasUrl = wrap.dataset.hasUrl === 'true';
+
   function getCountdown() {
     const now = new Date();
-    const watNow = new Date(now.getTime() + 60 * 60 * 1000);
-    const target = new Date(watNow);
-    target.setUTCHours(11, 0, 0, 0);
+    const target = new Date(targetIso);
+    const diff = target - now;
 
-    if (watNow >= target) {
-      target.setUTCDate(target.getUTCDate() + 1);
+    if (diff <= 0) {
+      if (hasUrl) return { text: 'LIVE NOW', live: true };
+      return { text: 'STARTING SOON', live: false };
     }
-
-    const diff = target.getTime() - watNow.getTime();
-    if (diff <= 0) return 'LIVE NOW';
 
     const h = Math.floor(diff / 3600000);
     const m = Math.floor((diff % 3600000) / 60000);
     const s = Math.floor((diff % 60000) / 1000);
-
     const pad = (n) => String(n).padStart(2, '0');
-    return `${pad(h)}:${pad(m)}:${pad(s)}`;
+    return { text: `${pad(h)}:${pad(m)}:${pad(s)}`, live: false };
   }
 
   function tick() {
-    const val = getCountdown();
+    const { text, live } = getCountdown();
     document.querySelectorAll('.ticker-countdown, .ticker-countdown-clone')
-      .forEach(el => { el.textContent = val; });
+      .forEach(el => {
+        el.textContent = text;
+        el.classList.toggle('is-live', live);
+      });
   }
 
   tick();
