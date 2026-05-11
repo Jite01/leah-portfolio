@@ -34,489 +34,141 @@ const nextKickoff = {
 };
 ---
 
-<Layout
-  title="Leah Bluewater — Crypto & Finance Voice"
-  description="Daily crypto commentary, The Kickoff X Space, and Doginal Dogs collector. 16K+ followers on X."
->
-  <Nav slot="nav" />
+<Layout title="Leah Bluewater — Crypto & Finance Voice" description="Daily crypto commentary, The Kickoff X Space, and Doginal Dogs collector. 16K+ followers on X." >
 
-  <section class="landing" aria-label="Introduction">
-    <div class="hero-bg" aria-hidden="true"></div>
-    <div class="landing-inner container">
-      <div class="landing-identity">
-        <div class="landing-copy">
-          <h1 class="landing-name">
-            Leah<br />
-            <span class="name-line-2">
-              <span class="name-blue">Blue</span><WaterCanvas />
-            </span>
-          </h1>
-          <p class="landing-handle typewriter-handle" id="typewriter-handle"></p>
-          <p class="landing-bio">
-            Crypto &amp; finance voice. Daily markets. Host of The Kickoff.
-            <span class="landing-followers mono-label">16K+ on X</span>
-          </p>
-        </div>
+<Nav slot="nav" />
+
+<section class="landing" aria-label="Introduction">
+  <div class="hero-bg" aria-hidden="true"></div>
+
+  <div class="landing-inner container">
+    <div class="landing-identity">
+      <div class="landing-copy">
+        <h1 class="landing-name">
+          Leah<br/>
+          <span class="name-line-2">
+            <span class="name-blue">Blue</span><WaterCanvas />
+          </span>
+        </h1>
+
+        <p class="landing-handle typewriter-handle" id="typewriter-handle"></p>
+
+        <p class="landing-bio">
+          Crypto &amp; finance voice. Daily markets. Host of The Kickoff.
+          <span class="landing-followers mono-label">16K+ on X</span>
+        </p>
       </div>
     </div>
-    <div class="ticker-slot">
-      <Ticker />
-    </div>
-  </section>
+  </div>
 
-  <section class="section" id="kickoff" aria-labelledby="kickoff-heading">
-    <div class="container">
-      <header class="section-header">
-        <h2 class="section-heading" id="kickoff-heading">The Kickoff</h2>
-        <p class="section-sub mono-label">Daily X Space · 10AM UTC · 5AM EST</p>
-      </header>
+  <div class="ticker-slot">
+    <Ticker />
+  </div>
+</section>
 
-      <div class="next-card" aria-label="Next Kickoff details">
-        <!-- ═══ Premium metallic halo badge ═══ -->
-        <div class="kickoff-badge" aria-hidden="true">
-          <div class="kickoff-badge-halo"></div>
-          <div class="kickoff-badge-halo kickoff-badge-halo--outer"></div>
-          <div class="kickoff-badge-face">🏈</div>
-        </div>
+<section class="section" id="kickoff" aria-labelledby="kickoff-heading">
+  <div class="container">
 
-        <div class="next-card-meta">
-          <span class="mono-label-bold text-accent">NEXT</span>
-          <span class="mono-label">{nextKickoff.dayLabel}</span>
-          <span class="mono-label">{nextKickoff.wat} · {nextKickoff.cst}</span>
-        </div>
+    <header class="section-header">
+      <h2 class="section-heading" id="kickoff-heading">The Kickoff</h2>
+      <p class="section-sub mono-label">Daily X Space · 10AM UTC · 5AM EST</p>
+    </header>
 
-        <div class="next-card-countdown mono-label" id="next-card-countdown" aria-live="polite">
-          --:--:--
-        </div>
+    <div class="next-card" aria-label="Next Kickoff details">
 
-        {nextKickoff.url ? (
-          <a href={nextKickoff.url} target="_blank" rel="noopener noreferrer" class="btn btn-primary">Join Space</a>
-        ) : (
-          <span class="btn btn-ghost" aria-disabled="true">Not Yet Live</span>
-        )}
+      <div class="kickoff-badge" aria-hidden="true">
+        <div class="kickoff-badge-halo"></div>
+        <div class="kickoff-badge-halo kickoff-badge-halo--outer"></div>
+        <div class="kickoff-badge-face">🏈</div>
       </div>
 
-      <div class="kickoff-archive" aria-label="Kickoff archive">
-        <h3 class="archive-label mono-label-bold">Archive</h3>
-        <ul class="kickoff-list" role="list">
-          {kickoffs.map(ep => (
-            <li class="kickoff-row">
-              <span class="kickoff-date mono-label text-muted">{ep.date}</span>
-              <span class="kickoff-title">{ep.title}</span>
-              <span class="kickoff-dur mono-label text-muted">{ep.duration}</span>
-              <a
-                href={ep.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="link-accent"
-                aria-label={`Listen to ${ep.title} on X`}
-              >
-                Listen ↗
-              </a>
-            </li>
-          ))}
-        </ul>
+      <div class="next-card-meta">
+        <span class="mono-label-bold text-accent">NEXT</span>
+        <span class="mono-label">{nextKickoff.dayLabel}</span>
+        <span class="mono-label">{nextKickoff.wat} · {nextKickoff.cst}</span>
       </div>
 
-      <p class="placeholder-note mono-label text-muted">✦ AI episode summaries via lurky.ai — coming soon</p>
+      <div class="next-card-countdown mono-label" id="next-card-countdown" aria-live="polite">
+        --:--:--
+      </div>
+
+      {nextKickoff.url ? (
+        <a href={nextKickoff.url} target="_blank" rel="noopener noreferrer" class="btn btn-primary">Join Space</a>
+      ) : (
+        <span class="btn btn-ghost" aria-disabled="true">Not Yet Live</span>
+      )}
+
     </div>
-  </section>
+
+    <div class="kickoff-archive" aria-label="Kickoff archive">
+      <h3 class="archive-label mono-label-bold">Archive</h3>
+      <ul class="kickoff-list" role="list">
+        {kickoffs.map(ep => (
+          <li class="kickoff-row">
+            <span class="kickoff-date mono-label text-muted">{ep.date}</span>
+            <span class="kickoff-title">{ep.title}</span>
+            <span class="kickoff-dur mono-label text-muted">{ep.duration}</span>
+            <a href={ep.url} target="_blank" rel="noopener noreferrer" class="link-accent">
+              Listen ↗
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <p class="placeholder-note mono-label text-muted">
+      ✦ AI episode summaries via lurky.ai — coming soon
+    </p>
+
+  </div>
+</section>
+
 </Layout>
 
 <style>
-  .landing {
-    position: relative;
-    overflow: hidden;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  .hero-bg {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background-image: url('https://i.imgur.com/3S4HfHp.png');
-    background-size: cover;
-    background-position: center center;
-    opacity: 0.29;
-    animation: hero-breathe 10s ease-in-out infinite;
-    pointer-events: none;
-  }
-
-  @keyframes hero-breathe {
-    0%,
-    100% {
-      opacity: 0.59;
-    }
-    50% {
-      opacity: 0.99;
-    }
-  }
-
-  .landing-inner,
-  .ticker-slot {
-    position: relative;
-    z-index: 1;
-  }
-
-  .landing {
-    position: relative;
-    padding-top: var(--space-3);
-    padding-bottom: 0;
-    border-bottom: 1px solid var(--clr-border);
-  }
-
-  .landing-inner {
-    padding-bottom: var(--space-6);
-  }
-
-  .landing-identity {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--space-6);
-  }
-
-  .landing-copy {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-
-  .landing-name {
-    font-family: var(--font-heading);
-    font-weight: var(--fw-extrabold);
-    font-size: var(--fs-4xl);
-    line-height: 0.95;
-    letter-spacing: -0.04em;
-    animation: fade-in-up 0.6s var(--ease-out) both;
-  }
-
-  .name-line-2 {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0;
-  }
-
-  .name-blue {
-    color: var(--clr-text);
-  }
-
-  .typewriter-handle {
-    font-family: var(--font-mono);
-    font-size: var(--fs-sm);
-    color: var(--clr-text-muted);
-    letter-spacing: 0.02em;
-    min-height: 1.5em;
-    animation: fade-in 0.6s var(--ease-out) 400ms both;
-  }
-
-  .landing-bio {
-    font-family: var(--font-mono);
-    font-size: var(--fs-sm);
-    color: var(--clr-text-muted);
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    flex-wrap: wrap;
-    animation: fade-in-up 0.6s var(--ease-out) 500ms both;
-  }
-
-  .landing-followers {
-    color: var(--clr-accent);
-    background: var(--clr-accent-wash);
-    padding: 2px 8px;
-    border-radius: 2px;
-  }
-
-  .ticker-slot {
-    animation: fade-in 0.6s var(--ease-out) 600ms both;
-  }
-
-  .section-sub {
-    color: var(--clr-text-muted);
-    margin-top: var(--space-2);
-  }
-
-  /* ═══════════════════════════════════════════ NEXT CARD ═══════════════════════════════════════════ */
-  .next-card {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: var(--space-6);
-    flex-wrap: wrap;
-    padding: var(--space-5) var(--space-6);
-    padding-top: calc(var(--space-5) + 18px); /* room for badge */
-    border-radius: var(--radius-md);
-    background: var(--clr-accent-wash);
-    margin-bottom: var(--space-8);
-    overflow: visible;
-  }
-
-  /* Card-edge metallic ring border */
-  .next-card::before {
-    content: "";
-    position: absolute;
-    inset: -2px;
-    border-radius: calc(var(--radius-md) + 2px);
-    padding: 2px;
-    background: conic-gradient(
-      from var(--ring-angle, 0deg),
-      rgba(180,190,200,0.3),
-      rgba(220,230,240,0.8),
-      rgba(160,170,180,0.4),
-      rgba(200,210,220,0.9),
-      rgba(140,150,160,0.3),
-      rgba(180,190,200,0.3)
-    );
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-    filter: drop-shadow(0 0 8px rgba(180,200,220,0.4)) drop-shadow(0 0 20px rgba(0,119,182,0.15));
-  }
-
-  /* ═══════════════════════════════════════════ KICKOFF BADGE — premium metallic halo ═══════════════════════════════════════════ */
-  .kickoff-badge {
-    position: absolute;
-    top: -24px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 48px;
-    height: 48px;
-    z-index: 10;
-    /* NO filter here — filter on a parent breaks child transform animations in Safari and Blink. Glow lives on .kickoff-badge-face instead. */
-  }
-
-  /* Mask-free ring technique:
-   - .kickoff-badge-halo → full conic-gradient circle, rotates freely
-   - .kickoff-badge-face → z-index:2, inset 3px, covers the centre
-   Only the 3px ring around the face edge is visible. No mask = no freeze.
-  */
-
-  /* ── Inner ring (RAF-rotated) ── */
-  .kickoff-badge-halo {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: conic-gradient(
-      from 0deg,
-      rgba(70, 85, 100, 0.25),
-      rgba(180, 198, 215, 0.80),
-      rgba(235, 245, 255, 1.00),
-      rgba(255, 255, 255, 1.00),
-      rgba(200, 215, 228, 0.85),
-      rgba(150, 168, 185, 0.60),
-      rgba(100, 118, 135, 0.35),
-      rgba(70, 85, 100, 0.25)
-    );
-  }
-
-  /* ── Outer diffuse blue halo (RAF counter-rotated) ── */
-  .kickoff-badge-halo--outer {
-    inset: -5px;
-    background: conic-gradient(
-      from 180deg,
-      rgba(60, 80, 110, 0.00),
-      rgba(100, 150, 200, 0.45),
-      rgba(180, 210, 240, 0.70),
-      rgba(100, 150, 200, 0.45),
-      rgba(60, 80, 110, 0.00)
-    );
-    filter: blur(1px);
-  }
-
-  /* ── Face plate: covers halo centre, emoji sits here ── */
-  .kickoff-badge-face {
-    position: absolute;
-    inset: 3px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 38% 36%, rgba(28, 34, 42, 1) 0%, rgba(16, 20, 26, 1) 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.25rem;
-    line-height: 1;
-    z-index: 2;
-    /* Glow lives here — safe, no impact on sibling transform animations */
-    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.12), inset 0 -1px 2px rgba(0, 0, 0, 0.55), 0 0 12px rgba(140, 185, 230, 0.50), 0 0 28px rgba(60, 130, 200, 0.25);
-    user-select: none;
-  }
-
-  /* ─── card body (unchanged below) ─── */
-  .next-card-meta {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    flex: 1;
-    min-width: 180px;
-  }
-
-  .next-card-countdown {
-    font-variant-numeric: tabular-nums;
-    font-size: var(--fs-xl);
-    font-weight: var(--fw-bold);
-    color: var(--clr-accent);
-    letter-spacing: 0.04em;
-    min-width: 120px;
-  }
-
-  .archive-label {
-    margin-bottom: var(--space-4);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--clr-text-faint);
-  }
-
-  .kickoff-list {
-    display: flex;
-    flex-direction: column;
-    border-top: 1px solid var(--clr-border);
-  }
-
-  .kickoff-row {
-    display: grid;
-    grid-template-columns: 110px 1fr 60px auto;
-    align-items: center;
-    gap: var(--space-4);
-    padding-block: var(--space-4);
-    border-bottom: 1px solid var(--clr-border);
-    transition: background var(--dur-fast) var(--ease-out);
-  }
-
-  .kickoff-row:hover {
-    background: var(--clr-bg-off);
-    padding-inline: var(--space-3);
-    border-radius: var(--radius-sm);
-    margin-inline: calc(-1 * var(--space-3));
-  }
-
-  .kickoff-title {
-    font-family: var(--font-mono);
-    font-size: var(--fs-sm);
-    line-height: 1.4;
-  }
-
-  .kickoff-dur {
-    text-align: right;
-  }
-
-  .placeholder-note {
-    margin-top: var(--space-6);
-    padding: var(--space-4);
-    border: 1px dashed var(--clr-border);
-    border-radius: var(--radius-sm);
-    text-align: center;
-  }
-
-  @media (max-width: 640px) {
-    .landing-name {
-      font-size: clamp(2.5rem, 12vw, var(--fs-3xl));
-    }
-
-    .kickoff-row {
-      grid-template-columns: 1fr auto;
-      grid-template-rows: auto auto;
-    }
-
-    .kickoff-date {
-      grid-column: 1;
-    }
-
-    .kickoff-dur {
-      display: none;
-    }
-
-    .kickoff-title {
-      grid-column: 1 / -1;
-    }
-
-    .next-card {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  }
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url('https://i.imgur.com/3S4HfHp.png');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.29;
+  animation: hero-breathe 10s ease-in-out infinite;
+  pointer-events: none;
+}
 </style>
 
 <script>
-  const handleText = '@leahbluewater';
-  const handleEl = document.getElementById('typewriter-handle');
-  let charIndex = 0;
+const handleText = '@leahbluewater';
+const handleEl = document.getElementById('typewriter-handle');
+let charIndex = 0;
 
-  function typeWriter() {
-    if (handleEl && charIndex < handleText.length) {
-      handleEl.textContent = handleText.substring(0, charIndex + 1);
-      charIndex++;
-      setTimeout(typeWriter, 80 + Math.random() * 40);
-    } else if (handleEl) {
-      handleEl.innerHTML = handleText + '<span class="cursor">|</span>';
-      const cursor = handleEl.querySelector('.cursor');
-      if (cursor) {
-        cursor.style.animation = 'blink 1s step-end infinite';
-        cursor.style.color = 'var(--clr-accent)';
-      }
-    }
+function typeWriter() {
+  if (handleEl && charIndex < handleText.length) {
+    handleEl.textContent = handleText.substring(0, charIndex + 1);
+    charIndex++;
+    setTimeout(typeWriter, 80);
   }
+}
+setTimeout(typeWriter, 800);
 
-  setTimeout(typeWriter, 800);
+const haloInner = document.querySelector('.kickoff-badge-halo:not(.kickoff-badge-halo--outer)');
+const haloOuter = document.querySelector('.kickoff-badge-halo--outer');
+const nextCard = document.querySelector('.next-card');
 
-  // ── Halo & Card Border rotation via RAF ──────────────────────────────────────
-  // CSS animation silently fails when a parent has `filter` or `transform`
-  // (compositor stacking context bug in Safari + Blink). RAF is immune.
-  const haloInner = document.querySelector('.kickoff-badge-halo:not(.kickoff-badge-halo--outer)');
-  const haloOuter = document.querySelector('.kickoff-badge-halo--outer');
-  const nextCard = document.querySelector('.next-card');
+let rafStart = null;
 
-  if (haloInner || haloOuter || nextCard) {
-    const INNER_MS = 18000; // 18s full rotation
-    const OUTER_MS = 27000; // 27s counter-rotation
-    const CARD_MS = 12000; // 12s card ring rotation
+function spinHalos(ts) {
+  if (rafStart === null) rafStart = ts;
+  const elapsed = ts - rafStart;
 
-    let rafStart = null; // Removed TS annotation
+  if (haloInner) haloInner.style.transform = `rotate(${elapsed / 50}deg)`;
+  if (haloOuter) haloOuter.style.transform = `rotate(${-elapsed / 70}deg)`;
+  if (nextCard) nextCard.style.setProperty('--ring-angle', `${elapsed / 40}deg`);
 
-    function spinHalos(ts) { // Removed TS annotation
-      if (rafStart === null) rafStart = ts;
-      const elapsed = ts - rafStart;
+  requestAnimationFrame(spinHalos);
+}
 
-      if (haloInner) {
-        haloInner.style.transform = `rotate(${(elapsed / INNER_MS) * 360}deg)`;
-      }
-      if (haloOuter) {
-        haloOuter.style.transform = `rotate(${-(elapsed / OUTER_MS) * 360}deg)`;
-      }
-      if (nextCard) {
-        // Drives the conic-gradient angle safely via JS
-        nextCard.style.setProperty('--ring-angle', `${(elapsed / CARD_MS) * 360}deg`);
-      }
-
-      requestAnimationFrame(spinHalos);
-    }
-
-    requestAnimationFrame(spinHalos);
-  }
-
-  function getCountdown() {
-    const now = new Date();
-    const watNow = new Date(now.getTime() + 60 * 60 * 1000);
-    const target = new Date(watNow);
-    target.setUTCHours(12, 0, 0, 0);
-    if (watNow >= target) target.setUTCDate(target.getUTCDate() + 1);
-    const diff = target.getTime() - watNow.getTime();
-    if (diff <= 0) return 'LIVE NOW';
-    const h = Math.floor(diff / 3600000);
-    const m = Math.floor((diff % 3600000) / 60000);
-    const s = Math.floor((diff % 60000) / 1000);
-    const pad = (n) => String(n).padStart(2, '0');
-    return `${pad(h)}:${pad(m)}:${pad(s)}`;
-  }
-
-  const cardCountdown = document.getElementById('next-card-countdown');
-  if (cardCountdown) {
-    const tick = () => {
-      cardCountdown.textContent = getCountdown();
-    };
-    tick();
-    setInterval(tick, 1000);
-  }
+requestAnimationFrame(spinHalos);
 </script>
