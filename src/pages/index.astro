@@ -254,9 +254,8 @@ const nextKickoff = {
     overflow: visible;
   }
 
-  /* Card-edge metallic ring border */
-  .next-card::before {
-    content: "";
+  /* Card-edge metallic ring border — moved from ::before to real element */
+  .next-card-ring {
     position: absolute;
     inset: -2px;
     border-radius: calc(var(--radius-md) + 2px);
@@ -275,6 +274,7 @@ const nextKickoff = {
     mask-composite: exclude;
     pointer-events: none;
     filter: drop-shadow(0 0 8px rgba(180,200,220,0.4)) drop-shadow(0 0 20px rgba(0,119,182,0.15));
+    animation: spin-ring 4s linear infinite;
   }
 
   /* ═══════════════════════════════════════════ KICKOFF BADGE — premium metallic halo ═══════════════════════════════════════════ */
