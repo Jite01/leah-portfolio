@@ -71,15 +71,15 @@ const nextKickoff = {
         <p class="section-sub mono-label">Daily X Space · 10AM UTC · 5AM EST</p>
       </header>
 
-      <div class="next-card" aria-label="Next Kickoff details">
-        <!-- ═══ Orbiting comet ring ═══ -->
+      <div class="next-card" aria-label="Next Kickoff details" id="next-card">
+        <!-- ═══ Rotating metallic ring ═══ -->
         <div class="next-card-ring" aria-hidden="true">
           <div class="next-card-ring-halo"></div>
           <div class="next-card-ring-face"></div>
         </div>
 
-        <!-- ═══ Premium metallic halo badge ═══ -->
-        <div class="kickoff-badge" aria-hidden="true">
+        <!-- ═══ Premium metallic halo badge — orbits the card perimeter via RAF ═══ -->
+        <div class="kickoff-badge" aria-hidden="true" id="kickoff-badge">
           <div class="kickoff-badge-halo"></div>
           <div class="kickoff-badge-halo kickoff-badge-halo--outer"></div>
           <div class="kickoff-badge-face">🏈</div>
@@ -253,26 +253,22 @@ const nextKickoff = {
     gap: var(--space-6);
     flex-wrap: wrap;
     padding: var(--space-5) var(--space-6);
-    padding-top: calc(var(--space-5) + 18px); /* room for badge */
+    padding-top: calc(var(--space-5) + 18px);
     border-radius: var(--radius-md);
     background: var(--clr-accent-wash);
     margin-bottom: var(--space-8);
+    /* overflow must stay visible so the badge can travel outside all four edges */
     overflow: visible;
   }
 
-  /* ── Orbiting comet ring ── */
-  /* The halo is a conic-gradient with a narrow bright arc and a long comet tail,
-     rest transparent. The face-plate (inset 2px) covers the centre so only the
-     2px perimeter ring is visible. As the halo rotates, the bright arc appears
-     to physically travel around the card border — 18 s full orbit via RAF. */
+  /* ── Rotating metallic ring (mask-free face-plate technique) ── */
   .next-card-ring {
     position: absolute;
     inset: -2px;
     border-radius: calc(var(--radius-md) + 2px);
     overflow: hidden;
     pointer-events: none;
-    /* dim ambient glow so the comet head pops */
-    filter: drop-shadow(0 0 6px rgba(140, 185, 230, 0.25));
+    filter: drop-shadow(0 0 8px rgba(180,200,220,0.4)) drop-shadow(0 0 20px rgba(0,119,182,0.15));
     z-index: 0;
   }
 
@@ -280,19 +276,14 @@ const nextKickoff = {
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    /* Comet head at ~357-360 deg, tapering tail back through ~60 deg, rest transparent.
-       RAF rotates this every 18 s so the bright head physically chases around the edge. */
     background: conic-gradient(
       from 0deg,
-      transparent 0deg,
-      transparent 280deg,
-      rgba(100, 140, 180, 0.08) 295deg,
-      rgba(150, 185, 220, 0.20) 310deg,
-      rgba(195, 215, 235, 0.45) 325deg,
-      rgba(220, 235, 250, 0.70) 340deg,
-      rgba(240, 248, 255, 0.90) 352deg,
-      rgba(255, 255, 255, 1.00) 357deg,
-      rgba(240, 248, 255, 0.90) 360deg
+      rgba(180,190,200,0.3),
+      rgba(220,230,240,0.8),
+      rgba(160,170,180,0.4),
+      rgba(200,210,220,0.9),
+      rgba(140,150,160,0.3),
+      rgba(180,190,200,0.3)
     );
   }
 
@@ -304,23 +295,18 @@ const nextKickoff = {
     z-index: 1;
   }
 
-  /* ═══════════════════════════════════════════ KICKOFF BADGE — premium metallic halo ═══════════════════════════════════════════ */
+  /* ═══════════════════════════════════════════ KICKOFF BADGE ═══════════════════════════════════════════ */
+  /* CSS sets the initial position (top-centre, pre-JS fallback).
+     RAF immediately overrides left/top with orbit coordinates and clears transform. */
   .kickoff-badge {
     position: absolute;
     top: -24px;
-    left: 50%;
-    transform: translateX(-50%);
+    left: calc(50% - 24px);
     width: 48px;
     height: 48px;
     z-index: 10;
-    /* NO filter here — filter on a parent breaks child transform animations in Safari and Blink. Glow lives on .kickoff-badge-face instead. */
+    /* NO filter here — filter on a parent breaks child transform animations in Safari + Blink. */
   }
-
-  /* Mask-free ring technique:
-   - .kickoff-badge-halo → full conic-gradient circle, rotates freely
-   - .kickoff-badge-face → z-index:2, inset 3px, covers the centre
-   Only the 3px ring around the face edge is visible. No mask = no freeze.
-  */
 
   /* ── Inner ring (RAF-rotated) ── */
   .kickoff-badge-halo {
@@ -366,12 +352,15 @@ const nextKickoff = {
     font-size: 1.25rem;
     line-height: 1;
     z-index: 2;
-    /* Glow lives here — safe, no impact on sibling transform animations */
-    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.12), inset 0 -1px 2px rgba(0, 0, 0, 0.55), 0 0 12px rgba(140, 185, 230, 0.50), 0 0 28px rgba(60, 130, 200, 0.25);
+    box-shadow:
+      inset 0 1px 2px rgba(255, 255, 255, 0.12),
+      inset 0 -1px 2px rgba(0, 0, 0, 0.55),
+      0 0 12px rgba(140, 185, 230, 0.50),
+      0 0 28px rgba(60, 130, 200, 0.25);
     user-select: none;
   }
 
-  /* ─── card body (unchanged below) ─── */
+  /* ─── card body ─── */
   .next-card-meta {
     display: flex;
     flex-direction: column;
@@ -488,61 +477,95 @@ const nextKickoff = {
 
   setTimeout(typeWriter, 800);
 
-  // ── Halo & Card Border rotation via RAF ──────────────────────────────────────
-  // CSS animation silently fails when a parent has `filter` or `transform`
-  // (compositor stacking context bug in Safari + Blink). RAF is immune.
+  // ── Single RAF loop drives everything ───────────────────────────────────────
   const haloInner = document.querySelector('.kickoff-badge-halo:not(.kickoff-badge-halo--outer)');
   const haloOuter = document.querySelector('.kickoff-badge-halo--outer');
-  const cardRing = document.querySelector('.next-card-ring-halo');
+  const cardRing  = document.querySelector('.next-card-ring-halo');
+  const badge     = document.getElementById('kickoff-badge');
+  const card      = document.getElementById('next-card');
 
-  if (haloInner || haloOuter || cardRing) {
-    const INNER_MS = 18000; // 18s full rotation
-    const OUTER_MS = 27000; // 27s counter-rotation
-    const CARD_MS  = 18000; // 18s comet orbit around card
+  const INNER_MS  = 18000; // badge inner halo spin period
+  const OUTER_MS  = 27000; // badge outer halo counter-spin period
+  const CARD_MS   = 18000; // card border ring spin period
+  const ORBIT_MS  = 18000; // badge orbit period around card perimeter
 
-    let rafStart = null;
+  // The badge is 48×48 px. We position its centre on the card perimeter,
+  // so top/left = centreX − 24, centreY − 24.
+  const BADGE_HALF = 24;
 
-    function spinHalos(ts) {
-      if (rafStart === null) rafStart = ts;
-      const elapsed = ts - rafStart;
+  let rafStart = null;
 
-      if (haloInner) {
-        haloInner.style.transform = `rotate(${(elapsed / INNER_MS) * 360}deg)`;
+  function tick(ts) {
+    if (rafStart === null) rafStart = ts;
+    const elapsed = ts - rafStart;
+
+    // ── Badge halo spins ──
+    if (haloInner) haloInner.style.transform = `rotate(${(elapsed / INNER_MS) * 360}deg)`;
+    if (haloOuter) haloOuter.style.transform = `rotate(${-(elapsed / OUTER_MS) * 360}deg)`;
+
+    // ── Card border ring spin ──
+    if (cardRing) cardRing.style.transform = `rotate(${(elapsed / CARD_MS) * 360}deg)`;
+
+    // ── Badge orbit: centre travels clockwise around the card's perimeter ──
+    if (badge && card) {
+      const w = card.offsetWidth;
+      const h = card.offsetHeight;
+
+      // progress 0→1 per orbit; dist = linear distance along perimeter
+      const progress  = (elapsed % ORBIT_MS) / ORBIT_MS;
+      const perimeter = 2 * (w + h);
+      const dist      = progress * perimeter;
+
+      let cx, cy; // badge centre in card-local coords
+
+      if (dist <= w) {
+        // Top edge: left → right
+        cx = dist;
+        cy = 0;
+      } else if (dist <= w + h) {
+        // Right edge: top → bottom
+        cx = w;
+        cy = dist - w;
+      } else if (dist <= 2 * w + h) {
+        // Bottom edge: right → left
+        cx = w - (dist - w - h);
+        cy = h;
+      } else {
+        // Left edge: bottom → top
+        cx = 0;
+        cy = h - (dist - 2 * w - h);
       }
-      if (haloOuter) {
-        haloOuter.style.transform = `rotate(${-(elapsed / OUTER_MS) * 360}deg)`;
-      }
-      if (cardRing) {
-        cardRing.style.transform = `rotate(${(elapsed / CARD_MS) * 360}deg)`;
-      }
 
-      requestAnimationFrame(spinHalos);
+      badge.style.left      = `${cx - BADGE_HALF}px`;
+      badge.style.top       = `${cy - BADGE_HALF}px`;
+      badge.style.transform = 'none'; // clear CSS translateX(-50%) fallback
     }
 
-    requestAnimationFrame(spinHalos);
+    requestAnimationFrame(tick);
   }
 
+  requestAnimationFrame(tick);
+
+  // ── Countdown ────────────────────────────────────────────────────────────────
   function getCountdown() {
-    const now = new Date();
+    const now    = new Date();
     const watNow = new Date(now.getTime() + 60 * 60 * 1000);
     const target = new Date(watNow);
     target.setUTCHours(12, 0, 0, 0);
     if (watNow >= target) target.setUTCDate(target.getUTCDate() + 1);
     const diff = target.getTime() - watNow.getTime();
     if (diff <= 0) return 'LIVE NOW';
-    const h = Math.floor(diff / 3600000);
-    const m = Math.floor((diff % 3600000) / 60000);
-    const s = Math.floor((diff % 60000) / 1000);
+    const h   = Math.floor(diff / 3600000);
+    const m   = Math.floor((diff % 3600000) / 60000);
+    const s   = Math.floor((diff % 60000) / 1000);
     const pad = (n) => String(n).padStart(2, '0');
     return `${pad(h)}:${pad(m)}:${pad(s)}`;
   }
 
   const cardCountdown = document.getElementById('next-card-countdown');
   if (cardCountdown) {
-    const tick = () => {
-      cardCountdown.textContent = getCountdown();
-    };
-    tick();
-    setInterval(tick, 1000);
+    const tickCd = () => { cardCountdown.textContent = getCountdown(); };
+    tickCd();
+    setInterval(tickCd, 1000);
   }
 </script>
