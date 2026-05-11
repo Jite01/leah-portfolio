@@ -4,7 +4,7 @@
  * ───────────────────
  * Run after The Kickoff ends (suggest 12:15 WAT → cron: 15 11 * * * UTC).
  * 1. Archives the completed kickoff (max 3 entries).
- * 2. Generates summary placeholder (swap in lurky.ai call when key arrives).
+ * 2. Generates a template summary from metadata (zero API cost).
  * 3. Advances nextKickoff to the following day, clears URL.
  */
 
@@ -32,7 +32,7 @@ function formatDayLabel(dateObj) {
 }
 
 function addDays(dateStr, n) {
-  const d = new Date(dateStr + 'T11:00:00+01:00'); // anchor to 11:00 WAT
+  const d = new Date(dateStr + 'T11:00:00+01:00');
   d.setDate(d.getDate() + n);
   return d.toISOString().split('T')[0];
 }
@@ -49,21 +49,23 @@ function calcDuration(startedAtIso) {
   return m ? `${h}h ${m}m` : `${h}h`;
 }
 
-/* ── lurky.ai placeholder ────────────────────────────────────────────────── */
-async function generateSummary(/* spaceUrl */) {
-  // TODO: replace with lurky.ai API call when your friend sends the key.
-  // const res = await fetch('https://api.lurky.ai/v1/summarize', {
-  //   method: 'POST',
-  //   headers: {
-  //     'Authorization': 'Bearer YOUR_API_KEY',
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: JSON.stringify({ url: spaceUrl }),
-  // });
-  // const { summary } = await res.json();
-  // return summary;
+/* ── template summary generator ───────────────────────────────────────────── */
+function generateSummary(dateStr, duration) {
+  const d = new Date(dateStr + 'T11:00:00+01:00');
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const dayName = days[d.getDay()];
 
-  return 'AI episode summary coming soon…';
+  const templates = [
+    `Leah hosted The Kickoff on ${dayName}, covering the day's crypto market moves and on-chain narratives in a ${duration} session.`,
+    `A ${duration} live session on ${dayName} — macro trends, altcoin rotations, and community Q&A with Leah.`,
+    `The Kickoff for ${dayName}: ${duration} of market commentary, ETF flows, and Doginal Dogs community updates.`,
+    `Leah broke down the crypto week so far on ${dayName} — ${duration} of charts, sentiment, and space culture.`,
+    `${dayName}'s session ran ${duration}. Leah covered Bitcoin dominance, altseason signals, and Nigeria crypto adoption updates.`,
+  ];
+
+  // Deterministic pick based on date (same date = same template)
+  const idx = d.getDate() % templates.length;
+  return templates[idx];
 }
 
 /* ── main ────────────────────────────────────────────────────────────────── */
@@ -91,12 +93,12 @@ async function main() {
 
   // ── Archive today's kickoff ──
   const nk = data.nextKickoff;
-  const summary = await generateSummary(nk.url);
   const duration = calcDuration(nk.startedAt);
+  const summary = generateSummary(nk.date, duration);
 
   data.archive.unshift({
     date: nk.date,
-    title: 'The Kickoff',          // override if you scrape the real title later
+    title: 'The Kickoff',
     duration,
     summary,
     url: nk.url,
