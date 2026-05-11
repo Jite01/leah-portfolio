@@ -361,6 +361,15 @@ const nextKickoff = {
   }
 
   /* ─── card body ─── */
+  /* position: relative + z-index: 2 lifts these above .next-card-ring (z-index: 0)
+     which otherwise creates a stacking context that buries non-positioned flex items */
+  .next-card-meta,
+  .next-card-countdown,
+  .next-card .btn {
+    position: relative;
+    z-index: 2;
+  }
+
   .next-card-meta {
     display: flex;
     flex-direction: column;
