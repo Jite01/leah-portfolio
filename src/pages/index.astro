@@ -72,6 +72,12 @@ const nextKickoff = {
       </header>
 
       <div class="next-card" aria-label="Next Kickoff details">
+        <!-- ═══ Rotating metallic ring ═══ -->
+        <div class="next-card-ring" aria-hidden="true">
+          <div class="next-card-ring-halo"></div>
+          <div class="next-card-ring-face"></div>
+        </div>
+
         <!-- ═══ Premium metallic halo badge ═══ -->
         <div class="kickoff-badge" aria-hidden="true">
           <div class="kickoff-badge-halo"></div>
@@ -79,33 +85,22 @@ const nextKickoff = {
           <div class="kickoff-badge-face">🏈</div>
         </div>
 
-        <div class="next-card" aria-label="Next Kickoff details">
-  <div class="next-card-ring" aria-hidden="true"></div>
+        <div class="next-card-meta">
+          <span class="mono-label-bold text-accent">NEXT</span>
+          <span class="mono-label">{nextKickoff.dayLabel}</span>
+          <span class="mono-label">{nextKickoff.wat} · {nextKickoff.cst}</span>
+        </div>
 
-  <!-- ═══ Premium metallic halo badge ═══ -->
-  <div class="kickoff-badge" aria-hidden="true">
-    <div class="kickoff-badge-halo"></div>
-    <div class="kickoff-badge-halo kickoff-badge-halo--outer"></div>
-    <div class="kickoff-badge-face">🏈</div>
-  </div>
+        <div class="next-card-countdown mono-label" id="next-card-countdown" aria-live="polite">
+          --:--:--
+        </div>
 
-  <div class="next-card-meta">
-    <span class="mono-label-bold text-accent">NEXT</span>
-    <span class="mono-label">{nextKickoff.dayLabel}</span>
-    <span class="mono-label">{nextKickoff.wat} · {nextKickoff.cst}</span>
-  </div>
-
-  <div class="next-card-countdown mono-label" id="next-card-countdown" aria-live="polite">
-    --:--:--
-  </div>
-
-  {nextKickoff.url ? (
-    <a href={nextKickoff.url} target="_blank" rel="noopener noreferrer" class="btn btn-primary">Join Space</a>
-  ) : (
-    <span class="btn btn-ghost" aria-disabled="true">Not Yet Live</span>
-  )}
-</div>
-
+        {nextKickoff.url ? (
+          <a href={nextKickoff.url} target="_blank" rel="noopener noreferrer" class="btn btn-primary">Join Space</a>
+        ) : (
+          <span class="btn btn-ghost" aria-disabled="true">Not Yet Live</span>
+        )}
+      </div>
 
       <div class="kickoff-archive" aria-label="Kickoff archive">
         <h3 class="archive-label mono-label-bold">Archive</h3>
@@ -265,35 +260,38 @@ const nextKickoff = {
     overflow: visible;
   }
 
-  /* Card-edge metallic ring border — moved from ::before to real element */
+  /* ── Rotating metallic ring (mask-free face-plate technique) ── */
+  .next-card-ring {
+    position: absolute;
+    inset: -2px;
+    border-radius: calc(var(--radius-md) + 2px);
+    overflow: hidden;
+    pointer-events: none;
+    filter: drop-shadow(0 0 8px rgba(180,200,220,0.4)) drop-shadow(0 0 20px rgba(0,119,182,0.15));
+    z-index: 0;
+  }
 
-.next-card-ring {
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  width: auto;
-  height: auto;
-  border-radius: calc(var(--radius-md) + 2px);
-  padding: 2px;
-  background: conic-gradient(
-    from var(--ring-angle, 0deg),
-    rgba(180,190,200,0.3),
-    rgba(220,230,240,0.8),
-    rgba(160,170,180,0.4),
-    rgba(200,210,220,0.9),
-    rgba(140,150,160,0.3),
-    rgba(180,190,200,0.3)
-  );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-  filter: drop-shadow(0 0 8px rgba(180,200,220,0.4)) drop-shadow(0 0 20px rgba(0,119,182,0.15));
-  animation: spin-ring 4s linear infinite;
-}
+  .next-card-ring-halo {
+    position: absolute;
+    inset: -10px;
+    background: conic-gradient(
+      from 0deg,
+      rgba(180,190,200,0.3),
+      rgba(220,230,240,0.8),
+      rgba(160,170,180,0.4),
+      rgba(200,210,220,0.9),
+      rgba(140,150,160,0.3),
+      rgba(180,190,200,0.3)
+    );
+  }
 
+  .next-card-ring-face {
+    position: absolute;
+    inset: 2px;
+    border-radius: var(--radius-md);
+    background: var(--clr-accent-wash);
+    z-index: 1;
+  }
 
   /* ═══════════════════════════════════════════ KICKOFF BADGE — premium metallic halo ═══════════════════════════════════════════ */
   .kickoff-badge {
@@ -484,16 +482,16 @@ const nextKickoff = {
   // (compositor stacking context bug in Safari + Blink). RAF is immune.
   const haloInner = document.querySelector('.kickoff-badge-halo:not(.kickoff-badge-halo--outer)');
   const haloOuter = document.querySelector('.kickoff-badge-halo--outer');
-  const nextCard = document.querySelector('.next-card');
+  const cardRing = document.querySelector('.next-card-ring-halo');
 
-  if (haloInner || haloOuter || nextCard) {
+  if (haloInner || haloOuter || cardRing) {
     const INNER_MS = 18000; // 18s full rotation
     const OUTER_MS = 27000; // 27s counter-rotation
     const CARD_MS = 12000; // 12s card ring rotation
 
-    let rafStart = null; // Removed TS annotation
+    let rafStart = null;
 
-    function spinHalos(ts) { // Removed TS annotation
+    function spinHalos(ts) {
       if (rafStart === null) rafStart = ts;
       const elapsed = ts - rafStart;
 
@@ -503,9 +501,8 @@ const nextKickoff = {
       if (haloOuter) {
         haloOuter.style.transform = `rotate(${-(elapsed / OUTER_MS) * 360}deg)`;
       }
-      if (nextCard) {
-        // Drives the conic-gradient angle safely via JS
-        nextCard.style.setProperty('--ring-angle', `${(elapsed / CARD_MS) * 360}deg`);
+      if (cardRing) {
+        cardRing.style.transform = `rotate(${(elapsed / CARD_MS) * 360}deg)`;
       }
 
       requestAnimationFrame(spinHalos);
