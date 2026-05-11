@@ -3,35 +3,10 @@ import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Ticker from '../components/Ticker.astro';
 import WaterCanvas from '../components/WaterCanvas.astro';
+import kickoffData from '../data/kickoffs.json';
 
-const kickoffs = [
-  {
-    date: '2025-01-10',
-    title: 'Bitcoin ETF Inflows & What They Mean for Altseason',
-    duration: '58m',
-    url: 'https://twitter.com/i/spaces/placeholder-1',
-  },
-  {
-    date: '2025-01-09',
-    title: 'DOGE + Doginals: The Comeback Nobody Saw Coming',
-    duration: '1h 12m',
-    url: 'https://twitter.com/i/spaces/placeholder-2',
-  },
-  {
-    date: '2025-01-08',
-    title: 'Nigeria Crypto Adoption: State of Play 2025',
-    duration: '45m',
-    url: 'https://twitter.com/i/spaces/placeholder-3',
-  },
-];
-
-const nextKickoff = {
-  label: 'Next Kickoff',
-  dayLabel: 'Mon, 13 Jan 2025',
-  wat: '12:00 PM WAT',
-  cst: '6:00 AM CST',
-  url: null,
-};
+const { nextKickoff, archive } = kickoffData;
+const targetIso = `${nextKickoff.date}T11:00:00+01:00`;
 ---
 
 <Layout
@@ -68,10 +43,16 @@ const nextKickoff = {
     <div class="container">
       <header class="section-header">
         <h2 class="section-heading" id="kickoff-heading">The Kickoff</h2>
-        <p class="section-sub mono-label">Daily X Space · 10AM UTC · 5AM EST</p>
+        <p class="section-sub mono-label">Daily X Space · 10AM UTC · 5AM EST · 4AM CST</p>
       </header>
 
-      <div class="next-card" aria-label="Next Kickoff details" id="next-card">
+      <div
+        class="next-card"
+        aria-label="Next Kickoff details"
+        id="next-card"
+        data-target={targetIso}
+        data-has-url={nextKickoff.url ? 'true' : 'false'}
+      >
         <!-- ═══ Rotating metallic ring ═══ -->
         <div class="next-card-ring" aria-hidden="true">
           <div class="next-card-ring-halo"></div>
@@ -88,7 +69,7 @@ const nextKickoff = {
         <div class="next-card-meta">
           <span class="mono-label-bold text-accent">NEXT</span>
           <span class="mono-label">{nextKickoff.dayLabel}</span>
-          <span class="mono-label">{nextKickoff.wat} · {nextKickoff.cst}</span>
+          <span class="mono-label">{nextKickoff.utc} · {nextKickoff.est} · {nextKickoff.cst}</span>
         </div>
 
         <div class="next-card-countdown mono-label" id="next-card-countdown" aria-live="polite">
@@ -98,33 +79,25 @@ const nextKickoff = {
         {nextKickoff.url ? (
           <a href={nextKickoff.url} target="_blank" rel="noopener noreferrer" class="btn btn-primary">Join Space</a>
         ) : (
-          <span class="btn btn-ghost" aria-disabled="true">Not Yet Live</span>
+          <span class="btn btn-ghost" aria-disabled="true">Waiting...</span>
         )}
       </div>
 
       <div class="kickoff-archive" aria-label="Kickoff archive">
         <h3 class="archive-label mono-label-bold">Archive</h3>
         <ul class="kickoff-list" role="list">
-          {kickoffs.map(ep => (
+          {archive.map(ep => (
             <li class="kickoff-row">
               <span class="kickoff-date mono-label text-muted">{ep.date}</span>
               <span class="kickoff-title">{ep.title}</span>
               <span class="kickoff-dur mono-label text-muted">{ep.duration}</span>
-              <a
-                href={ep.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="link-accent"
-                aria-label={`Listen to ${ep.title} on X`}
-              >
-                Listen ↗
-              </a>
+              <span class="kickoff-summary mono-label text-muted">{ep.summary}</span>
             </li>
           ))}
         </ul>
       </div>
 
-      <p class="placeholder-note mono-label text-muted">✦ AI episode summaries via lurky.ai — coming soon</p>
+      <p class="placeholder-note mono-label text-muted">✦ AI episode summaries via lurky.ai</p>
     </div>
   </section>
 </Layout>
@@ -257,7 +230,6 @@ const nextKickoff = {
     border-radius: var(--radius-md);
     background: var(--clr-accent-wash);
     margin-bottom: var(--space-8);
-    /* overflow must stay visible so the badge can travel outside all four edges */
     overflow: visible;
   }
 
@@ -296,8 +268,6 @@ const nextKickoff = {
   }
 
   /* ═══════════════════════════════════════════ KICKOFF BADGE ═══════════════════════════════════════════ */
-  /* CSS sets the initial position (top-centre, pre-JS fallback).
-     RAF immediately overrides left/top with orbit coordinates and clears transform. */
   .kickoff-badge {
     position: absolute;
     top: -24px;
@@ -305,7 +275,6 @@ const nextKickoff = {
     width: 48px;
     height: 48px;
     z-index: 10;
-    /* NO filter here — filter on a parent breaks child transform animations in Safari + Blink. */
   }
 
   /* ── Inner ring (RAF-rotated) ── */
@@ -361,8 +330,6 @@ const nextKickoff = {
   }
 
   /* ─── card body ─── */
-  /* position: relative + z-index: 2 lifts these above .next-card-ring (z-index: 0)
-     which otherwise creates a stacking context that buries non-positioned flex items */
   .next-card-meta,
   .next-card-countdown,
   .next-card .btn {
@@ -427,6 +394,14 @@ const nextKickoff = {
     text-align: right;
   }
 
+  .kickoff-summary {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    color: var(--clr-text-muted);
+    line-height: 1.4;
+    max-width: 260px;
+  }
+
   .placeholder-note {
     margin-top: var(--space-6);
     padding: var(--space-4);
@@ -442,7 +417,8 @@ const nextKickoff = {
 
     .kickoff-row {
       grid-template-columns: 1fr auto;
-      grid-template-rows: auto auto;
+      grid-template-rows: auto auto auto;
+      gap: var(--space-2);
     }
 
     .kickoff-date {
@@ -455,6 +431,11 @@ const nextKickoff = {
 
     .kickoff-title {
       grid-column: 1 / -1;
+    }
+
+    .kickoff-summary {
+      grid-column: 1 / -1;
+      max-width: none;
     }
 
     .next-card {
@@ -493,13 +474,11 @@ const nextKickoff = {
   const badge     = document.getElementById('kickoff-badge');
   const card      = document.getElementById('next-card');
 
-  const INNER_MS  = 18000; // badge inner halo spin period
-  const OUTER_MS  = 27000; // badge outer halo counter-spin period
-  const CARD_MS   = 18000; // card border ring spin period
-  const ORBIT_MS  = 18000; // badge orbit period around card perimeter
+  const INNER_MS  = 18000;
+  const OUTER_MS  = 27000;
+  const CARD_MS   = 18000;
+  const ORBIT_MS  = 18000;
 
-  // The badge is 48×48 px. We position its centre on the card perimeter,
-  // so top/left = centreX − 24, centreY − 24.
   const BADGE_HALF = 24;
 
   let rafStart = null;
@@ -508,46 +487,36 @@ const nextKickoff = {
     if (rafStart === null) rafStart = ts;
     const elapsed = ts - rafStart;
 
-    // ── Badge halo spins ──
     if (haloInner) haloInner.style.transform = `rotate(${(elapsed / INNER_MS) * 360}deg)`;
     if (haloOuter) haloOuter.style.transform = `rotate(${-(elapsed / OUTER_MS) * 360}deg)`;
+    if (cardRing)  cardRing.style.transform  = `rotate(${(elapsed / CARD_MS) * 360}deg)`;
 
-    // ── Card border ring spin ──
-    if (cardRing) cardRing.style.transform = `rotate(${(elapsed / CARD_MS) * 360}deg)`;
-
-    // ── Badge orbit: centre travels clockwise around the card's perimeter ──
     if (badge && card) {
       const w = card.offsetWidth;
       const h = card.offsetHeight;
-
-      // progress 0→1 per orbit; dist = linear distance along perimeter
       const progress  = (elapsed % ORBIT_MS) / ORBIT_MS;
       const perimeter = 2 * (w + h);
       const dist      = progress * perimeter;
 
-      let cx, cy; // badge centre in card-local coords
+      let cx, cy;
 
       if (dist <= w) {
-        // Top edge: left → right
         cx = dist;
         cy = 0;
       } else if (dist <= w + h) {
-        // Right edge: top → bottom
         cx = w;
         cy = dist - w;
       } else if (dist <= 2 * w + h) {
-        // Bottom edge: right → left
         cx = w - (dist - w - h);
         cy = h;
       } else {
-        // Left edge: bottom → top
         cx = 0;
         cy = h - (dist - 2 * w - h);
       }
 
       badge.style.left      = `${cx - BADGE_HALF}px`;
       badge.style.top       = `${cy - BADGE_HALF}px`;
-      badge.style.transform = 'none'; // clear CSS translateX(-50%) fallback
+      badge.style.transform = 'none';
     }
 
     requestAnimationFrame(tick);
@@ -556,14 +525,21 @@ const nextKickoff = {
   requestAnimationFrame(tick);
 
   // ── Countdown ────────────────────────────────────────────────────────────────
+  const cardEl       = document.getElementById('next-card');
+  const targetIso    = cardEl?.dataset?.target;
+  const hasUrl       = cardEl?.dataset?.hasUrl === 'true';
+  const countdownEl  = document.getElementById('next-card-countdown');
+
   function getCountdown() {
+    if (!targetIso) return '--:--:--';
     const now    = new Date();
-    const watNow = new Date(now.getTime() + 60 * 60 * 1000);
-    const target = new Date(watNow);
-    target.setUTCHours(12, 0, 0, 0);
-    if (watNow >= target) target.setUTCDate(target.getUTCDate() + 1);
-    const diff = target.getTime() - watNow.getTime();
-    if (diff <= 0) return 'LIVE NOW';
+    const target = new Date(targetIso);
+    const diff   = target - now;
+
+    if (diff <= 0) {
+      return hasUrl ? 'LIVE NOW' : 'STARTING SOON';
+    }
+
     const h   = Math.floor(diff / 3600000);
     const m   = Math.floor((diff % 3600000) / 60000);
     const s   = Math.floor((diff % 60000) / 1000);
@@ -571,9 +547,8 @@ const nextKickoff = {
     return `${pad(h)}:${pad(m)}:${pad(s)}`;
   }
 
-  const cardCountdown = document.getElementById('next-card-countdown');
-  if (cardCountdown) {
-    const tickCd = () => { cardCountdown.textContent = getCountdown(); };
+  if (countdownEl) {
+    const tickCd = () => { countdownEl.textContent = getCountdown(); };
     tickCd();
     setInterval(tickCd, 1000);
   }
