@@ -569,4 +569,16 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
       scroll-behavior: auto !important;
     }
   }
+
+@property --ring-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes spin-ring {
+  to { --ring-angle: 360deg; }
+}
+
+
 </style>
