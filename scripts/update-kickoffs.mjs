@@ -6,6 +6,7 @@
  * 1. Archives the completed kickoff (max 3 entries).
  * 2. Generates a template summary from metadata (zero API cost).
  * 3. Advances nextKickoff to the following day, clears URL.
+ *    ── Skips Sunday: no Kickoff on Sundays.
  */
 
 import fs from 'fs';
@@ -31,9 +32,15 @@ function formatDayLabel(dateObj) {
   return `${days[dateObj.getDay()]}, ${dateObj.getDate()} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
 }
 
-function addDays(dateStr, n) {
+function getNextKickoffDate(dateStr) {
   const d = new Date(dateStr + 'T11:00:00+01:00');
-  d.setDate(d.getDate() + n);
+  d.setDate(d.getDate() + 1);
+
+  // Skip Sunday (0) — no Kickoff on Sundays
+  if (d.getDay() === 0) {
+    d.setDate(d.getDate() + 1);
+  }
+
   return d.toISOString().split('T')[0];
 }
 
@@ -63,7 +70,6 @@ function generateSummary(dateStr, duration) {
     `${dayName}'s session ran ${duration}. Leah covered Bitcoin dominance, altseason signals, and Nigeria crypto adoption updates.`,
   ];
 
-  // Deterministic pick based on date (same date = same template)
   const idx = d.getDate() % templates.length;
   return templates[idx];
 }
@@ -79,7 +85,7 @@ async function main() {
     const nowWat   = new Date(new Date().toLocaleString('en-US', { timeZone: 'Africa/Lagos' }));
 
     if (nowWat > nextDate) {
-      const tomorrowStr = addDays(data.nextKickoff.date, 1);
+      const tomorrowStr = getNextKickoffDate(data.nextKickoff.date);
       data.nextKickoff.date     = tomorrowStr;
       data.nextKickoff.dayLabel = formatDayLabel(new Date(tomorrowStr + 'T11:00:00+01:00'));
       data.nextKickoff.startedAt = null;
@@ -109,8 +115,8 @@ async function main() {
     data.archive = data.archive.slice(0, 3);
   }
 
-  // ── Advance to next day ──
-  const nextDateStr = addDays(nk.date, 1);
+  // ── Advance to next day (skipping Sunday) ──
+  const nextDateStr = getNextKickoffDate(nk.date);
   const nextDateObj = new Date(nextDateStr + 'T11:00:00+01:00');
 
   data.nextKickoff = {
