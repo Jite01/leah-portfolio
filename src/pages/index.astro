@@ -79,22 +79,33 @@ const nextKickoff = {
           <div class="kickoff-badge-face">🏈</div>
         </div>
 
-        <div class="next-card-meta">
-          <span class="mono-label-bold text-accent">NEXT</span>
-          <span class="mono-label">{nextKickoff.dayLabel}</span>
-          <span class="mono-label">{nextKickoff.wat} · {nextKickoff.cst}</span>
-        </div>
+        <div class="next-card" aria-label="Next Kickoff details">
+  <div class="next-card-ring" aria-hidden="true"></div>
 
-        <div class="next-card-countdown mono-label" id="next-card-countdown" aria-live="polite">
-          --:--:--
-        </div>
+  <!-- ═══ Premium metallic halo badge ═══ -->
+  <div class="kickoff-badge" aria-hidden="true">
+    <div class="kickoff-badge-halo"></div>
+    <div class="kickoff-badge-halo kickoff-badge-halo--outer"></div>
+    <div class="kickoff-badge-face">🏈</div>
+  </div>
 
-        {nextKickoff.url ? (
-          <a href={nextKickoff.url} target="_blank" rel="noopener noreferrer" class="btn btn-primary">Join Space</a>
-        ) : (
-          <span class="btn btn-ghost" aria-disabled="true">Not Yet Live</span>
-        )}
-      </div>
+  <div class="next-card-meta">
+    <span class="mono-label-bold text-accent">NEXT</span>
+    <span class="mono-label">{nextKickoff.dayLabel}</span>
+    <span class="mono-label">{nextKickoff.wat} · {nextKickoff.cst}</span>
+  </div>
+
+  <div class="next-card-countdown mono-label" id="next-card-countdown" aria-live="polite">
+    --:--:--
+  </div>
+
+  {nextKickoff.url ? (
+    <a href={nextKickoff.url} target="_blank" rel="noopener noreferrer" class="btn btn-primary">Join Space</a>
+  ) : (
+    <span class="btn btn-ghost" aria-disabled="true">Not Yet Live</span>
+  )}
+</div>
+
 
       <div class="kickoff-archive" aria-label="Kickoff archive">
         <h3 class="archive-label mono-label-bold">Archive</h3>
