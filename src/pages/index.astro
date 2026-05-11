@@ -273,7 +273,8 @@ const nextKickoff = {
 
   .next-card-ring-halo {
     position: absolute;
-    inset: -10px;
+    inset: 0;
+    border-radius: inherit;
     background: conic-gradient(
       from 0deg,
       rgba(180,190,200,0.3),
@@ -487,7 +488,7 @@ const nextKickoff = {
   if (haloInner || haloOuter || cardRing) {
     const INNER_MS = 18000; // 18s full rotation
     const OUTER_MS = 27000; // 27s counter-rotation
-    const CARD_MS = 12000; // 12s card ring rotation
+    const CARD_MS = 18000; // 18s card ring rotation
 
     let rafStart = null;
 
