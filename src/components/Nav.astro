@@ -1,3 +1,6 @@
+---
+---
+
 <a href="#main-content" class="skip-link">Skip to content</a>
 
 <header class="nav-bar" id="nav-bar">
@@ -8,16 +11,15 @@
     </a>
 
     <button
-      class="hamburger"
-      id="hamburger"
-      type="button"
+      class="menu-btn"
+      id="menuBtn"
       aria-controls="nav-overlay"
       aria-expanded="false"
       aria-label="Open navigation"
     >
-      <span class="bar bar-1"></span>
-      <span class="bar bar-2"></span>
-      <span class="bar bar-3"></span>
+      <span class="bar bar-a"></span>
+      <span class="bar bar-b"></span>
+      <span class="bar bar-c"></span>
     </button>
   </div>
 </header>
@@ -28,7 +30,6 @@
   <button
     class="overlay-close"
     id="overlay-close"
-    type="button"
     aria-label="Close navigation"
   >
     <span class="bar bar-1"></span>
@@ -58,7 +59,6 @@
         </a>
       </li>
     </ol>
-
     <div class="overlay-footer">
       <span class="mono-label" style="color: var(--clr-text-faint);">@leahbluewater · TypeMedia · Doginal Dogs</span>
     </div>
@@ -66,8 +66,6 @@
 </div>
 
 <style>
-  :root { --nav-h: 64px; }
-
   .nav-bar {
     position: fixed;
     top: 0;
@@ -78,6 +76,8 @@
     background: var(--clr-bg);
     border-bottom: 1px solid var(--clr-border);
   }
+
+  :root { --nav-h: 64px; }
 
   .nav-inner {
     max-width: var(--max-w-content);
@@ -115,80 +115,142 @@
     margin-top: 1px;
   }
 
-  .hamburger {
+  /* ── Menu Button ── */
+  .menu-btn {
     position: relative;
-    width: 36px;
-    height: 36px;
+    width: 52px;
+    height: 52px;
     border: 1px solid var(--clr-border);
     border-radius: 12px;
-    background: var(--clr-bg);
+    background: var(--clr-bg-off, #111820);
     cursor: pointer;
     overflow: visible;
-    padding: 0;
     -webkit-tap-highlight-color: transparent;
-    transition:
-      border-color 220ms ease,
-      box-shadow 220ms ease,
-      transform 110ms ease;
+    transition: border-color var(--dur-base) var(--ease-out),
+                box-shadow var(--dur-base) var(--ease-out),
+                transform 110ms ease;
     z-index: calc(var(--z-overlay) + 10);
+    flex-shrink: 0;
   }
 
-  .hamburger::before {
+  .menu-btn::before {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: 11px;
-    background: linear-gradient(
-      148deg,
-      rgba(255, 255, 255, 0.055) 0%,
-      transparent 55%
-    );
+    background: linear-gradient(148deg, rgba(255,255,255,0.055) 0%, transparent 55%);
     pointer-events: none;
   }
 
-  .hamburger::after {
+  .menu-btn::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: 10%;
-    right: 10%;
+    top: 0; left: 10%; right: 10%;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
     pointer-events: none;
   }
 
-  .hamburger:hover {
-    border-color: var(--clr-border-hover);
-    box-shadow:
-      0 0 0 3px rgba(61, 155, 233, 0.06),
-      0 0 18px rgba(61, 155, 233, 0.12),
-      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  .menu-btn:hover {
+    border-color: var(--clr-border-hover, rgba(61, 155, 233, 0.32));
+    box-shadow: 0 0 0 3px rgba(61,155,233,0.06),
+                0 0 18px rgba(61,155,233,0.12),
+                inset 0 1px 0 rgba(255,255,255,0.04);
   }
 
-  .hamburger:active {
-    transform: scale(0.93);
-    transition-duration: 70ms;
-  }
+  .menu-btn:active { transform: scale(0.93); transition-duration: 70ms; }
 
-  .hamburger .bar {
+  .menu-btn .bar {
     position: absolute;
-    left: 5px;
+    left: 13px;
     width: 26px;
     height: 2px;
     border-radius: 999px;
-    background: var(--clr-text-faint);
+    background: var(--clr-text-muted, rgba(232, 237, 242, 0.50));
     transform-origin: center;
-    transition: background 220ms ease;
+    transition: background var(--dur-base) var(--ease-out),
+                transform var(--dur-base) var(--ease-out),
+                opacity var(--dur-base) var(--ease-out);
   }
 
-  .hamburger:hover .bar {
-    background: var(--clr-text);
+  .menu-btn:hover .bar { background: var(--clr-text); }
+
+  .menu-btn .bar-a { top: 16px; }
+  .menu-btn .bar-b { top: 25px; }
+  .menu-btn .bar-c { top: 34px; }
+
+  /* ── Motes ── */
+  .mote {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    pointer-events: none;
+    will-change: transform, opacity;
+    animation: moteFall var(--fall-dur, 2200ms) ease-out forwards;
+  }
+  .mote-halo {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(
+      from 0deg,
+      rgba(70,85,100,0.25), rgba(180,198,215,0.80),
+      rgba(235,245,255,1.00), rgba(255,255,255,1.00),
+      rgba(200,215,228,0.85), rgba(150,168,185,0.60),
+      rgba(100,118,135,0.35), rgba(70,85,100,0.25)
+    );
+    animation: moteRingSpin var(--spin-a, 2.2s) linear infinite;
+  }
+  .mote-halo--outer {
+    inset: -5px;
+    background: conic-gradient(
+      from 180deg,
+      rgba(60,80,110,0.00), rgba(100,150,200,0.45),
+      rgba(180,210,240,0.70), rgba(100,150,200,0.45),
+      rgba(60,80,110,0.00)
+    );
+    filter: blur(1px);
+    animation: moteRingSpin var(--spin-b, 3.4s) linear infinite reverse;
+  }
+  .mote-face {
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    overflow: hidden;
+    z-index: 2;
+    box-shadow:
+      inset 0 1px 2px rgba(255,255,255,0.12),
+      inset 0 -1px 2px rgba(0,0,0,0.55),
+      0 0 12px rgba(140,185,230,0.50),
+      0 0 28px rgba(60,130,200,0.25);
+  }
+  .mote-face img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    image-rendering: pixelated;
+  }
+  .mote-face--pox img {
+    image-rendering: auto;
+    object-fit: cover;
+    object-position: center;
+    width: 200%;
+    height: 200%;
+    margin-left: -50%;
+    margin-top: -50%;
   }
 
-  .hamburger .bar-1 { top: 9px; transform: rotate(-17deg); }
-  .hamburger .bar-2 { top: 17px; }
-  .hamburger .bar-3 { top: 25px; transform: rotate(17deg); }
+  @keyframes moteRingSpin { to { transform: rotate(360deg); } }
+  @keyframes moteFall {
+    0%  { opacity: 0;    transform: translate(0,0) scale(0.22) rotate(0deg); }
+    7%  { opacity: 1;    transform: translate(var(--dx1), var(--dy1)) scale(1.00) rotate(var(--r1)); }
+    68% { opacity: 0.88; transform: translate(var(--dx-mid), var(--dy-mid)) scale(0.92) rotate(var(--r-mid)); }
+    100%{ opacity: 0;    transform: translate(var(--dx2), var(--dy2)) scale(0.80) rotate(var(--r2)); }
+  }
 
+  /* ── Overlay ── */
   .nav-overlay {
     position: fixed;
     inset: 0;
@@ -229,6 +291,9 @@
     justify-content: center;
     padding: 4px;
     z-index: 1;
+    background: transparent;
+    border: none;
+    cursor: pointer;
   }
 
   .overlay-close .bar {
@@ -263,9 +328,8 @@
     border-top: 1px solid var(--clr-border);
     opacity: 0;
     transform: translateY(16px);
-    transition:
-      opacity var(--dur-slow) var(--ease-out),
-      transform var(--dur-slow) var(--ease-out);
+    transition: opacity var(--dur-slow) var(--ease-out),
+                transform var(--dur-slow) var(--ease-out);
   }
 
   .overlay-item:last-child {
@@ -314,305 +378,162 @@
     opacity: 1;
   }
 
-  /* burst motes */
-  .mote {
-    position: absolute;
-    width: 48px;
-    height: 48px;
-    pointer-events: none;
-    will-change: transform, opacity;
-    animation: moteFall var(--fall-dur, 2200ms) cubic-bezier(0.12, 0.9, 0.3, 1) forwards;
-  }
-
-  .mote-halo {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: conic-gradient(
-      from 0deg,
-      rgba(70, 85, 100, 0.25),
-      rgba(180, 198, 215, 0.80),
-      rgba(235, 245, 255, 1.00),
-      rgba(255, 255, 255, 1.00),
-      rgba(200, 215, 228, 0.85),
-      rgba(150, 168, 185, 0.60),
-      rgba(100, 118, 135, 0.35),
-      rgba(70, 85, 100, 0.25)
-    );
-    animation: moteRingSpin var(--spin-a, 2.2s) linear infinite;
-  }
-
-  .mote-halo--outer {
-    inset: -5px;
-    background: conic-gradient(
-      from 180deg,
-      rgba(60, 80, 110, 0.00),
-      rgba(100, 150, 200, 0.45),
-      rgba(180, 210, 240, 0.70),
-      rgba(100, 150, 200, 0.45),
-      rgba(60, 80, 110, 0.00)
-    );
-    filter: blur(1px);
-    animation: moteRingSpin var(--spin-b, 3.4s) linear infinite reverse;
-  }
-
-  .mote-face {
-    position: absolute;
-    inset: 3px;
-    border-radius: 50%;
-    overflow: hidden;
-    z-index: 2;
-    box-shadow:
-      inset 0 1px 2px rgba(255, 255, 255, 0.12),
-      inset 0 -1px 2px rgba(0, 0, 0, 0.55),
-      0 0 12px rgba(140, 185, 230, 0.50),
-      0 0 28px rgba(60, 130, 200, 0.25);
-  }
-
-  .mote-face img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-    image-rendering: pixelated;
-  }
-
-  .mote-face--pox img {
-    image-rendering: auto;
-    object-fit: cover;
-    object-position: center center;
-    width: 200%;
-    height: 200%;
-    margin-left: -50%;
-    margin-top: -50%;
-  }
-
-  @keyframes moteRingSpin {
-    to { transform: rotate(360deg); }
-  }
-
-  @keyframes moteFall {
-    0% {
-      opacity: 0;
-      transform: translate(0, 0) scale(0.22) rotate(0deg);
-    }
-
-    7% {
-      opacity: 1;
-      transform: translate(var(--dx1), var(--dy1)) scale(1.10) rotate(var(--r1));
-    }
-
-    68% {
-      opacity: 0.90;
-      transform: translate(var(--dx-mid), var(--dy-mid)) scale(0.95) rotate(var(--r-mid));
-    }
-
-    100% {
-      opacity: 0;
-      transform: translate(var(--dx2), var(--dy2)) scale(0.70) rotate(var(--r2));
-    }
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .nav-overlay,
-    .overlay-item,
-    .overlay-footer,
-    .hamburger,
-    .hamburger .bar,
-    .overlay-close .bar {
+    .nav-overlay, .overlay-item, .overlay-footer,
+    .menu-btn, .menu-btn .bar, .overlay-close .bar,
+    .mote {
       transition: none !important;
-    }
-
-    .mote,
-    .mote-halo {
       animation: none !important;
     }
   }
 </style>
 
 <script>
-  const PFP_SRC = '/pfp.jpg';
-  const POX_SRC = '/pox.jpg';
+  (function() {
+    const PFP_SRC = '/pfp.jpg';
+    const POX_SRC = '/pox.jpg';
 
-  function rand(lo, hi) {
-    return Math.random() * (hi - lo) + lo;
-  }
+    function rand(lo, hi) { return Math.random() * (hi - lo) + lo; }
+    function px(n) { return n.toFixed(2) + 'px'; }
+    function dg(n) { return n.toFixed(1) + 'deg'; }
 
-  function px(n) {
-    return n.toFixed(2) + 'px';
-  }
+    function spawnMote(btn, localX, localY, imgSrc, isPox, delayMs) {
+      setTimeout(() => {
+        const mote = document.createElement('div');
+        mote.className = 'mote';
+        mote.style.left = px(localX - 24);
+        mote.style.top  = px(localY - 24);
 
-  function dg(n) {
-    return n.toFixed(1) + 'deg';
-  }
+        const haloOuter = document.createElement('div');
+        haloOuter.className = 'mote-halo mote-halo--outer';
 
-  function getEls() {
-    const hamburger = document.getElementById('hamburger');
-    const overlay = document.getElementById('nav-overlay');
-    const closeBtn = document.getElementById('overlay-close');
-    return { hamburger, overlay, closeBtn };
-  }
+        const haloInner = document.createElement('div');
+        haloInner.className = 'mote-halo';
 
-  function openNav() {
-    const { hamburger, overlay, closeBtn } = getEls();
-    if (!hamburger || !overlay || !closeBtn) return;
+        const face = document.createElement('div');
+        face.className = isPox ? 'mote-face mote-face--pox' : 'mote-face';
 
-    overlay.classList.add('is-open');
-    overlay.setAttribute('aria-hidden', 'false');
-    hamburger.setAttribute('aria-expanded', 'true');
-    hamburger.setAttribute('aria-label', 'Close navigation');
-    document.body.style.overflow = 'hidden';
-    closeBtn.focus();
-  }
+        const img = document.createElement('img');
+        img.src = imgSrc;
+        img.alt = '';
+        img.draggable = false;
+        face.appendChild(img);
 
-  function closeNav() {
-    const { hamburger, overlay } = getEls();
-    if (!hamburger || !overlay) return;
+        mote.append(haloOuter, haloInner, face);
 
-    overlay.classList.remove('is-open');
-    overlay.setAttribute('aria-hidden', 'true');
-    hamburger.setAttribute('aria-expanded', 'false');
-    hamburger.setAttribute('aria-label', 'Open navigation');
-    document.body.style.overflow = '';
-    hamburger.focus();
-  }
+        mote.style.setProperty('--spin-a', rand(1.4, 3.0).toFixed(2) + 's');
+        mote.style.setProperty('--spin-b', rand(2.6, 4.8).toFixed(2) + 's');
+        mote.style.setProperty('--dx1',    px(rand(-22,  22)));
+        mote.style.setProperty('--dy1',    px(rand(-28,  -6)));
+        mote.style.setProperty('--dx-mid', px(rand(-70,  70)));
+        mote.style.setProperty('--dy-mid', px(rand( 90, 200)));
+        mote.style.setProperty('--dx2',    px(rand(-110, 110)));
+        mote.style.setProperty('--dy2',    px(rand( 260, 440)));
+        mote.style.setProperty('--r1',     dg(rand(-28,  28)));
+        mote.style.setProperty('--r-mid',  dg(rand(-110, 110)));
+        mote.style.setProperty('--r2',     dg(rand(-220, 220)));
 
-  function spawnMote(button, localX, localY, imgSrc, isPox, delayMs) {
-    window.setTimeout(() => {
-      const mote = document.createElement('div');
-      mote.className = 'mote';
-      mote.style.left = px(localX - 24);
-      mote.style.top = px(localY - 24);
-
-      const haloOuter = document.createElement('div');
-      haloOuter.className = 'mote-halo mote-halo--outer';
-
-      const haloInner = document.createElement('div');
-      haloInner.className = 'mote-halo';
-
-      const face = document.createElement('div');
-      face.className = isPox ? 'mote-face mote-face--pox' : 'mote-face';
-
-      const img = document.createElement('img');
-      img.src = imgSrc;
-      img.alt = '';
-      img.draggable = false;
-      face.appendChild(img);
-
-      mote.append(haloOuter, haloInner, face);
-
-      mote.style.setProperty('--spin-a', rand(1.4, 3.0).toFixed(2) + 's');
-      mote.style.setProperty('--spin-b', rand(2.6, 4.8).toFixed(2) + 's');
-
-      mote.style.setProperty('--dx1', px(rand(-22, 22)));
-      mote.style.setProperty('--dy1', px(rand(-28, -6)));
-      mote.style.setProperty('--dx-mid', px(rand(-70, 70)));
-      mote.style.setProperty('--dy-mid', px(rand(90, 200)));
-      mote.style.setProperty('--dx2', px(rand(-110, 110)));
-      mote.style.setProperty('--dy2', px(rand(260, 440)));
-      mote.style.setProperty('--r1', dg(rand(-28, 28)));
-      mote.style.setProperty('--r-mid', dg(rand(-110, 110)));
-      mote.style.setProperty('--r2', dg(rand(-220, 220)));
-
-      const dur = Math.round(rand(1900, 3100));
-      mote.style.setProperty('--fall-dur', dur + 'ms');
-
-      button.appendChild(mote);
-      window.setTimeout(() => mote.remove(), dur + 80);
-    }, delayMs);
-  }
-
-  function burst(button) {
-    const W = button.offsetWidth;
-    const H = button.offsetHeight;
-
-    const motes = [
-      { x: W * 0.38, y: H * 0.28, src: PFP_SRC, pox: false, d: 0 },
-      { x: W * 0.50, y: H * 0.50, src: PFP_SRC, pox: false, d: 55 },
-      { x: W * 0.62, y: H * 0.72, src: PFP_SRC, pox: false, d: 25 },
-      { x: W * 0.50, y: H * 0.15, src: POX_SRC, pox: true, d: 10 },
-    ];
-
-    motes.forEach((m) => {
-      spawnMote(
-        button,
-        m.x + rand(-6, 6),
-        m.y + rand(-6, 6),
-        m.src,
-        m.pox,
-        m.d
-      );
-    });
-  }
-
-  function handleClick(event) {
-    const target = event.target instanceof Element ? event.target : null;
-    if (!target) return;
-
-    if (target.closest('#hamburger')) {
-      openNav();
-      return;
+        const dur = Math.round(rand(1900, 3100));
+        mote.style.setProperty('--fall-dur', dur + 'ms');
+        btn.appendChild(mote);
+        setTimeout(() => mote.remove(), dur + 80);
+      }, delayMs);
     }
 
-    if (target.closest('#overlay-close')) {
-      closeNav();
-      return;
+    function burst(btn) {
+      const W = btn.offsetWidth;
+      const H = btn.offsetHeight;
+      const motes = [
+        { x: W * 0.38, y: H * 0.28, src: PFP_SRC, pox: false, d:  0  },
+        { x: W * 0.50, y: H * 0.50, src: PFP_SRC, pox: false, d: 55  },
+        { x: W * 0.62, y: H * 0.72, src: PFP_SRC, pox: false, d: 25  },
+        { x: W * 0.50, y: H * 0.15, src: POX_SRC, pox: true,  d: 10  },
+      ];
+      motes.forEach(m => {
+        spawnMote(btn, m.x + rand(-6,6), m.y + rand(-6,6), m.src, m.pox, m.d);
+      });
     }
 
-    if (target.closest('.overlay-link')) {
-      closeNav();
+    function initNav() {
+      const btn = document.getElementById('menuBtn');
+      const overlay = document.getElementById('nav-overlay');
+      const closeBtn = document.getElementById('overlay-close');
+      if (!btn || !overlay) return;
+
+      // Prevent double-binding if script re-runs
+      if (btn._navBound) return;
+      btn._navBound = true;
+
+      const overlayLinks = overlay.querySelectorAll('.overlay-link');
+
+      function openNav() {
+        overlay.classList.add('is-open');
+        overlay.setAttribute('aria-hidden', 'false');
+        btn.setAttribute('aria-expanded', 'true');
+        btn.setAttribute('aria-label', 'Close navigation');
+        document.body.style.overflow = 'hidden';
+        closeBtn.focus();
+      }
+
+      function closeNav() {
+        overlay.classList.remove('is-open');
+        overlay.setAttribute('aria-hidden', 'true');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.setAttribute('aria-label', 'Open navigation');
+        document.body.style.overflow = '';
+        btn.focus();
+      }
+
+      btn.addEventListener('pointerdown', () => burst(btn));
+      btn.addEventListener('click', () => {
+        if (overlay.classList.contains('is-open')) {
+          closeNav();
+        } else {
+          openNav();
+        }
+      });
+
+      closeBtn.addEventListener('click', closeNav);
+
+      overlayLinks.forEach(link => {
+        link.addEventListener('click', closeNav);
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.classList.contains('is-open')) {
+          closeNav();
+        }
+      });
+
+      overlay.addEventListener('keydown', (e) => {
+        if (!overlay.classList.contains('is-open')) return;
+        if (e.key !== 'Tab') return;
+
+        const focusable = Array.from(
+          overlay.querySelectorAll('button, a[href], [tabindex]:not([tabindex="-1"])')
+        ).filter(el => !el.closest('[aria-hidden="true"]'));
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      });
     }
-  }
 
-  function handlePointerDown(event) {
-    const target = event.target instanceof Element ? event.target : null;
-    if (!target) return;
-
-    const button = target.closest('#hamburger');
-    if (!button) return;
-
-    burst(button);
-  }
-
-  function handleKeyDown(event) {
-    const { overlay } = getEls();
-    if (!overlay || !overlay.classList.contains('is-open')) return;
-
-    if (event.key === 'Escape') {
-      closeNav();
-      return;
+    // Run on initial load (for MPA or when View Transitions not active)
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initNav);
+    } else {
+      initNav();
     }
 
-    if (event.key !== 'Tab') return;
-
-    const focusable = Array.from(
-      overlay.querySelectorAll('button, a[href], [tabindex]:not([tabindex="-1"])')
-    ).filter((el) => !el.closest('[aria-hidden="true"]'));
-
-    if (!focusable.length) return;
-
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault();
-      last.focus();
-    } else if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault();
-      first.focus();
-    }
-  }
-
-  function initNav() {
-    if (window.__leahNavBound) return;
-    window.__leahNavBound = true;
-
-    document.addEventListener('click', handleClick);
-    document.addEventListener('pointerdown', handlePointerDown);
-    document.addEventListener('keydown', handleKeyDown);
-  }
-
-  document.addEventListener('astro:page-load', initNav);
-  initNav();
+    // Run on every Astro View Transition navigation (Astro v6: only fires on transitions, not initial load)
+    document.addEventListener('astro:page-load', initNav);
+  })();
 </script>
