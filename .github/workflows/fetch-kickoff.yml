@@ -1,0 +1,38 @@
+name: Fetch Kickoff URL
+
+on:
+  schedule:
+    # 10:02, 10:05, 10:10 UTC  →  11:02, 11:05, 11:10 WAT
+    - cron: '2,5,10 10 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install twscrape
+        run: pip install twscrape
+
+      - name: Write cookies from secret
+        run: echo '${{ secrets.X_COOKIES_JSON }}' > cookies.json
+
+      - name: Fetch kickoff URL
+        id: fetch
+        run: python scripts/fetch-kickoff.py
+
+      - name: Commit kickoffs.json if changed
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore: update kickoff URL'
+          file_pattern: src/data/kickoffs.json
