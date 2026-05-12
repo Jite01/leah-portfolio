@@ -1,7 +1,7 @@
 {
   "nextKickoff": {
-    "date": "2025-01-14",
-    "dayLabel": "Tue, 14 Jan 2025",
+    "date": "2026-05-12",
+    "dayLabel": "Mon, 12 May 2026",
     "utc": "10:00 AM UTC",
     "est": "5:00 AM EST",
     "cst": "4:00 AM CST",
@@ -25,10 +25,11 @@
     },
     {
       "date": "2025-01-08",
-      "title": "Nigeria Crypto Adoption: State of Play 2025",
+      "title": " Solana Consensus with host: Leah Bluewater",
       "duration": "45m",
       "summary": "AI episode summary coming soon…",
       "url": "https://twitter.com/i/spaces/placeholder-3"
     }
-  ]
+  ],
+  "lastAdvancedAt": null
 }
