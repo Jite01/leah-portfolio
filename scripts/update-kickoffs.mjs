@@ -7,6 +7,7 @@
  * 2. Generates a template summary from metadata (zero API cost).
  * 3. Advances nextKickoff to the following day, clears URL.
  *    ── Skips Sunday: no Kickoff on Sundays.
+ *    ── Guards against double-advance via lastAdvancedAt.
  */
 
 import fs from 'fs';
@@ -56,6 +57,10 @@ function calcDuration(startedAtIso) {
   return m ? `${h}h ${m}m` : `${h}h`;
 }
 
+function todayIso() {
+  return new Date().toISOString().split('T')[0];
+}
+
 /* ── template summary generator ───────────────────────────────────────────── */
 function generateSummary(dateStr, duration) {
   const d = new Date(dateStr + 'T11:00:00+01:00');
@@ -78,8 +83,15 @@ function generateSummary(dateStr, duration) {
 
 async function main() {
   const data = loadData();
+  const today = todayIso();
 
-  // Nothing to archive — just advance date if we're past it
+  // Guard: already advanced today
+  if (data.lastAdvancedAt === today) {
+    console.log('Already advanced today (' + today + '). Skipping.');
+    return;
+  }
+
+  // ── No URL captured — just advance date if we're past it ──
   if (!data.nextKickoff.url) {
     const nextDate = new Date(data.nextKickoff.date + 'T11:00:00+01:00');
     const nowWat   = new Date(new Date().toLocaleString('en-US', { timeZone: 'Africa/Lagos' }));
@@ -89,6 +101,7 @@ async function main() {
       data.nextKickoff.date     = tomorrowStr;
       data.nextKickoff.dayLabel = formatDayLabel(new Date(tomorrowStr + 'T11:00:00+01:00'));
       data.nextKickoff.startedAt = null;
+      data.lastAdvancedAt = today;
       saveData(data);
       console.log('No URL found today — advanced to', tomorrowStr);
     } else {
@@ -129,6 +142,7 @@ async function main() {
     startedAt: null,
   };
 
+  data.lastAdvancedAt = today;
   saveData(data);
   console.log('Archived', nk.date, '— next kickoff:', nextDateStr);
 }
