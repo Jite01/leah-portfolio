@@ -29,3 +29,4 @@ jobs:
         with:
           commit_message: 'chore: archive kickoff and advance date'
           file_pattern: src/data/kickoffs.json
+

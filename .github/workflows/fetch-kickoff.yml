@@ -36,3 +36,4 @@ jobs:
         with:
           commit_message: 'chore: update kickoff URL'
           file_pattern: src/data/kickoffs.json
+
