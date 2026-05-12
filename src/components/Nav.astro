@@ -11,15 +11,15 @@
     </a>
 
     <button
-      class="menu-btn"
-      id="menuBtn"
+      class="hamburger"
+      id="hamburger"
       aria-controls="nav-overlay"
       aria-expanded="false"
       aria-label="Open navigation"
     >
-      <span class="bar bar-a"></span>
-      <span class="bar bar-b"></span>
-      <span class="bar bar-c"></span>
+      <span class="bar bar-1"></span>
+      <span class="bar bar-2"></span>
+      <span class="bar bar-3"></span>
     </button>
   </div>
 </header>
@@ -115,69 +115,52 @@
     margin-top: 1px;
   }
 
-  /* ── Menu Button ── */
-  .menu-btn {
+  .hamburger {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 5px;
+    padding: 4px;
     position: relative;
-    width: 52px;
-    height: 52px;
-    border: 1px solid var(--clr-border);
-    border-radius: 12px;
-    background: var(--clr-bg-off, #111820);
-    cursor: pointer;
-    overflow: visible;
-    -webkit-tap-highlight-color: transparent;
-    transition: border-color var(--dur-base) var(--ease-out),
-                box-shadow var(--dur-base) var(--ease-out),
-                transform 110ms ease;
     z-index: calc(var(--z-overlay) + 10);
-    flex-shrink: 0;
+    transition: opacity var(--dur-base) var(--ease-out);
+    overflow: visible;
+    background: transparent;
+    border: none;
+    cursor: pointer;
   }
 
-  .menu-btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 11px;
-    background: linear-gradient(148deg, rgba(255,255,255,0.055) 0%, transparent 55%);
-    pointer-events: none;
-  }
-
-  .menu-btn::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 10%; right: 10%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
-    pointer-events: none;
-  }
-
-  .menu-btn:hover {
-    border-color: var(--clr-border-hover, rgba(61, 155, 233, 0.32));
-    box-shadow: 0 0 0 3px rgba(61,155,233,0.06),
-                0 0 18px rgba(61,155,233,0.12),
-                inset 0 1px 0 rgba(255,255,255,0.04);
-  }
-
-  .menu-btn:active { transform: scale(0.93); transition-duration: 70ms; }
-
-  .menu-btn .bar {
-    position: absolute;
-    left: 13px;
-    width: 26px;
-    height: 2px;
-    border-radius: 999px;
-    background: var(--clr-text-muted, rgba(232, 237, 242, 0.50));
+  .hamburger .bar {
+    display: block;
+    height: 1.5px;
+    background: var(--clr-text);
+    border-radius: 1px;
     transform-origin: center;
-    transition: background var(--dur-base) var(--ease-out),
+    transition: width var(--dur-base) var(--ease-out),
                 transform var(--dur-base) var(--ease-out),
                 opacity var(--dur-base) var(--ease-out);
   }
 
-  .menu-btn:hover .bar { background: var(--clr-text); }
+  .hamburger .bar-1 { width: 24px; }
+  .hamburger .bar-2 { width: 16px; }
+  .hamburger .bar-3 { width: 20px; }
 
-  .menu-btn .bar-a { top: 16px; }
-  .menu-btn .bar-b { top: 25px; }
-  .menu-btn .bar-c { top: 34px; }
+  /* Hamburger → X when overlay is open */
+  .hamburger.is-active .bar-1 {
+    transform: translateY(6.5px) rotate(45deg);
+    width: 24px;
+  }
+  .hamburger.is-active .bar-2 {
+    opacity: 0;
+    width: 0;
+  }
+  .hamburger.is-active .bar-3 {
+    transform: translateY(-6.5px) rotate(-45deg);
+    width: 24px;
+  }
 
   /* ── Motes ── */
   .mote {
@@ -250,7 +233,6 @@
     100%{ opacity: 0;    transform: translate(var(--dx2), var(--dy2)) scale(0.80) rotate(var(--r2)); }
   }
 
-  /* ── Overlay ── */
   .nav-overlay {
     position: fixed;
     inset: 0;
@@ -291,9 +273,6 @@
     justify-content: center;
     padding: 4px;
     z-index: 1;
-    background: transparent;
-    border: none;
-    cursor: pointer;
   }
 
   .overlay-close .bar {
@@ -380,7 +359,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     .nav-overlay, .overlay-item, .overlay-footer,
-    .menu-btn, .menu-btn .bar, .overlay-close .bar,
+    .hamburger .bar, .overlay-close .bar,
     .mote {
       transition: none !important;
       animation: none !important;
@@ -455,22 +434,23 @@
     }
 
     function initNav() {
-      const btn = document.getElementById('menuBtn');
+      const hamburger = document.getElementById('hamburger');
       const overlay = document.getElementById('nav-overlay');
       const closeBtn = document.getElementById('overlay-close');
-      if (!btn || !overlay) return;
+      if (!hamburger || !overlay) return;
 
       // Prevent double-binding if script re-runs
-      if (btn._navBound) return;
-      btn._navBound = true;
+      if (hamburger._navBound) return;
+      hamburger._navBound = true;
 
       const overlayLinks = overlay.querySelectorAll('.overlay-link');
 
       function openNav() {
         overlay.classList.add('is-open');
         overlay.setAttribute('aria-hidden', 'false');
-        btn.setAttribute('aria-expanded', 'true');
-        btn.setAttribute('aria-label', 'Close navigation');
+        hamburger.classList.add('is-active');
+        hamburger.setAttribute('aria-expanded', 'true');
+        hamburger.setAttribute('aria-label', 'Close navigation');
         document.body.style.overflow = 'hidden';
         closeBtn.focus();
       }
@@ -478,14 +458,16 @@
       function closeNav() {
         overlay.classList.remove('is-open');
         overlay.setAttribute('aria-hidden', 'true');
-        btn.setAttribute('aria-expanded', 'false');
-        btn.setAttribute('aria-label', 'Open navigation');
+        hamburger.classList.remove('is-active');
+        hamburger.setAttribute('aria-expanded', 'false');
+        hamburger.setAttribute('aria-label', 'Open navigation');
         document.body.style.overflow = '';
-        btn.focus();
+        hamburger.focus();
       }
 
-      btn.addEventListener('pointerdown', () => burst(btn));
-      btn.addEventListener('click', () => {
+      // Burst on pointerdown (visual feedback), toggle on click
+      hamburger.addEventListener('pointerdown', () => burst(hamburger));
+      hamburger.addEventListener('click', () => {
         if (overlay.classList.contains('is-open')) {
           closeNav();
         } else {
@@ -533,7 +515,7 @@
       initNav();
     }
 
-    // Run on every Astro View Transition navigation (Astro v6: only fires on transitions, not initial load)
+    // Run on every Astro View Transition navigation
     document.addEventListener('astro:page-load', initNav);
   })();
 </script>
