@@ -1,14 +1,21 @@
 {
   "nextKickoff": {
-    "date": "2026-05-12",
-    "dayLabel": "Mon, 12 May 2026",
+    "date": "2026-05-13",
+    "dayLabel": "Wed, 13 May 2026",
     "utc": "10:00 AM UTC",
     "est": "5:00 AM EST",
     "cst": "4:00 AM CST",
-    "url": "https://t.co/4thRafmpgr",
-    "startedAt": "2026-05-12T10:06:17.606824+00:00"
+    "url": null,
+    "startedAt": null
   },
   "archive": [
+    {
+      "date": "2026-05-12",
+      "title": "The Kickoff",
+      "duration": "1h 11m",
+      "summary": "The Kickoff for Tuesday: 1h 11m of market commentary, ETF flows, and Doginal Dogs community updates.",
+      "url": "https://t.co/4thRafmpgr"
+    },
     {
       "date": "2025-01-10",
       "title": "Bitcoin ETF Inflows & What They Mean for Altseason",
@@ -22,14 +29,7 @@
       "duration": "1h 12m",
       "summary": "AI episode summary coming soon…",
       "url": "https://twitter.com/i/spaces/placeholder-2"
-    },
-    {
-      "date": "2025-01-08",
-      "title": " Solana Consensus with host: Leah Bluewater",
-      "duration": "45m",
-      "summary": "AI episode summary coming soon…",
-      "url": "https://twitter.com/i/spaces/placeholder-3"
     }
   ],
-  "lastAdvancedAt": null
+  "lastAdvancedAt": "2026-05-12"
 }
