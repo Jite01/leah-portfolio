@@ -3,6 +3,8 @@
 fetch-kickoff.py
 ────────────────
 Scrape Leah Bluewater's X profile for a live/scheduled Space URL.
+Uses the link-only heuristic: Leah's Space tweets are her own tweets
+(not RTs) where rawContent contains ONLY a t.co shortlink.
 Schedule: 11:02, 11:05, 11:10 WAT  (cron: 2,5,10 10 * * * UTC)
 Exits early if kickoffs.json already has a URL for today.
 """
@@ -11,7 +13,6 @@ import asyncio
 import json
 import os
 import re
-import sys
 from datetime import datetime, timezone
 
 import twscrape
@@ -83,6 +84,33 @@ def already_has_url():
     return data["nextKickoff"].get("url") is not None
 
 
+def is_link_only_tweet(tweet) -> str | None:
+    """
+    Returns the Space URL if this tweet matches Leah's Space signature:
+      1. Her own tweet (URL contains /leahbluewater/status/)
+      2. Not a retweet (no 'RT @' in rawContent)
+      3. rawContent is ONLY a t.co shortlink (nothing else)
+    Returns the t.co shortlink string, or None.
+    """
+    # Must be her own tweet, not a retweet by someone else
+    if not tweet.url or "/leahbluewater/status/" not in tweet.url:
+        return None
+
+    # Skip retweets / quote tweets with RT prefix
+    raw = (tweet.rawContent or "").strip()
+    if raw.startswith("RT @") or raw.startswith("rt @" ):
+        return None
+
+    # Must be ONLY a t.co shortlink, nothing else
+    if re.fullmatch(r"https?://t\.co/[A-Za-z0-9]+\s*", raw):
+        # Extract the clean URL
+        m = re.search(r"https?://t\.co/[A-Za-z0-9]+", raw)
+        if m:
+            return m.group(0)
+
+    return None
+
+
 async def find_space_url():
     pool = twscrape.AccountsPool()
 
@@ -116,31 +144,11 @@ async def find_space_url():
         print(f"User @{LEAH_USERNAME} not found")
         return None
 
-    # Scan recent tweets for Space URLs
+    # Scan recent tweets for link-only Space tweets
     async for tweet in api.user_tweets(user.id, limit=30):
-        # Check tweet's own permalink — sometimes Spaces appear here
-        if tweet.url and "twitter.com/i/spaces/" in tweet.url:
-            return tweet.url
-        if tweet.url and "x.com/i/spaces/" in tweet.url:
-            return tweet.url
-
-        # Check raw content for space links
-        if tweet.rawContent:
-            m = re.search(
-                r'https?://(?:twitter|x)\.com/i/spaces/([a-zA-Z0-9]+)',
-                tweet.rawContent
-            )
-            if m:
-                return f"https://twitter.com/i/spaces/{m.group(1)}"
-
-        # Check entities if available
-        entities = getattr(tweet, 'entities', None)
-        if entities:
-            urls = getattr(entities, 'urls', [])
-            for u in urls:
-                expanded = getattr(u, 'expanded_url', '') or getattr(u, 'url', '')
-                if "twitter.com/i/spaces/" in expanded or "x.com/i/spaces/" in expanded:
-                    return expanded
+        space_url = is_link_only_tweet(tweet)
+        if space_url:
+            return space_url
 
     return None
 
