@@ -5,6 +5,7 @@ fetch-kickoff.py
 Scrape Leah Bluewater's X profile for a live/scheduled Space URL.
 Uses the link-only heuristic: Leah's Space tweets are her own tweets
 (not RTs) where rawContent contains ONLY a t.co shortlink.
+Only accepts tweets from TODAY (WAT timezone).
 Schedule: 11:02, 11:05, 11:10 WAT  (cron: 2,5,10 10 * * * UTC)
 Exits early if kickoffs.json already has a URL for today.
 """
@@ -84,12 +85,21 @@ def already_has_url():
     return data["nextKickoff"].get("url") is not None
 
 
-def is_link_only_tweet(tweet) -> str | None:
+def today_wat_iso():
+    """Return today's date as YYYY-MM-DD in WAT timezone."""
+    wat_now = datetime.now(timezone.utc).astimezone(
+        __import__('zoneinfo').ZoneInfo('Africa/Lagos')
+    )
+    return wat_now.strftime('%Y-%m-%d')
+
+
+def is_link_only_today(tweet) -> str | None:
     """
     Returns the Space URL if this tweet matches Leah's Space signature:
       1. Her own tweet (URL contains /leahbluewater/status/)
       2. Not a retweet (no 'RT @' in rawContent)
       3. rawContent is ONLY a t.co shortlink (nothing else)
+      4. Tweet was posted TODAY (WAT timezone)
     Returns the t.co shortlink string, or None.
     """
     # Must be her own tweet, not a retweet by someone else
@@ -102,11 +112,18 @@ def is_link_only_tweet(tweet) -> str | None:
         return None
 
     # Must be ONLY a t.co shortlink, nothing else
-    if re.fullmatch(r"https?://t\.co/[A-Za-z0-9]+\s*", raw):
-        # Extract the clean URL
-        m = re.search(r"https?://t\.co/[A-Za-z0-9]+", raw)
-        if m:
-            return m.group(0)
+    if not re.fullmatch(r"https?://t\.co/[A-Za-z0-9]+\s*", raw):
+        return None
+
+    # Must be from TODAY
+    tweet_date = tweet.date.strftime('%Y-%m-%d') if hasattr(tweet, 'date') else None
+    if tweet_date != today_wat_iso():
+        return None
+
+    # Extract the clean URL
+    m = re.search(r"https?://t\.co/[A-Za-z0-9]+", raw)
+    if m:
+        return m.group(0)
 
     return None
 
@@ -144,9 +161,9 @@ async def find_space_url():
         print(f"User @{LEAH_USERNAME} not found")
         return None
 
-    # Scan recent tweets for link-only Space tweets
+    # Scan recent tweets for link-only Space tweets from TODAY
     async for tweet in api.user_tweets(user.id, limit=30):
-        space_url = is_link_only_tweet(tweet)
+        space_url = is_link_only_today(tweet)
         if space_url:
             return space_url
 
