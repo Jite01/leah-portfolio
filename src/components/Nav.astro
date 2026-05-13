@@ -367,7 +367,6 @@
 
 <script is:inline>
   (function() {
-alert('script running, hamburger=' + document.getElementById('hamburger'));
     const PFP_SRC = '/pfp.jpg';
     const POX_SRC = '/pox.jpg';
 
@@ -446,45 +445,52 @@ alert('script running, hamburger=' + document.getElementById('hamburger'));
       const moteLayer = document.getElementById('mote-layer');
       if (!hamburger || !overlay || !moteLayer) return;
 
+      // Clean up old listeners before adding new ones
+      const newHamburger = hamburger.cloneNode(true);
+      hamburger.parentNode.replaceChild(newHamburger, hamburger);
+
+      const newCloseBtn = closeBtn.cloneNode(true);
+      closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
+
       const overlayLinks = overlay.querySelectorAll('.overlay-link');
+      const newLinks = Array.from(overlayLinks).map(link => {
+        const newLink = link.cloneNode(true);
+        link.parentNode.replaceChild(newLink, link);
+        return newLink;
+      });
 
       function openNav() {
         overlay.classList.add('is-open');
         overlay.setAttribute('aria-hidden', 'false');
-        hamburger.classList.add('is-active');
-        hamburger.setAttribute('aria-expanded', 'true');
-        hamburger.setAttribute('aria-label', 'Close navigation');
+        newHamburger.classList.add('is-active');
+        newHamburger.setAttribute('aria-expanded', 'true');
+        newHamburger.setAttribute('aria-label', 'Close navigation');
         document.body.style.overflow = 'hidden';
-        closeBtn.focus();
+        newCloseBtn.focus();
       }
 
       function closeNav() {
         overlay.classList.remove('is-open');
         overlay.setAttribute('aria-hidden', 'true');
-        hamburger.classList.remove('is-active');
-        hamburger.setAttribute('aria-expanded', 'false');
-        hamburger.setAttribute('aria-label', 'Open navigation');
+        newHamburger.classList.remove('is-active');
+        newHamburger.setAttribute('aria-expanded', 'false');
+        newHamburger.setAttribute('aria-label', 'Open navigation');
         document.body.style.overflow = '';
-        hamburger.focus();
+        newHamburger.focus();
       }
 
-      hamburger.addEventListener('click', () => {
-hamburger.addEventListener('click', () => {
-  alert('hamburger clicked');
-  // ... rest
-});
-
+      newHamburger.addEventListener('click', () => {
         if (overlay.classList.contains('is-open')) {
           closeNav();
         } else {
-          burst(moteLayer, hamburger);
+          burst(moteLayer, newHamburger);
           openNav();
         }
       });
 
-      closeBtn.addEventListener('click', closeNav);
+      newCloseBtn.addEventListener('click', closeNav);
 
-      overlayLinks.forEach(link => {
+      newLinks.forEach(link => {
         link.addEventListener('click', closeNav);
       });
 
