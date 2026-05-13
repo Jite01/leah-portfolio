@@ -161,77 +161,6 @@
     width: 24px;
   }
 
-  /* ── Motes ── */
-  .mote {
-    position: absolute;
-    width: 48px;
-    height: 48px;
-    pointer-events: none;
-    will-change: transform, opacity;
-    animation: moteFall var(--fall-dur, 2200ms) cubic-bezier(0.12, 0.9, 0.3, 1) forwards;
-  }
-  .mote-halo {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: conic-gradient(
-      from 0deg,
-      rgba(70, 85, 100, 0.25), rgba(180, 198, 215, 0.80),
-      rgba(235, 245, 255, 1.00), rgba(255, 255, 255, 1.00),
-      rgba(200, 215, 228, 0.85), rgba(150, 168, 185, 0.60),
-      rgba(100, 118, 135, 0.35), rgba(70, 85, 100, 0.25)
-    );
-    animation: moteRingSpin var(--spin-a, 2.2s) linear infinite;
-  }
-  .mote-halo--outer {
-    inset: -5px;
-    background: conic-gradient(
-      from 180deg,
-      rgba(60, 80, 110, 0.00), rgba(100, 150, 200, 0.45),
-      rgba(180, 210, 240, 0.70), rgba(100, 150, 200, 0.45),
-      rgba(60, 80, 110, 0.00)
-    );
-    filter: blur(1px);
-    animation: moteRingSpin var(--spin-b, 3.4s) linear infinite reverse;
-  }
-  .mote-face {
-    position: absolute;
-    inset: 3px;
-    border-radius: 50%;
-    overflow: hidden;
-    z-index: 2;
-    box-shadow:
-      inset 0 1px 2px rgba(255, 255, 255, 0.12),
-      inset 0 -1px 2px rgba(0, 0, 0, 0.55),
-      0 0 12px rgba(140, 185, 230, 0.50),
-      0 0 28px rgba(60, 130, 200, 0.25);
-  }
-  .mote-face img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-    image-rendering: pixelated;
-  }
-  .mote-face--pox img {
-    image-rendering: auto;
-    object-fit: cover;
-    object-position: center center;
-    width: 200%;
-    height: 200%;
-    margin-left: -50%;
-    margin-top: -50%;
-  }
-
-  @keyframes moteRingSpin { to { transform: rotate(360deg); } }
-  @keyframes moteFall {
-    0%  { opacity: 0;    transform: translate(0, 0) scale(0.22) rotate(0deg); }
-    7%  { opacity: 1;    transform: translate(var(--dx1), var(--dy1)) scale(1.10) rotate(var(--r1)); }
-    68% { opacity: 0.90; transform: translate(var(--dx-mid), var(--dy-mid)) scale(0.95) rotate(var(--r-mid)); }
-    100%{ opacity: 0;    transform: translate(var(--dx2), var(--dy2)) scale(0.70) rotate(var(--r2)); }
-  }
-
   .nav-overlay {
     position: fixed;
     inset: 0;
@@ -361,11 +290,95 @@
 
   @media (prefers-reduced-motion: reduce) {
     .nav-overlay, .overlay-item, .overlay-footer,
-    .hamburger .bar, .overlay-close .bar,
-    .mote {
+    .hamburger .bar, .overlay-close .bar {
       transition: none !important;
       animation: none !important;
     }
+  }
+</style>
+
+<!-- Mote styles must be global so JS-created elements receive them -->
+<style is:global>
+  #mote-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 999999;
+    overflow: hidden;
+  }
+
+  .mote {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    pointer-events: none;
+    will-change: transform, opacity;
+    animation: moteFall var(--fall-dur, 2200ms) cubic-bezier(0.12, 0.9, 0.3, 1) forwards;
+  }
+  .mote-halo {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(
+      from 0deg,
+      rgba(70, 85, 100, 0.25), rgba(180, 198, 215, 0.80),
+      rgba(235, 245, 255, 1.00), rgba(255, 255, 255, 1.00),
+      rgba(200, 215, 228, 0.85), rgba(150, 168, 185, 0.60),
+      rgba(100, 118, 135, 0.35), rgba(70, 85, 100, 0.25)
+    );
+    animation: moteRingSpin var(--spin-a, 2.2s) linear infinite;
+  }
+  .mote-halo--outer {
+    inset: -5px;
+    background: conic-gradient(
+      from 180deg,
+      rgba(60, 80, 110, 0.00), rgba(100, 150, 200, 0.45),
+      rgba(180, 210, 240, 0.70), rgba(100, 150, 200, 0.45),
+      rgba(60, 80, 110, 0.00)
+    );
+    filter: blur(1px);
+    animation: moteRingSpin var(--spin-b, 3.4s) linear infinite reverse;
+  }
+  .mote-face {
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    overflow: hidden;
+    z-index: 2;
+    box-shadow:
+      inset 0 1px 2px rgba(255, 255, 255, 0.12),
+      inset 0 -1px 2px rgba(0, 0, 0, 0.55),
+      0 0 12px rgba(140, 185, 230, 0.50),
+      0 0 28px rgba(60, 130, 200, 0.25);
+  }
+  .mote-face img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    image-rendering: pixelated;
+  }
+  .mote-face--pox img {
+    image-rendering: auto;
+    object-fit: cover;
+    object-position: center center;
+    width: 200%;
+    height: 200%;
+    margin-left: -50%;
+    margin-top: -50%;
+  }
+
+  @keyframes moteRingSpin { to { transform: rotate(360deg); } }
+  @keyframes moteFall {
+    0%  { opacity: 0;    transform: translate(0, 0) scale(0.22) rotate(0deg); }
+    7%  { opacity: 1;    transform: translate(var(--dx1), var(--dy1)) scale(1.10) rotate(var(--r1)); }
+    68% { opacity: 0.90; transform: translate(var(--dx-mid), var(--dy-mid)) scale(0.95) rotate(var(--r-mid)); }
+    100%{ opacity: 0;    transform: translate(var(--dx2), var(--dy2)) scale(0.70) rotate(var(--r2)); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mote { animation: none !important; }
   }
 </style>
 
@@ -383,13 +396,6 @@
     if (!moteLayer) {
       moteLayer = document.createElement('div');
       moteLayer.id = 'mote-layer';
-      Object.assign(moteLayer.style, {
-        position: 'fixed',
-        inset: '0',
-        pointerEvents: 'none',
-        zIndex: '999999',
-        overflow: 'hidden',
-      });
       document.body.appendChild(moteLayer);
     }
 
@@ -397,8 +403,6 @@
       setTimeout(() => {
         const mote = document.createElement('div');
         mote.className = 'mote';
-        // absolute within the fixed full-viewport layer = stable viewport coords
-        mote.style.position = 'absolute';
         mote.style.left = px(rect.left + localX - 24);
         mote.style.top  = px(rect.top  + localY - 24);
 
@@ -440,7 +444,6 @@
     }
 
     function burst(btn) {
-      // Capture rect before any layout shift caused by nav opening
       const rect = btn.getBoundingClientRect();
       const W = rect.width;
       const H = rect.height;
