@@ -161,76 +161,117 @@
     width: 24px;
   }
 
-  /* ── Motes ── */
-  .mote {
-    position: absolute;
-    width: 48px;
-    height: 48px;
-    pointer-events: none;
-    will-change: transform, opacity;
-    animation: moteFall var(--fall-dur, 2200ms) ease-out forwards;
-  }
-  .mote-halo {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: conic-gradient(
-      from 0deg,
-      rgba(70,85,100,0.25), rgba(180,198,215,0.80),
-      rgba(235,245,255,1.00), rgba(255,255,255,1.00),
-      rgba(200,215,228,0.85), rgba(150,168,185,0.60),
-      rgba(100,118,135,0.35), rgba(70,85,100,0.25)
-    );
-    animation: moteRingSpin var(--spin-a, 2.2s) linear infinite;
-  }
-  .mote-halo--outer {
-    inset: -5px;
-    background: conic-gradient(
-      from 180deg,
-      rgba(60,80,110,0.00), rgba(100,150,200,0.45),
-      rgba(180,210,240,0.70), rgba(100,150,200,0.45),
-      rgba(60,80,110,0.00)
-    );
-    filter: blur(1px);
-    animation: moteRingSpin var(--spin-b, 3.4s) linear infinite reverse;
-  }
-  .mote-face {
-    position: absolute;
-    inset: 3px;
-    border-radius: 50%;
-    overflow: hidden;
-    z-index: 2;
-    box-shadow:
-      inset 0 1px 2px rgba(255,255,255,0.12),
-      inset 0 -1px 2px rgba(0,0,0,0.55),
-      0 0 12px rgba(140,185,230,0.50),
-      0 0 28px rgba(60,130,200,0.25);
-  }
-  .mote-face img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-    image-rendering: pixelated;
-  }
-  .mote-face--pox img {
-    image-rendering: auto;
-    object-fit: cover;
-    object-position: center;
-    width: 200%;
-    height: 200%;
-    margin-left: -50%;
-    margin-top: -50%;
-  }
+  /* ════════════════════════════════════════════
+       MOTE  — 48×48, badge ring + image face
+       ════════════════════════════════════════════ */
+    .mote {
+      position: absolute;
+      width: 48px;
+      height: 48px;
+      pointer-events: none;
+      will-change: transform, opacity;
+      animation: moteFall var(--fall-dur, 2200ms)
+                 cubic-bezier(0.12, 0.9, 0.3, 1) forwards;
+    }
 
-  @keyframes moteRingSpin { to { transform: rotate(360deg); } }
-  @keyframes moteFall {
-    0%  { opacity: 0;    transform: translate(0,0) scale(0.22) rotate(0deg); }
-    7%  { opacity: 1;    transform: translate(var(--dx1), var(--dy1)) scale(1.00) rotate(var(--r1)); }
-    68% { opacity: 0.88; transform: translate(var(--dx-mid), var(--dy-mid)) scale(0.92) rotate(var(--r-mid)); }
-    100%{ opacity: 0;    transform: translate(var(--dx2), var(--dy2)) scale(0.80) rotate(var(--r2)); }
-  }
+    /* ── inner metallic ring (exact .kickoff-badge-halo) ── */
+    .mote-halo {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: conic-gradient(
+        from 0deg,
+        rgba(70,  85,  100, 0.25),
+        rgba(180, 198, 215, 0.80),
+        rgba(235, 245, 255, 1.00),
+        rgba(255, 255, 255, 1.00),
+        rgba(200, 215, 228, 0.85),
+        rgba(150, 168, 185, 0.60),
+        rgba(100, 118, 135, 0.35),
+        rgba(70,  85,  100, 0.25)
+      );
+      animation: moteRingSpin var(--spin-a, 2.2s) linear infinite;
+    }
+
+    /* ── outer diffuse blue halo (exact .kickoff-badge-halo--outer) ── */
+    .mote-halo--outer {
+      inset: -5px;
+      background: conic-gradient(
+        from 180deg,
+        rgba(60,  80,  110, 0.00),
+        rgba(100, 150, 200, 0.45),
+        rgba(180, 210, 240, 0.70),
+        rgba(100, 150, 200, 0.45),
+        rgba(60,  80,  110, 0.00)
+      );
+      filter: blur(1px);
+      animation: moteRingSpin var(--spin-b, 3.4s) linear infinite reverse;
+    }
+
+    /* ── face plate: image fills the dark disc ── */
+    .mote-face {
+      position: absolute;
+      inset: 3px;
+      border-radius: 50%;
+      overflow: hidden;   /* clips image to circle */
+      z-index: 2;
+      box-shadow:
+        inset 0 1px 2px rgba(255, 255, 255, 0.12),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.55),
+        0 0 12px rgba(140, 185, 230, 0.50),
+        0 0 28px rgba(60,  130, 200, 0.25);
+    }
+
+    .mote-face img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      /* pixel art pfp stays crisp at small size */
+      image-rendering: pixelated;
+    }
+
+    /* POX mote: banner is wide, so zoom in to frame the virus-O at center */
+    .mote-face--pox img {
+      image-rendering: auto;            /* smooth for the illustrated banner  */
+      object-fit: cover;
+      object-position: center center;
+      /* slight zoom ensures the "O" virus glyph fills the disc */
+      width: 200%;
+      height: 200%;
+      margin-left: -50%;
+      margin-top: -50%;
+    }
+
+    /* ════════════════════════════════════════════
+       KEYFRAMES
+       ════════════════════════════════════════════ */
+    @keyframes moteRingSpin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes moteFall {
+      0% {
+        opacity: 0;
+        transform: translate(0, 0) scale(0.22) rotate(0deg);
+      }
+      /* burst pop — slight upward kick */
+      7% {
+        opacity: 1;
+        transform: translate(var(--dx1), var(--dy1)) scale(1.10) rotate(var(--r1));
+      }
+      /* mid-air, well-lit, drifting */
+      68% {
+        opacity: 0.90;
+        transform: translate(var(--dx-mid), var(--dy-mid)) scale(0.95) rotate(var(--r-mid));
+      }
+      /* far below the button, fading out */
+      100% {
+        opacity: 0;
+        transform: translate(var(--dx2), var(--dy2)) scale(0.70) rotate(var(--r2));
+      }
+    }
 
   .nav-overlay {
     position: fixed;
@@ -257,7 +298,7 @@
     background-image: url('/hero.jpg');
     background-size: cover;
     background-position: center 30%;
-    opacity: 0.15;
+    opacity: 0.55;
     pointer-events: none;
   }
 
@@ -372,64 +413,105 @@
     const POX_SRC = '/pox.jpg';
 
     function rand(lo, hi) { return Math.random() * (hi - lo) + lo; }
-    function px(n) { return n.toFixed(2) + 'px'; }
-    function dg(n) { return n.toFixed(1) + 'deg'; }
+  function px(n)        { return n.toFixed(2) + 'px'; }
+  function dg(n)        { return n.toFixed(1) + 'deg'; }
 
-    function spawnMote(btn, localX, localY, imgSrc, isPox, delayMs) {
-      setTimeout(() => {
-        const mote = document.createElement('div');
-        mote.className = 'mote';
-        mote.style.left = px(localX - 24);
-        mote.style.top  = px(localY - 24);
+  /**
+   * Spawns one 48×48 badge-ring mote at (localX, localY) relative to the button.
+   * @param {number}  localX   - x from button top-left
+   * @param {number}  localY   - y from button top-left
+   * @param {string}  imgSrc   - image URL for the face
+   * @param {boolean} isPox    - true → apply pox-specific face sizing
+   * @param {number}  delayMs  - stagger offset
+   */
+  function spawnMote(localX, localY, imgSrc, isPox, delayMs) {
+    setTimeout(() => {
 
-        const haloOuter = document.createElement('div');
-        haloOuter.className = 'mote-halo mote-halo--outer';
+      /* ── Outer wrapper ── */
+      const mote = document.createElement('div');
+      mote.className = 'mote';
+      mote.style.left = px(localX - 24); // centre 48px disc on spawn point
+      mote.style.top  = px(localY - 24);
 
-        const haloInner = document.createElement('div');
-        haloInner.className = 'mote-halo';
+      /* ── Outer diffuse halo ── */
+      const haloOuter = document.createElement('div');
+      haloOuter.className = 'mote-halo mote-halo--outer';
 
-        const face = document.createElement('div');
-        face.className = isPox ? 'mote-face mote-face--pox' : 'mote-face';
+      /* ── Inner metallic ring ── */
+      const haloInner = document.createElement('div');
+      haloInner.className = 'mote-halo';
 
-        const img = document.createElement('img');
-        img.src = imgSrc;
-        img.alt = '';
-        img.draggable = false;
-        face.appendChild(img);
+      /* ── Face plate ── */
+      const face = document.createElement('div');
+      face.className = isPox
+        ? 'mote-face mote-face--pox'
+        : 'mote-face';
 
-        mote.append(haloOuter, haloInner, face);
+      const img = document.createElement('img');
+      img.src = imgSrc;
+      img.alt = '';
+      img.draggable = false;
+      face.appendChild(img);
 
-        mote.style.setProperty('--spin-a', rand(1.4, 3.0).toFixed(2) + 's');
-        mote.style.setProperty('--spin-b', rand(2.6, 4.8).toFixed(2) + 's');
-        mote.style.setProperty('--dx1',    px(rand( -8,   8)));
-        mote.style.setProperty('--dy1',    px(rand(  8,  22)));
-        mote.style.setProperty('--dx-mid', px(rand(-25,  25)));
-        mote.style.setProperty('--dy-mid', px(rand( 65, 130)));
-        mote.style.setProperty('--dx2',    px(rand(-38,  38)));
-        mote.style.setProperty('--dy2',    px(rand(150, 260)));
-        mote.style.setProperty('--r1',     dg(rand(-12,  12)));
-        mote.style.setProperty('--r-mid',  dg(rand(-30,  30)));
-        mote.style.setProperty('--r2',     dg(rand(-50,  50)));
+      mote.append(haloOuter, haloInner, face);
 
-        const dur = Math.round(rand(1900, 3100));
-        mote.style.setProperty('--fall-dur', dur + 'ms');
-        btn.appendChild(mote);
-        setTimeout(() => mote.remove(), dur + 80);
-      }, delayMs);
-    }
+      /* ── Unique spin speeds per mote ── */
+      mote.style.setProperty('--spin-a', rand(1.4, 3.0).toFixed(2) + 's');
+      mote.style.setProperty('--spin-b', rand(2.6, 4.8).toFixed(2) + 's');
 
-    function burst(btn) {
-      const W = btn.offsetWidth;
-      const H = btn.offsetHeight;
-      [
-        { x: W * 0.38, y: H * 0.28, src: PFP_SRC, pox: false, d:  0 },
-        { x: W * 0.50, y: H * 0.50, src: PFP_SRC, pox: false, d: 55 },
-        { x: W * 0.62, y: H * 0.72, src: PFP_SRC, pox: false, d: 25 },
-        { x: W * 0.50, y: H * 0.15, src: POX_SRC, pox: true,  d: 10 },
-      ].forEach(m => {
-        spawnMote(btn, m.x + rand(-6,6), m.y + rand(-6,6), m.src, m.pox, m.d);
-      });
-    }
+      /* ── Trajectory ──
+           dy1    : slight upward pop on burst
+           dy-mid : mid-air waypoint
+           dy2    : far descent                */
+      mote.style.setProperty('--dx1',    px(rand(-22,  22)));
+      mote.style.setProperty('--dy1',    px(rand(-28,  -6)));
+      mote.style.setProperty('--dx-mid', px(rand(-70,  70)));
+      mote.style.setProperty('--dy-mid', px(rand( 90, 200)));
+      mote.style.setProperty('--dx2',    px(rand(-110, 110)));
+      mote.style.setProperty('--dy2',    px(rand( 260, 440)));
+      mote.style.setProperty('--r1',     dg(rand(-28,  28)));
+      mote.style.setProperty('--r-mid',  dg(rand(-110, 110)));
+      mote.style.setProperty('--r2',     dg(rand(-220, 220)));
+
+      /* ── Duration: 1.9 s – 3.1 s ── */
+      const dur = Math.round(rand(1900, 3100));
+      mote.style.setProperty('--fall-dur', dur + 'ms');
+
+      btn.appendChild(mote);
+      setTimeout(() => mote.remove(), dur + 80);
+    }, delayMs);
+  }
+
+  function burst() {
+    const W = btn.offsetWidth;
+    const H = btn.offsetHeight;
+
+    /*
+     * 4 motes, mapped to the three diagonal bars + one bonus.
+     * 3 pfp motes  — emerge from bar-A, bar-B, bar-C
+     * 1 POX mote   — bursts from top-centre (above bar-A)
+     */
+    const motes = [
+      /* bar-A zone  */
+      { x: W * 0.38, y: H * 0.28, src: PFP_SRC, pox: false, d:  0  },
+      /* bar-B centre */
+      { x: W * 0.50, y: H * 0.50, src: PFP_SRC, pox: false, d:  55 },
+      /* bar-C zone  */
+      { x: W * 0.62, y: H * 0.72, src: PFP_SRC, pox: false, d:  25 },
+      /* POX — top-centre, erupts first for emphasis */
+      { x: W * 0.50, y: H * 0.15, src: POX_SRC, pox: true,  d:  10 },
+    ];
+
+    motes.forEach(m => {
+      spawnMote(
+        m.x + rand(-6, 6),
+        m.y + rand(-6, 6),
+        m.src,
+        m.pox,
+        m.d
+      );
+    });
+  }
 
     function initNav() {
       const hamburger = document.getElementById('hamburger');
