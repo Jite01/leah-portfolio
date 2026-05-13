@@ -163,6 +163,7 @@
     width: 24px;
   }
 
+  /* ── Mote Layer ── */
   .mote-layer {
     position: fixed;
     inset: 0;
@@ -171,6 +172,7 @@
     overflow: visible;
   }
 
+  /* ── Motes ── */
   .mote {
     position: absolute;
     width: 48px;
@@ -215,20 +217,9 @@
       0 0 12px rgba(140,185,230,0.50),
       0 0 28px rgba(60,130,200,0.25);
   }
-  .mote-face img,
-  .mote-face--pox img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-  }
-  .mote-face--pox img {
-    image-rendering: auto;
-    width: 200%;
-    height: 200%;
-    margin-left: -50%;
-    margin-top: -50%;
+  .mote-face--pox {
+    background-size: 200% 200%;
+    background-position: center center;
   }
 
   @keyframes moteRingSpin { to { transform: rotate(360deg); } }
@@ -238,6 +229,7 @@
     68% { opacity: 0.90; transform: translate(var(--dx-mid), var(--dy-mid)) scale(0.95) rotate(var(--r-mid)); }
     100%{ opacity: 0;    transform: translate(var(--dx2), var(--dy2)) scale(0.70) rotate(var(--r2)); }
   }
+
 
   .nav-overlay {
     position: fixed;
@@ -400,19 +392,10 @@
 
         const face = document.createElement('div');
         face.className = isPox ? 'mote-face mote-face--pox' : 'mote-face';
-
-        const img = document.createElement('img');
-        img.src = imgSrc;
-        img.alt = '';
-        img.draggable = false;
-        img.width = 42;
-        img.height = 42;
-        img.style.width = '100%';
-        img.style.height = '100%';
-        img.style.objectFit = 'cover';
-        img.style.objectPosition = 'center';
-        img.style.display = 'block';
-        face.appendChild(img);
+        face.style.backgroundImage = 'url(' + imgSrc + ')';
+        face.style.backgroundSize = isPox ? '200% 200%' : 'cover';
+        face.style.backgroundPosition = 'center center';
+        face.style.backgroundRepeat = 'no-repeat';
 
         mote.append(haloOuter, haloInner, face);
 
@@ -540,4 +523,6 @@
 
     document.addEventListener('astro:page-load', initNav);
   })();
+</script>
+
 </script>
