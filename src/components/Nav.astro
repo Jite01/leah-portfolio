@@ -148,7 +148,6 @@
   .hamburger .bar-2 { width: 16px; }
   .hamburger .bar-3 { width: 20px; }
 
-  /* Hamburger → X when overlay is open */
   .hamburger.is-active .bar-1 {
     transform: translateY(6.5px) rotate(45deg);
     width: 24px;
@@ -169,7 +168,7 @@
     height: 48px;
     pointer-events: none;
     will-change: transform, opacity;
-    animation: moteFall var(--fall-dur, 2200ms) cubic-bezier(0.12, 0.9, 0.3, 1) forwards;
+    animation: moteFall var(--fall-dur, 2200ms) ease-out forwards;
   }
   .mote-halo {
     position: absolute;
@@ -228,9 +227,9 @@
   @keyframes moteRingSpin { to { transform: rotate(360deg); } }
   @keyframes moteFall {
     0%  { opacity: 0;    transform: translate(0,0) scale(0.22) rotate(0deg); }
-    7%  { opacity: 1;    transform: translate(var(--dx1), var(--dy1)) scale(1.10) rotate(var(--r1)); }
-    68% { opacity: 0.90; transform: translate(var(--dx-mid), var(--dy-mid)) scale(0.95) rotate(var(--r-mid)); }
-    100%{ opacity: 0;    transform: translate(var(--dx2), var(--dy2)) scale(0.70) rotate(var(--r2)); }
+    7%  { opacity: 1;    transform: translate(var(--dx1), var(--dy1)) scale(1.00) rotate(var(--r1)); }
+    68% { opacity: 0.88; transform: translate(var(--dx-mid), var(--dy-mid)) scale(0.92) rotate(var(--r-mid)); }
+    100%{ opacity: 0;    transform: translate(var(--dx2), var(--dy2)) scale(0.80) rotate(var(--r2)); }
   }
 
   .nav-overlay {
@@ -402,15 +401,15 @@
 
         mote.style.setProperty('--spin-a', rand(1.4, 3.0).toFixed(2) + 's');
         mote.style.setProperty('--spin-b', rand(2.6, 4.8).toFixed(2) + 's');
-        mote.style.setProperty('--dx1',    px(rand(-22,  22)));
-        mote.style.setProperty('--dy1',    px(rand(-28,  -6)));
-        mote.style.setProperty('--dx-mid', px(rand(-70,  70)));
-        mote.style.setProperty('--dy-mid', px(rand( 90, 200)));
-        mote.style.setProperty('--dx2',    px(rand(-110, 110)));
-        mote.style.setProperty('--dy2',    px(rand( 260, 440)));
-        mote.style.setProperty('--r1',     dg(rand(-28,  28)));
-        mote.style.setProperty('--r-mid',  dg(rand(-110, 110)));
-        mote.style.setProperty('--r2',     dg(rand(-220, 220)));
+        mote.style.setProperty('--dx1',    px(rand( -8,   8)));
+        mote.style.setProperty('--dy1',    px(rand(  8,  22)));
+        mote.style.setProperty('--dx-mid', px(rand(-25,  25)));
+        mote.style.setProperty('--dy-mid', px(rand( 65, 130)));
+        mote.style.setProperty('--dx2',    px(rand(-38,  38)));
+        mote.style.setProperty('--dy2',    px(rand(150, 260)));
+        mote.style.setProperty('--r1',     dg(rand(-12,  12)));
+        mote.style.setProperty('--r-mid',  dg(rand(-30,  30)));
+        mote.style.setProperty('--r2',     dg(rand(-50,  50)));
 
         const dur = Math.round(rand(1900, 3100));
         mote.style.setProperty('--fall-dur', dur + 'ms');
@@ -422,24 +421,22 @@
     function burst(btn) {
       const W = btn.offsetWidth;
       const H = btn.offsetHeight;
-      const motes = [
-        { x: W * 0.38, y: H * 0.28, src: PFP_SRC, pox: false, d:  0  },
-        { x: W * 0.50, y: H * 0.50, src: PFP_SRC, pox: false, d: 55  },
-        { x: W * 0.62, y: H * 0.72, src: PFP_SRC, pox: false, d: 25  },
-        { x: W * 0.50, y: H * 0.15, src: POX_SRC, pox: true,  d: 10  },
-      ];
-      motes.forEach(m => {
+      [
+        { x: W * 0.38, y: H * 0.28, src: PFP_SRC, pox: false, d:  0 },
+        { x: W * 0.50, y: H * 0.50, src: PFP_SRC, pox: false, d: 55 },
+        { x: W * 0.62, y: H * 0.72, src: PFP_SRC, pox: false, d: 25 },
+        { x: W * 0.50, y: H * 0.15, src: POX_SRC, pox: true,  d: 10 },
+      ].forEach(m => {
         spawnMote(btn, m.x + rand(-6,6), m.y + rand(-6,6), m.src, m.pox, m.d);
       });
     }
 
     function initNav() {
       const hamburger = document.getElementById('hamburger');
-      const overlay = document.getElementById('nav-overlay');
-      const closeBtn = document.getElementById('overlay-close');
+      const overlay   = document.getElementById('nav-overlay');
+      const closeBtn  = document.getElementById('overlay-close');
       if (!hamburger || !overlay) return;
 
-      // Prevent double-binding if script re-runs
       if (hamburger._navBound) return;
       hamburger._navBound = true;
 
@@ -453,6 +450,7 @@
         hamburger.setAttribute('aria-label', 'Close navigation');
         document.body.style.overflow = 'hidden';
         closeBtn.focus();
+        setTimeout(() => burst(hamburger), 1000);
       }
 
       function closeNav() {
@@ -465,8 +463,6 @@
         hamburger.focus();
       }
 
-      // Burst on pointerdown (visual feedback), toggle on click
-      hamburger.addEventListener('pointerdown', () => burst(hamburger));
       hamburger.addEventListener('click', () => {
         if (overlay.classList.contains('is-open')) {
           closeNav();
@@ -496,7 +492,7 @@
         ).filter(el => !el.closest('[aria-hidden="true"]'));
 
         const first = focusable[0];
-        const last = focusable[focusable.length - 1];
+        const last  = focusable[focusable.length - 1];
 
         if (e.shiftKey && document.activeElement === first) {
           e.preventDefault();
@@ -508,14 +504,12 @@
       });
     }
 
-    // Run on initial load (for MPA or when View Transitions not active)
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', initNav);
     } else {
       initNav();
     }
 
-    // Run on every Astro View Transition navigation
     document.addEventListener('astro:page-load', initNav);
   })();
 </script>
