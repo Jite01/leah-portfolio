@@ -452,115 +452,142 @@ const targetIso = `${nextKickoff.date}T11:00:00+01:00`;
 </style>
 
 <script>
-  const handleText = '@leahbluewater';
-  const handleEl = document.getElementById('typewriter-handle');
-  let charIndex = 0;
+  (function() {
+    const handleText = '@leahbluewater';
+    let typewriterTimeout = null;
 
-  function typeWriter() {
-    if (handleEl && charIndex < handleText.length) {
-      handleEl.textContent = handleText.substring(0, charIndex + 1);
-      charIndex++;
-      setTimeout(typeWriter, 80 + Math.random() * 40);
-    } else if (handleEl) {
-      handleEl.innerHTML = handleText + '<span class="cursor">|</span>';
-      const cursor = handleEl.querySelector('.cursor');
-      if (cursor) {
-        cursor.style.animation = 'blink 1s step-end infinite';
-        cursor.style.color = 'var(--clr-accent)';
-      }
-    }
-  }
+    function runTypewriter() {
+      const handleEl = document.getElementById('typewriter-handle');
+      if (!handleEl) return;
+      let charIndex = 0;
+      handleEl.textContent = '';
+      handleEl.innerHTML = '';
 
-  setTimeout(typeWriter, 800);
-
-  // ── Single RAF loop drives everything ───────────────────────────────────────
-  const haloInner = document.querySelector('.kickoff-badge-halo:not(.kickoff-badge-halo--outer)');
-  const haloOuter = document.querySelector('.kickoff-badge-halo--outer');
-  const cardRing  = document.querySelector('.next-card-ring-halo');
-  const badge     = document.getElementById('kickoff-badge');
-  const card      = document.getElementById('next-card');
-
-  const INNER_MS  = 18000;
-  const OUTER_MS  = 27000;
-  const CARD_MS   = 18000;
-  const ORBIT_MS  = 18000;
-
-  const BADGE_HALF = 24;
-
-  let rafStart = null;
-
-  function tick(ts) {
-    if (rafStart === null) rafStart = ts;
-    const elapsed = ts - rafStart;
-
-    if (haloInner) haloInner.style.transform = `rotate(${(elapsed / INNER_MS) * 360}deg)`;
-    if (haloOuter) haloOuter.style.transform = `rotate(${-(elapsed / OUTER_MS) * 360}deg)`;
-    if (cardRing)  cardRing.style.transform  = `rotate(${(elapsed / CARD_MS) * 360}deg)`;
-
-    if (badge && card) {
-      const w = card.offsetWidth;
-      const h = card.offsetHeight;
-      const progress  = (elapsed % ORBIT_MS) / ORBIT_MS;
-      const perimeter = 2 * (w + h);
-      const dist      = progress * perimeter;
-
-      let cx, cy;
-
-      if (dist <= w) {
-        cx = dist;
-        cy = 0;
-      } else if (dist <= w + h) {
-        cx = w;
-        cy = dist - w;
-      } else if (dist <= 2 * w + h) {
-        cx = w - (dist - w - h);
-        cy = h;
-      } else {
-        cx = 0;
-        cy = h - (dist - 2 * w - h);
+      function typeWriter() {
+        if (handleEl && charIndex < handleText.length) {
+          handleEl.textContent = handleText.substring(0, charIndex + 1);
+          charIndex++;
+          typewriterTimeout = setTimeout(typeWriter, 80 + Math.random() * 40);
+        } else if (handleEl) {
+          handleEl.innerHTML = handleText + '<span class="cursor">|</span>';
+          const cursor = handleEl.querySelector('.cursor');
+          if (cursor) {
+            cursor.style.animation = 'blink 1s step-end infinite';
+            cursor.style.color = 'var(--clr-accent)';
+          }
+        }
       }
 
-      badge.style.left      = `${cx - BADGE_HALF}px`;
-      badge.style.top       = `${cy - BADGE_HALF}px`;
-      badge.style.transform = 'none';
+      if (typewriterTimeout) clearTimeout(typewriterTimeout);
+      setTimeout(typeWriter, 800);
     }
 
-    requestAnimationFrame(tick);
-  }
+    // ── RAF loop ───────────────────────────────────────────────────────────────
+    let rafId = null;
+    let rafStart = null;
 
-  requestAnimationFrame(tick);
+    function runAnimations() {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafStart = null;
 
-  // ── Countdown ────────────────────────────────────────────────────────────────
-  const cardEl       = document.getElementById('next-card');
-  const targetIso    = cardEl?.dataset?.target;
-  const hasUrl       = cardEl?.dataset?.hasUrl === 'true';
-  const countdownEl  = document.getElementById('next-card-countdown');
+      const haloInner = document.querySelector('.kickoff-badge-halo:not(.kickoff-badge-halo--outer)');
+      const haloOuter = document.querySelector('.kickoff-badge-halo--outer');
+      const cardRing  = document.querySelector('.next-card-ring-halo');
+      const badge     = document.getElementById('kickoff-badge');
+      const card      = document.getElementById('next-card');
 
-  function getCountdown() {
-    if (!targetIso) return { text: '--:--:--', live: false };
-    const now    = new Date();
-    const target = new Date(targetIso);
-    const diff   = target - now;
+      const INNER_MS  = 18000;
+      const OUTER_MS  = 27000;
+      const CARD_MS   = 18000;
+      const ORBIT_MS  = 18000;
+      const BADGE_HALF = 24;
 
-    if (diff <= 0) {
-      if (hasUrl) return { text: 'LIVE', live: true };
-      return { text: 'STARTING SOON', live: false };
+      function tick(ts) {
+        if (rafStart === null) rafStart = ts;
+        const elapsed = ts - rafStart;
+
+        if (haloInner) haloInner.style.transform = `rotate(${(elapsed / INNER_MS) * 360}deg)`;
+        if (haloOuter) haloOuter.style.transform = `rotate(${-(elapsed / OUTER_MS) * 360}deg)`;
+        if (cardRing)  cardRing.style.transform  = `rotate(${(elapsed / CARD_MS) * 360}deg)`;
+
+        if (badge && card) {
+          const w = card.offsetWidth;
+          const h = card.offsetHeight;
+          const progress  = (elapsed % ORBIT_MS) / ORBIT_MS;
+          const perimeter = 2 * (w + h);
+          const dist      = progress * perimeter;
+
+          let cx, cy;
+          if (dist <= w) {
+            cx = dist; cy = 0;
+          } else if (dist <= w + h) {
+            cx = w; cy = dist - w;
+          } else if (dist <= 2 * w + h) {
+            cx = w - (dist - w - h); cy = h;
+          } else {
+            cx = 0; cy = h - (dist - 2 * w - h);
+          }
+
+          badge.style.left      = `${cx - BADGE_HALF}px`;
+          badge.style.top       = `${cy - BADGE_HALF}px`;
+          badge.style.transform = 'none';
+        }
+
+        rafId = requestAnimationFrame(tick);
+      }
+
+      rafId = requestAnimationFrame(tick);
     }
 
-    const h   = Math.floor(diff / 3600000);
-    const m   = Math.floor((diff % 3600000) / 60000);
-    const s   = Math.floor((diff % 60000) / 1000);
-    const pad = (n) => String(n).padStart(2, '0');
-    return { text: `${pad(h)}:${pad(m)}:${pad(s)}`, live: false };
-  }
+    // ── Countdown ────────────────────────────────────────────────────────────────
+    function runCountdown() {
+      const cardEl       = document.getElementById('next-card');
+      const targetIso    = cardEl?.dataset?.target;
+      const hasUrl       = cardEl?.dataset?.hasUrl === 'true';
+      const countdownEl  = document.getElementById('next-card-countdown');
 
-  if (countdownEl) {
-    const tickCd = () => {
-      const { text, live } = getCountdown();
-      countdownEl.textContent = text;
-      countdownEl.classList.toggle('is-live', live);
-    };
-    tickCd();
-    setInterval(tickCd, 1000);
-  }
+      function getCountdown() {
+        if (!targetIso) return { text: '--:--:--', live: false };
+        const now    = new Date();
+        const target = new Date(targetIso);
+        const diff   = target - now;
+
+        if (diff <= 0) {
+          if (hasUrl) return { text: 'LIVE', live: true };
+          return { text: 'STARTING SOON', live: false };
+        }
+
+        const h   = Math.floor(diff / 3600000);
+        const m   = Math.floor((diff % 3600000) / 60000);
+        const s   = Math.floor((diff % 60000) / 1000);
+        const pad = (n) => String(n).padStart(2, '0');
+        return { text: `${pad(h)}:${pad(m)}:${pad(s)}`, live: false };
+      }
+
+      if (countdownEl) {
+        const tickCd = () => {
+          const { text, live } = getCountdown();
+          countdownEl.textContent = text;
+          countdownEl.classList.toggle('is-live', live);
+        };
+        tickCd();
+        setInterval(tickCd, 1000);
+      }
+    }
+
+    function initIndex() {
+      runTypewriter();
+      runAnimations();
+      runCountdown();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initIndex);
+    } else {
+      initIndex();
+    }
+
+    document.addEventListener('astro:page-load', initIndex);
+  })();
 </script>
+
