@@ -68,9 +68,6 @@
 </div>
 
 <style>
-.mote { border: 2px solid red !important; }
-.mote-face { border: 2px solid lime !important; background-color: blue !important; }
-
   .nav-bar {
     position: fixed;
     top: 0;
@@ -166,7 +163,6 @@
     width: 24px;
   }
 
-  /* ── Mote Layer ── */
   .mote-layer {
     position: fixed;
     inset: 0;
@@ -175,7 +171,6 @@
     overflow: visible;
   }
 
-  /* ── Motes ── */
   .mote {
     position: absolute;
     width: 48px;
@@ -233,7 +228,6 @@
     100%{ opacity: 0;    transform: translate(var(--dx2), var(--dy2)) scale(0.70) rotate(var(--r2)); }
   }
 
-
   .nav-overlay {
     position: fixed;
     inset: 0;
@@ -256,7 +250,7 @@
   .overlay-photo {
     position: absolute;
     inset: 0;
-    background-image: url('/hero.jpg');
+    background-image: url('/images/hero.jpg');
     background-size: cover;
     background-position: center 30%;
     opacity: 0.15;
@@ -371,7 +365,7 @@
   }
 </style>
 
-<script>
+<script is:inline>
   (function() {
     const PFP_SRC = '/pfp.jpg';
     const POX_SRC = '/pox.jpg';
@@ -422,11 +416,6 @@
     }
 
     function burst(layer, btn) {
-function burst(layer, btn) {
-  alert('burst');
-  // ... rest
-}
-
       const rect = btn.getBoundingClientRect();
       const cx = rect.left + rect.width / 2;
       const cy = rect.top + rect.height / 2;
@@ -455,9 +444,6 @@ function burst(layer, btn) {
       const closeBtn = document.getElementById('overlay-close');
       const moteLayer = document.getElementById('mote-layer');
       if (!hamburger || !overlay || !moteLayer) return;
-
-      if (hamburger._navBound) return;
-      hamburger._navBound = true;
 
       const overlayLinks = overlay.querySelectorAll('.overlay-link');
 
@@ -531,6 +517,4 @@ function burst(layer, btn) {
 
     document.addEventListener('astro:page-load', initNav);
   })();
-</script>
-
 </script>
