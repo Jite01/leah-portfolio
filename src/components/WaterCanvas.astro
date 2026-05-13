@@ -216,11 +216,17 @@
       animId = requestAnimationFrame(animate);
     }
     
-    function init() {
+   function init() {
+      lastTime = 0;
+      time = 0;
+      phase = 'filling';
+      phaseTimer = 0;
+      fillLevel = 0;
       resize();
       drawTextMask();
       animId = requestAnimationFrame(animate);
     }
+
     
     function cleanup() {
       if (animId) cancelAnimationFrame(animId);
