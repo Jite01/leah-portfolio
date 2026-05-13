@@ -359,15 +359,13 @@
     display: block;
     image-rendering: pixelated;
   }
-  .mote-face--pox img {
-    image-rendering: auto;
-    object-fit: cover;
-    object-position: 50% 55%;
-    width: 200%;
-    height: 200%;
-    margin-left: -50%;
-    margin-top: -50%;
+    .mote-face--pox {
+    background-image: var(--pox-src);
+    background-size: 200% 200%;
+    background-position: 50% 55%;
+    background-repeat: no-repeat;
   }
+
 
   @keyframes moteRingSpin { to { transform: rotate(360deg); } }
   @keyframes moteFall {
