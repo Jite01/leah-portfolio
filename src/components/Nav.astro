@@ -213,7 +213,7 @@
       position: absolute;
       inset: 3px;
       border-radius: 50%;
-      overflow: hidden;
+      overflow: hidden;   /* clips image to circle */
       z-index: 2;
       box-shadow:
         inset 0 1px 2px rgba(255, 255, 255, 0.12),
@@ -228,14 +228,16 @@
       object-fit: cover;
       object-position: center;
       display: block;
+      /* pixel art pfp stays crisp at small size */
       image-rendering: pixelated;
     }
 
     /* POX mote: banner is wide, so zoom in to frame the virus-O at center */
     .mote-face--pox img {
-      image-rendering: auto;
+      image-rendering: auto;            /* smooth for the illustrated banner  */
       object-fit: cover;
       object-position: center center;
+      /* slight zoom ensures the "O" virus glyph fills the disc */
       width: 200%;
       height: 200%;
       margin-left: -50%;
@@ -254,14 +256,17 @@
         opacity: 0;
         transform: translate(0, 0) scale(0.22) rotate(0deg);
       }
+      /* burst pop — slight upward kick */
       7% {
         opacity: 1;
         transform: translate(var(--dx1), var(--dy1)) scale(1.10) rotate(var(--r1));
       }
+      /* mid-air, well-lit, drifting */
       68% {
         opacity: 0.90;
         transform: translate(var(--dx-mid), var(--dy-mid)) scale(0.95) rotate(var(--r-mid));
       }
+      /* far below the button, fading out */
       100% {
         opacity: 0;
         transform: translate(var(--dx2), var(--dy2)) scale(0.70) rotate(var(--r2));
@@ -408,102 +413,8 @@
     const POX_SRC = '/pox.jpg';
 
     function rand(lo, hi) { return Math.random() * (hi - lo) + lo; }
-  function px(n)        { return n.toFixed(2) + 'px'; }
-  function dg(n)        { return n.toFixed(1) + 'deg'; }
-
-  /**
-   * Spawns one 48×48 badge-ring mote at (localX, localY) relative to the button.
-   * @param {number}  localX   - x from button top-left
-   * @param {number}  localY   - y from button top-left
-   * @param {string}  imgSrc   - image URL for the face
-   * @param {boolean} isPox    - true → apply pox-specific face sizing
-   * @param {number}  delayMs  - stagger offset
-   */
-  function spawnMote(localX, localY, imgSrc, isPox, delayMs) {
-    setTimeout(() => {
-
-      /* ── Outer wrapper ── */
-      const mote = document.createElement('div');
-      mote.className = 'mote';
-      mote.style.left = px(localX - 24);
-      mote.style.top  = px(localY - 24);
-
-      /* ── Outer diffuse halo ── */
-      const haloOuter = document.createElement('div');
-      haloOuter.className = 'mote-halo mote-halo--outer';
-
-      /* ── Inner metallic ring ── */
-      const haloInner = document.createElement('div');
-      haloInner.className = 'mote-halo';
-
-      /* ── Face plate ── */
-      const face = document.createElement('div');
-      face.className = isPox
-        ? 'mote-face mote-face--pox'
-        : 'mote-face';
-
-      const img = document.createElement('img');
-      img.src = imgSrc;
-      img.alt = '';
-      img.draggable = false;
-      face.appendChild(img);
-
-      mote.append(haloOuter, haloInner, face);
-
-      /* ── Unique spin speeds per mote ── */
-      mote.style.setProperty('--spin-a', rand(1.4, 3.0).toFixed(2) + 's');
-      mote.style.setProperty('--spin-b', rand(2.6, 4.8).toFixed(2) + 's');
-
-      /* ── Trajectory ── */
-      mote.style.setProperty('--dx1',    px(rand(-22,  22)));
-      mote.style.setProperty('--dy1',    px(rand(-28,  -6)));
-      mote.style.setProperty('--dx-mid', px(rand(-70,  70)));
-      mote.style.setProperty('--dy-mid', px(rand( 90, 200)));
-      mote.style.setProperty('--dx2',    px(rand(-110, 110)));
-      mote.style.setProperty('--dy2',    px(rand( 260, 440)));
-      mote.style.setProperty('--r1',     dg(rand(-28,  28)));
-      mote.style.setProperty('--r-mid',  dg(rand(-110, 110)));
-      mote.style.setProperty('--r2',     dg(rand(-220, 220)));
-
-      /* ── Duration: 1.9 s – 3.1 s ── */
-      const dur = Math.round(rand(1900, 3100));
-      mote.style.setProperty('--fall-dur', dur + 'ms');
-
-      hamburger.appendChild(mote);
-      setTimeout(() => mote.remove(), dur + 80);
-    }, delayMs);
-  }
-
-  function burst() {
-    const W = hamburger.offsetWidth;
-    const H = hamburger.offsetHeight;
-
-    /*
-     * 4 motes, mapped to the three diagonal bars + one bonus.
-     * 3 pfp motes  — emerge from bar-A, bar-B, bar-C
-     * 1 POX mote   — bursts from top-centre (above bar-A)
-     */
-    const motes = [
-      /* bar-A zone  */
-      { x: W * 0.38, y: H * 0.28, src: PFP_SRC, pox: false, d:  0  },
-      /* bar-B centre */
-      { x: W * 0.50, y: H * 0.50, src: PFP_SRC, pox: false, d:  55 },
-      /* bar-C zone  */
-      { x: W * 0.62, y: H * 0.72, src: PFP_SRC, pox: false, d:  25 },
-      /* POX — top-centre, erupts first for emphasis */
-      { x: W * 0.50, y: H * 0.15, src: POX_SRC, pox: true,  d:  10 },
-    ];
-
-    motes.forEach(m => {
-      spawnMote(
-        m.x + rand(-6, 6),
-        m.y + rand(-6, 6),
-        m.src,
-        m.pox,
-        m.d
-      );
-    });
-  }
+    function px(n)        { return n.toFixed(2) + 'px'; }
+    function dg(n)        { return n.toFixed(1) + 'deg'; }
 
     function initNav() {
       const hamburger = document.getElementById('hamburger');
@@ -515,6 +426,98 @@
       hamburger._navBound = true;
 
       const overlayLinks = overlay.querySelectorAll('.overlay-link');
+
+      /**
+       * Spawns one 48×48 badge-ring mote at (localX, localY) relative to the button.
+       */
+      function spawnMote(localX, localY, imgSrc, isPox, delayMs) {
+        setTimeout(() => {
+
+          /* ── Outer wrapper ── */
+          const mote = document.createElement('div');
+          mote.className = 'mote';
+          mote.style.left = px(localX - 24); // centre 48px disc on spawn point
+          mote.style.top  = px(localY - 24);
+
+          /* ── Outer diffuse halo ── */
+          const haloOuter = document.createElement('div');
+          haloOuter.className = 'mote-halo mote-halo--outer';
+
+          /* ── Inner metallic ring ── */
+          const haloInner = document.createElement('div');
+          haloInner.className = 'mote-halo';
+
+          /* ── Face plate ── */
+          const face = document.createElement('div');
+          face.className = isPox
+            ? 'mote-face mote-face--pox'
+            : 'mote-face';
+
+          const img = document.createElement('img');
+          img.src = imgSrc;
+          img.alt = '';
+          img.draggable = false;
+          face.appendChild(img);
+
+          mote.append(haloOuter, haloInner, face);
+
+          /* ── Unique spin speeds per mote ── */
+          mote.style.setProperty('--spin-a', rand(1.4, 3.0).toFixed(2) + 's');
+          mote.style.setProperty('--spin-b', rand(2.6, 4.8).toFixed(2) + 's');
+
+          /* ── Trajectory ──
+               dy1    : slight upward pop on burst
+               dy-mid : mid-air waypoint
+               dy2    : far descent                */
+          mote.style.setProperty('--dx1',    px(rand(-22,  22)));
+          mote.style.setProperty('--dy1',    px(rand(-28,  -6)));
+          mote.style.setProperty('--dx-mid', px(rand(-70,  70)));
+          mote.style.setProperty('--dy-mid', px(rand( 90, 200)));
+          mote.style.setProperty('--dx2',    px(rand(-110, 110)));
+          mote.style.setProperty('--dy2',    px(rand( 260, 440)));
+          mote.style.setProperty('--r1',     dg(rand(-28,  28)));
+          mote.style.setProperty('--r-mid',  dg(rand(-110, 110)));
+          mote.style.setProperty('--r2',     dg(rand(-220, 220)));
+
+          /* ── Duration: 1.9 s – 3.1 s ── */
+          const dur = Math.round(rand(1900, 3100));
+          mote.style.setProperty('--fall-dur', dur + 'ms');
+
+          hamburger.appendChild(mote);
+          setTimeout(() => mote.remove(), dur + 80);
+        }, delayMs);
+      }
+
+      function burst() {
+        const W = hamburger.offsetWidth;
+        const H = hamburger.offsetHeight;
+
+        /*
+         * 4 motes, mapped to the three diagonal bars + one bonus.
+         * 3 pfp motes  — emerge from bar-A, bar-B, bar-C
+         * 1 POX mote   — bursts from top-centre (above bar-A)
+         */
+        const motes = [
+          /* bar-A zone  */
+          { x: W * 0.38, y: H * 0.28, src: PFP_SRC, pox: false, d:  0  },
+          /* bar-B centre */
+          { x: W * 0.50, y: H * 0.50, src: PFP_SRC, pox: false, d:  55 },
+          /* bar-C zone  */
+          { x: W * 0.62, y: H * 0.72, src: PFP_SRC, pox: false, d:  25 },
+          /* POX — top-centre, erupts first for emphasis */
+          { x: W * 0.50, y: H * 0.15, src: POX_SRC, pox: true,  d:  10 },
+        ];
+
+        motes.forEach(m => {
+          spawnMote(
+            m.x + rand(-6, 6),
+            m.y + rand(-6, 6),
+            m.src,
+            m.pox,
+            m.d
+          );
+        });
+      }
 
       function openNav() {
         overlay.classList.add('is-open');
