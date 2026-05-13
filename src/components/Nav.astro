@@ -469,6 +469,11 @@ alert('script running, hamburger=' + document.getElementById('hamburger'));
       }
 
       hamburger.addEventListener('click', () => {
+hamburger.addEventListener('click', () => {
+  alert('hamburger clicked');
+  // ... rest
+});
+
         if (overlay.classList.contains('is-open')) {
           closeNav();
         } else {
