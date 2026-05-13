@@ -216,7 +216,7 @@
       animId = requestAnimationFrame(animate);
     }
     
-   function init() {
+       function init() {
       lastTime = 0;
       time = 0;
       phase = 'filling';
@@ -224,13 +224,15 @@
       fillLevel = 0;
       resize();
       drawTextMask();
+      if (animId) cancelAnimationFrame(animId);
       animId = requestAnimationFrame(animate);
     }
-
     
     function cleanup() {
       if (animId) cancelAnimationFrame(animId);
+      animId = null;
     }
+
     
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
