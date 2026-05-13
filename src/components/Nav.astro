@@ -428,6 +428,12 @@
         const dur = Math.round(rand(1900, 3100));
         mote.style.setProperty('--fall-dur', dur + 'ms');
         layer.appendChild(mote);
+mote.style.width = '48px';
+mote.style.height = '48px';
+face.style.width = '42px';
+face.style.height = '42px';
+face.style.backgroundColor = 'red';
+
         alert('mote at ' + mote.style.left + ', ' + mote.style.top + ', children=' + mote.childNodes.length);
 
         mote.style.opacity = '1';
