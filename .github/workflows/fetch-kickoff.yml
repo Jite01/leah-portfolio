@@ -2,8 +2,10 @@ name: Fetch Kickoff URL
 
 on:
   schedule:
-    # 10:02, 10:05, 10:10 UTC  →  11:02, 11:05, 11:10 WAT
-    - cron: '2,5,10 10 * * *'
+    # 10:52, 10:55, 10:58, 11:00, 11:02, 11:05, 11:10 UTC
+    # = 11:52, 11:55, 11:58, 12:00, 12:02, 12:05, 12:10 WAT
+    # Compensates for ~1h GitHub Actions cron drift
+    - cron: '52,55,58,0,2,5,10 10 * * *'
   workflow_dispatch:
 
 permissions:
@@ -36,5 +38,3 @@ jobs:
         with:
           commit_message: 'chore: update kickoff URL'
           file_pattern: src/data/kickoffs.json
-
-
