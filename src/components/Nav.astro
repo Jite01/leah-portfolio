@@ -362,7 +362,7 @@
   .mote-face--pox img {
     image-rendering: auto;
     object-fit: cover;
-    object-position: center center;
+    object-position: 50% 55%;
     width: 200%;
     height: 200%;
     margin-left: -50%;
@@ -458,14 +458,18 @@
       });
     }
 
+    let navController = null;
+
     function initNav() {
       const hamburger = document.getElementById('hamburger');
       const overlay = document.getElementById('nav-overlay');
       const closeBtn = document.getElementById('overlay-close');
       if (!hamburger || !overlay) return;
 
-      if (hamburger._navBound) return;
-      hamburger._navBound = true;
+      // Abort old listeners before attaching new ones
+      if (navController) navController.abort();
+      navController = new AbortController();
+      const { signal } = navController;
 
       const overlayLinks = overlay.querySelectorAll('.overlay-link');
 
@@ -489,26 +493,26 @@
         hamburger.focus();
       }
 
-      hamburger.addEventListener('pointerdown', () => burst(hamburger));
+      hamburger.addEventListener('pointerdown', () => burst(hamburger), { signal });
       hamburger.addEventListener('click', () => {
         if (overlay.classList.contains('is-open')) {
           closeNav();
         } else {
           openNav();
         }
-      });
+      }, { signal });
 
-      closeBtn.addEventListener('click', closeNav);
+      closeBtn.addEventListener('click', closeNav, { signal });
 
       overlayLinks.forEach(link => {
-        link.addEventListener('click', closeNav);
+        link.addEventListener('click', closeNav, { signal });
       });
 
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && overlay.classList.contains('is-open')) {
           closeNav();
         }
-      });
+      }, { signal });
 
       overlay.addEventListener('keydown', (e) => {
         if (!overlay.classList.contains('is-open')) return;
@@ -528,7 +532,7 @@
           e.preventDefault();
           first.focus();
         }
-      });
+      }, { signal });
     }
 
     if (document.readyState === 'loading') {
