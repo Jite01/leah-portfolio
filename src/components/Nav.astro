@@ -359,15 +359,15 @@
     display: block;
     image-rendering: pixelated;
   }
-
   .mote-face--pox img {
-  image-rendering: auto;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 55%;
-  display: block;
-}
+    image-rendering: auto;
+    object-fit: cover;
+    object-position: 50% 55%;
+    width: 200%;
+    height: 200%;
+    margin-left: -50%;
+    margin-top: -50%;
+  }
 
   @keyframes moteRingSpin { to { transform: rotate(360deg); } }
   @keyframes moteFall {
@@ -415,16 +415,11 @@
         const face = document.createElement('div');
         face.className = isPox ? 'mote-face mote-face--pox' : 'mote-face';
 
-        if (isPox) {
-          face.style.setProperty('--pox-src', 'url(' + imgSrc + ')');
-        } else {
-          const img = document.createElement('img');
-          img.src = imgSrc;
-          img.alt = '';
-          img.draggable = false;
-          face.appendChild(img);
-        }
-
+        const img = document.createElement('img');
+        img.src = imgSrc;
+        img.alt = '';
+        img.draggable = false;
+        face.appendChild(img);
 
         mote.append(haloOuter, haloInner, face);
 
