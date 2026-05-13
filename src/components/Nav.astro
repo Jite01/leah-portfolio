@@ -421,6 +421,9 @@
         const dur = Math.round(rand(1900, 3100));
         mote.style.setProperty('--fall-dur', dur + 'ms');
         layer.appendChild(mote);
+        mote.style.opacity = '1';
+        mote.style.transform = 'scale(1)';
+
         setTimeout(() => mote.remove(), dur + 80);
       }, delayMs);
     }
