@@ -24,7 +24,6 @@
   </div>
 </header>
 
-<!-- Mote layer: fixed, pointer-events none, above everything -->
 <div class="mote-layer" id="mote-layer" aria-hidden="true"></div>
 
 <div class="nav-overlay" id="nav-overlay" aria-hidden="true">
@@ -151,7 +150,6 @@
   .hamburger .bar-2 { width: 16px; }
   .hamburger .bar-3 { width: 20px; }
 
-  /* Hamburger → X when overlay is open */
   .hamburger.is-active .bar-1 {
     transform: translateY(6.5px) rotate(45deg);
     width: 24px;
@@ -165,7 +163,6 @@
     width: 24px;
   }
 
-  /* ── Mote Layer ── */
   .mote-layer {
     position: fixed;
     inset: 0;
@@ -174,7 +171,6 @@
     overflow: visible;
   }
 
-  /* ── Motes ── */
   .mote {
     position: absolute;
     width: 48px;
@@ -219,17 +215,13 @@
       0 0 12px rgba(140,185,230,0.50),
       0 0 28px rgba(60,130,200,0.25);
   }
-  .mote-face img {
+  .mote-face img,
+  .mote-face--pox img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: center;
     display: block;
-    image-rendering: pixelated;
-  }
-  .mote-face--pox {
-    /* Pox face: zoomed in 2x and centered via negative margins */
-    inset: 3px;
   }
   .mote-face--pox img {
     image-rendering: auto;
@@ -237,9 +229,6 @@
     height: 200%;
     margin-left: -50%;
     margin-top: -50%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
   }
 
   @keyframes moteRingSpin { to { transform: rotate(360deg); } }
@@ -416,6 +405,13 @@
         img.src = imgSrc;
         img.alt = '';
         img.draggable = false;
+        img.width = 42;
+        img.height = 42;
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+        img.style.objectPosition = 'center';
+        img.style.display = 'block';
         face.appendChild(img);
 
         mote.append(haloOuter, haloInner, face);
@@ -469,7 +465,6 @@
       const moteLayer = document.getElementById('mote-layer');
       if (!hamburger || !overlay || !moteLayer) return;
 
-      // Prevent double-binding if script re-runs
       if (hamburger._navBound) return;
       hamburger._navBound = true;
 
@@ -495,7 +490,6 @@
         hamburger.focus();
       }
 
-      // Click toggles. Burst ONLY on open (when overlay is currently closed).
       hamburger.addEventListener('click', () => {
         if (overlay.classList.contains('is-open')) {
           closeNav();
@@ -538,14 +532,12 @@
       });
     }
 
-    // Run on initial load (for MPA or when View Transitions not active)
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', initNav);
     } else {
       initNav();
     }
 
-    // Run on every Astro View Transition navigation
     document.addEventListener('astro:page-load', initNav);
   })();
 </script>
