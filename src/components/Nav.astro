@@ -378,62 +378,69 @@
     function px(n) { return n.toFixed(2) + 'px'; }
     function dg(n) { return n.toFixed(1) + 'deg'; }
 
-    function spawnMote(btn, localX, localY, imgSrc, isPox, delayMs) {
-      setTimeout(() => {
-        const mote = document.createElement('div');
-        mote.className = 'mote';
-        mote.style.left = px(localX - 24);
-        mote.style.top  = px(localY - 24);
+    function spawnMote(anchorRect, localX, localY, imgSrc, isPox, delayMs) {
+  setTimeout(() => {
+    const mote = document.createElement('div');
+    mote.className = 'mote';
 
-        const haloOuter = document.createElement('div');
-        haloOuter.className = 'mote-halo mote-halo--outer';
+    // Position relative to viewport using the button's bounding rect
+    mote.style.position = 'fixed';
+    mote.style.left = px(anchorRect.left + localX - 24);
+    mote.style.top  = px(anchorRect.top  + localY - 24);
+    mote.style.zIndex = '99999';
+    mote.style.pointerEvents = 'none';
 
-        const haloInner = document.createElement('div');
-        haloInner.className = 'mote-halo';
+    const haloOuter = document.createElement('div');
+    haloOuter.className = 'mote-halo mote-halo--outer';
 
-        const face = document.createElement('div');
-        face.className = isPox ? 'mote-face mote-face--pox' : 'mote-face';
+    const haloInner = document.createElement('div');
+    haloInner.className = 'mote-halo';
 
-        const img = document.createElement('img');
-        img.src = imgSrc;
-        img.alt = '';
-        img.draggable = false;
-        face.appendChild(img);
+    const face = document.createElement('div');
+    face.className = isPox ? 'mote-face mote-face--pox' : 'mote-face';
 
-        mote.append(haloOuter, haloInner, face);
+    const img = document.createElement('img');
+    img.src = imgSrc;
+    img.alt = '';
+    img.draggable = false;
+    face.appendChild(img);
 
-        mote.style.setProperty('--spin-a', rand(1.4, 3.0).toFixed(2) + 's');
-        mote.style.setProperty('--spin-b', rand(2.6, 4.8).toFixed(2) + 's');
-        mote.style.setProperty('--dx1',    px(rand(-22,  22)));
-        mote.style.setProperty('--dy1',    px(rand(-28,  -6)));
-        mote.style.setProperty('--dx-mid', px(rand(-70,  70)));
-        mote.style.setProperty('--dy-mid', px(rand( 90, 200)));
-        mote.style.setProperty('--dx2',    px(rand(-110, 110)));
-        mote.style.setProperty('--dy2',    px(rand( 260, 440)));
-        mote.style.setProperty('--r1',     dg(rand(-28,  28)));
-        mote.style.setProperty('--r-mid',  dg(rand(-110, 110)));
-        mote.style.setProperty('--r2',     dg(rand(-220, 220)));
+    mote.append(haloOuter, haloInner, face);
 
-        const dur = Math.round(rand(1900, 3100));
-        mote.style.setProperty('--fall-dur', dur + 'ms');
-        btn.appendChild(mote);
-        setTimeout(() => mote.remove(), dur + 80);
-      }, delayMs);
-    }
+    mote.style.setProperty('--spin-a', rand(1.4, 3.0).toFixed(2) + 's');
+    mote.style.setProperty('--spin-b', rand(2.6, 4.8).toFixed(2) + 's');
+    mote.style.setProperty('--dx1',    px(rand(-22,  22)));
+    mote.style.setProperty('--dy1',    px(rand(-28,  -6)));
+    mote.style.setProperty('--dx-mid', px(rand(-70,  70)));
+    mote.style.setProperty('--dy-mid', px(rand( 90, 200)));
+    mote.style.setProperty('--dx2',    px(rand(-110, 110)));
+    mote.style.setProperty('--dy2',    px(rand( 260, 440)));
+    mote.style.setProperty('--r1',     dg(rand(-28,  28)));
+    mote.style.setProperty('--r-mid',  dg(rand(-110, 110)));
+    mote.style.setProperty('--r2',     dg(rand(-220, 220)));
 
-    function burst(btn) {
-      const W = btn.offsetWidth;
-      const H = btn.offsetHeight;
-      const motes = [
-        { x: W * 0.38, y: H * 0.28, src: PFP_SRC, pox: false, d:  0  },
-        { x: W * 0.50, y: H * 0.50, src: PFP_SRC, pox: false, d: 55  },
-        { x: W * 0.62, y: H * 0.72, src: PFP_SRC, pox: false, d: 25  },
-        { x: W * 0.50, y: H * 0.15, src: POX_SRC, pox: true,  d: 10  },
-      ];
-      motes.forEach(m => {
-        spawnMote(btn, m.x + rand(-6,6), m.y + rand(-6,6), m.src, m.pox, m.d);
-      });
-    }
+    const dur = Math.round(rand(1900, 3100));
+    mote.style.setProperty('--fall-dur', dur + 'ms');
+
+    document.body.appendChild(mote);  // ← append to body, not button
+    setTimeout(() => mote.remove(), dur + 80);
+  }, delayMs);
+}
+
+function burst(btn) {
+  const rect = btn.getBoundingClientRect();  // ← capture viewport position
+  const W = rect.width;
+  const H = rect.height;
+  const motes = [
+    { x: W * 0.38, y: H * 0.28, src: PFP_SRC, pox: false, d:  0 },
+    { x: W * 0.50, y: H * 0.50, src: PFP_SRC, pox: false, d: 55 },
+    { x: W * 0.62, y: H * 0.72, src: PFP_SRC, pox: false, d: 25 },
+    { x: W * 0.50, y: H * 0.15, src: POX_SRC, pox: true,  d: 10 },
+  ];
+  motes.forEach(m => {
+    spawnMote(rect, m.x + rand(-6,6), m.y + rand(-6,6), m.src, m.pox, m.d);
+  });
+}
 
     function initNav() {
       const hamburger = document.getElementById('hamburger');
