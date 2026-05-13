@@ -361,10 +361,14 @@
   }
 
   .mote-face--pox {
-    background-image: var(--pox-src);
-    background-size: 200% 200%;
-    background-position: 50% 55%;
-    background-repeat: no-repeat;
+      image-rendering: auto;            /* smooth for the illustrated banner  */
+      object-fit: cover;
+      object-position: center center;
+      /* slight zoom ensures the "O" virus glyph fills the disc */
+      width: 200%;
+      height: 200%;
+      margin-left: -50%;
+      margin-top: -50%; 
   }
 
 
