@@ -6,8 +6,8 @@ Scrape Leah Bluewater's X profile for a live/scheduled Space URL.
 Uses the link-only heuristic: Leah's Space tweets are her own tweets
 (not RTs) where rawContent contains ONLY a t.co shortlink.
 Only accepts tweets from TODAY (WAT timezone).
+Clears stale URLs from previous days before fetching.
 Schedule: 11:02, 11:05, 11:10 WAT  (cron: 2,5,10 10 * * * UTC)
-Exits early if kickoffs.json already has a URL for today.
 """
 
 import asyncio
@@ -80,17 +80,39 @@ def save_data(data):
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 
-def already_has_url():
-    data = load_data()
-    return data["nextKickoff"].get("url") is not None
-
-
 def today_wat_iso():
     """Return today's date as YYYY-MM-DD in WAT timezone."""
     wat_now = datetime.now(timezone.utc).astimezone(
         __import__('zoneinfo').ZoneInfo('Africa/Lagos')
     )
     return wat_now.strftime('%Y-%m-%d')
+
+
+def clear_stale_url(data):
+    """Clear url and startedAt if they are from a previous day."""
+    started_at = data["nextKickoff"].get("startedAt")
+    if not started_at:
+        return False
+
+    started_date = started_at[:10]  # YYYY-MM-DD
+    if started_date != today_wat_iso():
+        print(f"Stale URL from {started_date} cleared. Re-fetching...")
+        data["nextKickoff"]["url"] = None
+        data["nextKickoff"]["startedAt"] = None
+        save_data(data)
+        return True
+    return False
+
+
+def already_has_url():
+    data = load_data()
+    if data["nextKickoff"].get("url") is None:
+        return False
+    # Check if existing URL is stale (from previous day)
+    if clear_stale_url(data):
+        return False
+    print("URL already captured today. Exiting.")
+    return True
 
 
 def is_link_only_today(tweet) -> str | None:
@@ -172,7 +194,6 @@ async def find_space_url():
 
 async def main():
     if already_has_url():
-        print("URL already captured. Exiting.")
         return
 
     space_url = await find_space_url()
