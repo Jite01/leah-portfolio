@@ -40,10 +40,10 @@
 <script>
   (function() {
     const wrap = document.querySelector('.water-canvas-wrap');
-    let canvas = document.getElementById('water-canvas');
+    const canvas = document.getElementById('water-canvas');
     if (!wrap || !canvas) return;
     
-    let ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d');
     const textEl = wrap.querySelector('.water-text');
     if (!ctx || !textEl) return;
 
@@ -216,50 +216,21 @@
       animId = requestAnimationFrame(animate);
     }
     
-        function init() {
-      // Force fresh canvas — old one may be preserved by View Transitions
-      const oldCanvas = document.getElementById('water-canvas');
-      if (oldCanvas) {
-        oldCanvas.remove();
-      }
-      
-      const wrap = document.querySelector('.water-canvas-wrap');
-      if (!wrap) return;
-      
-      const newCanvas = document.createElement('canvas');
-      newCanvas.id = 'water-canvas';
-      newCanvas.className = 'water-canvas';
-      wrap.appendChild(newCanvas);
-      
-      // Re-bind canvas reference
-      canvas = newCanvas;
-      ctx = canvas.getContext('2d');
-      
-      lastTime = 0;
-      time = 0;
-      phase = 'filling';
-      phaseTimer = 0;
-      fillLevel = 0;
-      
+    function init() {
       resize();
       drawTextMask();
-      if (animId) cancelAnimationFrame(animId);
       animId = requestAnimationFrame(animate);
     }
-
     
     function cleanup() {
       if (animId) cancelAnimationFrame(animId);
-      animId = null;
     }
-
     
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
     } else {
       init();
     }
-    
     
     let resizeTimeout;
     window.addEventListener('resize', () => {
@@ -271,13 +242,8 @@
         animId = requestAnimationFrame(animate);
       }, 150);
     });
-
-    document.addEventListener('astro:before-preparation', () => {
-      cleanup();
-      const old = document.getElementById('water-canvas');
-      if (old) old.remove();
-    });
-
+    
+    document.addEventListener('astro:before-preparation', cleanup);
     document.addEventListener('astro:page-load', init);
   })();
 </script>
