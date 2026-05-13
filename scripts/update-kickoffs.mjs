@@ -2,12 +2,13 @@
 /**
  * update-kickoffs.mjs
  * ───────────────────
- * Run after The Kickoff ends (suggest 12:15 WAT → cron: 15 11 * * * UTC).
+ * Run after The Kickoff ends (10:15 UTC / 11:15 WAT).
  * 1. Archives the completed kickoff (max 3 entries).
- * 2. Generates a template summary from metadata (zero API cost).
+ * 2. Generates a template summary from metadata.
  * 3. Advances nextKickoff to the following day, clears URL.
  *    ── Skips Sunday: no Kickoff on Sundays.
  *    ── Guards against double-advance via lastAdvancedAt.
+ *    ── Duration is fixed at ~50m (startedAt is unreliable due to cron drift).
  */
 
 import fs from 'fs';
@@ -43,18 +44,6 @@ function getNextKickoffDate(dateStr) {
   }
 
   return d.toISOString().split('T')[0];
-}
-
-function calcDuration(startedAtIso) {
-  if (!startedAtIso) return '~50m';
-  const started = new Date(startedAtIso);
-  const ended   = new Date();
-  const diffMin = Math.round((ended - started) / 60000);
-  if (diffMin < 1)  return '<1m';
-  if (diffMin < 60) return `${diffMin}m`;
-  const h = Math.floor(diffMin / 60);
-  const m = diffMin % 60;
-  return m ? `${h}h ${m}m` : `${h}h`;
 }
 
 function todayIso() {
@@ -112,7 +101,8 @@ async function main() {
 
   // ── Archive today's kickoff ──
   const nk = data.nextKickoff;
-  const duration = calcDuration(nk.startedAt);
+  // Fixed ~50m duration — startedAt is unreliable due to cron drift
+  const duration = '~50m';
   const summary = generateSummary(nk.date, duration);
 
   data.archive.unshift({
