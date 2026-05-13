@@ -2,7 +2,7 @@ name: Update Kickoffs
 
 on:
   schedule:
-    # 11:15 UTC  →  12:15 WAT (buffer after typical ~50m space)
+    # 10:15 UTC = 11:15 WAT (buffer after ~50m space)
     - cron: '15 11 * * *'
   workflow_dispatch:
 
@@ -29,5 +29,3 @@ jobs:
         with:
           commit_message: 'chore: archive kickoff and advance date'
           file_pattern: src/data/kickoffs.json
-
-
