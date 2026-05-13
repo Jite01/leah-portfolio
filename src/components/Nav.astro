@@ -3,7 +3,7 @@
 
 <a href="#main-content" class="skip-link">Skip to content</a>
 
-<header class="nav-bar" id="nav-bar">
+<<header class="nav-bar" id="nav-bar">
   <div class="nav-inner">
     <a href="/" class="nav-wordmark" aria-label="Leah Bluewater — home">
       <span class="nav-wordmark-name">LEAH</span>
@@ -213,7 +213,7 @@
       position: absolute;
       inset: 3px;
       border-radius: 50%;
-      overflow: hidden;   /* clips image to circle */
+      overflow: hidden;
       z-index: 2;
       box-shadow:
         inset 0 1px 2px rgba(255, 255, 255, 0.12),
@@ -228,16 +228,14 @@
       object-fit: cover;
       object-position: center;
       display: block;
-      /* pixel art pfp stays crisp at small size */
       image-rendering: pixelated;
     }
 
     /* POX mote: banner is wide, so zoom in to frame the virus-O at center */
     .mote-face--pox img {
-      image-rendering: auto;            /* smooth for the illustrated banner  */
+      image-rendering: auto;
       object-fit: cover;
       object-position: center center;
-      /* slight zoom ensures the "O" virus glyph fills the disc */
       width: 200%;
       height: 200%;
       margin-left: -50%;
@@ -256,17 +254,14 @@
         opacity: 0;
         transform: translate(0, 0) scale(0.22) rotate(0deg);
       }
-      /* burst pop — slight upward kick */
       7% {
         opacity: 1;
         transform: translate(var(--dx1), var(--dy1)) scale(1.10) rotate(var(--r1));
       }
-      /* mid-air, well-lit, drifting */
       68% {
         opacity: 0.90;
         transform: translate(var(--dx-mid), var(--dy-mid)) scale(0.95) rotate(var(--r-mid));
       }
-      /* far below the button, fading out */
       100% {
         opacity: 0;
         transform: translate(var(--dx2), var(--dy2)) scale(0.70) rotate(var(--r2));
@@ -430,7 +425,7 @@
       /* ── Outer wrapper ── */
       const mote = document.createElement('div');
       mote.className = 'mote';
-      mote.style.left = px(localX - 24); // centre 48px disc on spawn point
+      mote.style.left = px(localX - 24);
       mote.style.top  = px(localY - 24);
 
       /* ── Outer diffuse halo ── */
@@ -459,10 +454,7 @@
       mote.style.setProperty('--spin-a', rand(1.4, 3.0).toFixed(2) + 's');
       mote.style.setProperty('--spin-b', rand(2.6, 4.8).toFixed(2) + 's');
 
-      /* ── Trajectory ──
-           dy1    : slight upward pop on burst
-           dy-mid : mid-air waypoint
-           dy2    : far descent                */
+      /* ── Trajectory ── */
       mote.style.setProperty('--dx1',    px(rand(-22,  22)));
       mote.style.setProperty('--dy1',    px(rand(-28,  -6)));
       mote.style.setProperty('--dx-mid', px(rand(-70,  70)));
@@ -477,14 +469,14 @@
       const dur = Math.round(rand(1900, 3100));
       mote.style.setProperty('--fall-dur', dur + 'ms');
 
-      btn.appendChild(mote);
+      hamburger.appendChild(mote);
       setTimeout(() => mote.remove(), dur + 80);
     }, delayMs);
   }
 
   function burst() {
-    const W = btn.offsetWidth;
-    const H = btn.offsetHeight;
+    const W = hamburger.offsetWidth;
+    const H = hamburger.offsetHeight;
 
     /*
      * 4 motes, mapped to the three diagonal bars + one bonus.
@@ -532,7 +524,7 @@
         hamburger.setAttribute('aria-label', 'Close navigation');
         document.body.style.overflow = 'hidden';
         closeBtn.focus();
-        setTimeout(() => burst(hamburger), 1000);
+        setTimeout(burst, 1000);
       }
 
       function closeNav() {
