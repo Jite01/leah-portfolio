@@ -72,14 +72,13 @@ const dogs = [
             >
               <div class="dog-img-wrap">
                 <img
-                  src={`https://market.doginaldogs.com/api/content/${dog.inscription}`}
+                  src={`/dogs/${dog.id}.png`}
                   alt={`Doginal Dog #${dog.id}`}
                   width="400"
                   height="400"
                   class="dog-img"
                   loading={i < 4 ? 'eager' : 'lazy'}
                   decoding="async"
-                  crossorigin="anonymous"
                   data-dog-id={dog.id}
                 />
               </div>
