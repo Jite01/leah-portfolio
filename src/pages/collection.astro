@@ -3,142 +3,18 @@ import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 
 /* ─── Dog Data ─── */
-const dogs = {
-  6095: {
-    inscription: 'f3e1174ba880735bf1fe0f07d904a23b7e164edf224203d9b8f6aacc6f207870i0',
-    traits: [
-      { label: 'Background', value: 'Yellow' },
-      { label: 'Fur Color', value: 'White' },
-      { label: 'Fur Pattern', value: 'Dalmatian' },
-      { label: 'Head', value: 'Wizard' },
-      { label: 'Eyes', value: 'Square Glasses' },
-    ],
-    rarity: 5093,
-  },
-  4821: {
-    inscription: 'f51ba6025ac30c70fa5d47dcfbcb51e3f03add69f2a21da0de5bd93fdbf7f9b5i0',
-    traits: [
-      { label: 'Background', value: 'Tan' },
-      { label: 'Fur Color', value: 'Tan' },
-      { label: 'Fur Pattern', value: 'Husky' },
-      { label: 'Head', value: 'Big Ears' },
-      { label: 'Eyes', value: 'Round Glasses' },
-      { label: 'Clothes', value: 'Suspenders' },
-      { label: 'Accessory', value: 'Bow' },
-    ],
-    rarity: 114,
-  },
-  9500: {
-    inscription: '037e760b9cad620a2401342850be829cc9558cd524f55ffe5d2c182fac7ed885i0',
-    traits: [
-      { label: 'Background', value: 'Tan' },
-      { label: 'Fur Color', value: 'White' },
-      { label: 'Fur Pattern', value: 'Collie' },
-      { label: 'Head', value: 'Floppy Ears' },
-      { label: 'Eyes', value: 'Round Glasses' },
-    ],
-    rarity: 8368,
-  },
-  2422: {
-    inscription: '664cdd0ac22d72f9f5cf3f375277e17f44254088f20fcaea34b328868d5e24a1i0',
-    traits: [
-      { label: 'Background', value: 'Yellow' },
-      { label: 'Fur Color', value: 'Tan' },
-      { label: 'Fur Pattern', value: 'Solid' },
-      { label: 'Head', value: 'Beanie' },
-      { label: 'Eyes', value: 'Black' },
-    ],
-    rarity: 6127,
-  },
-  3738: {
-    inscription: '02ffb945fbbf8abce195b155ec9c27a66d2ad47b43e37ac3a52714a75e16989di0',
-    traits: [
-      { label: 'Background', value: 'Tan' },
-      { label: 'Fur Color', value: 'Green' },
-      { label: 'Fur Pattern', value: 'Zombie' },
-      { label: 'Head', value: 'Floppy Ears' },
-      { label: 'Eyes', value: 'Green' },
-    ],
-    rarity: 5788,
-  },
-  9640: {
-    inscription: '067c20d7ffd0d058c59a605ccc3ba7830d9313e41c0afed9cfbf974c088d46ebi0',
-    traits: [
-      { label: 'Background', value: 'Rose' },
-      { label: 'Fur Color', value: 'Purple' },
-      { label: 'Fur Pattern', value: 'Classic' },
-      { label: 'Head', value: 'Floppy Ears' },
-      { label: 'Eyes', value: 'Sleepy' },
-      { label: 'Clothes', value: 'Collar' },
-    ],
-    rarity: 3503,
-  },
-  1107: {
-    inscription: 'da3dce8f4c904dd4908627a0a278735b075428007064f1f62320e63d88543b8ei0',
-    traits: [
-      { label: 'Background', value: 'Aqua' },
-      { label: 'Fur Color', value: 'Gray' },
-      { label: 'Fur Pattern', value: 'Husky' },
-      { label: 'Head', value: 'Floppy Ears' },
-      { label: 'Eyes', value: 'Pink' },
-      { label: 'Mouth', value: 'Ball' },
-      { label: 'Clothes', value: 'Suspenders' },
-    ],
-    rarity: 61,
-  },
-  1294: {
-    inscription: 'b150b7c436b88dd421d9b6caeac0d0b4863001e0b9c19b7a717d915ff59328dci0',
-    traits: [
-      { label: 'Background', value: 'Rose' },
-      { label: 'Fur Color', value: 'Grey' },
-      { label: 'Fur Pattern', value: 'Classic' },
-      { label: 'Head', value: 'Floppy Ears' },
-      { label: 'Eyes', value: 'Black' },
-    ],
-    rarity: 9762,
-  },
-  5530: {
-    inscription: '0219c115a9077ad55a648283e29ea4d047ca99efb5069c4b0c35b8542906c1afi0',
-    traits: [
-      { label: 'Background', value: 'Rose' },
-      { label: 'Fur Color', value: 'White' },
-      { label: 'Fur Pattern', value: 'Bernard' },
-      { label: 'Head', value: 'Floppy Ears' },
-      { label: 'Eyes', value: 'Mixed' },
-      { label: 'Mouth', value: 'Ball' },
-      { label: 'Clothes', value: 'Suspenders' },
-      { label: 'Accessory', value: 'Bow' },
-    ],
-    rarity: 2,
-  },
-  1087: {
-    inscription: '062627e176893da6f30b2d259c3cff3123e5de6826528ceb7651b17cdd3957afi0',
-    traits: [
-      { label: 'Background', value: 'Green' },
-      { label: 'Fur Color', value: 'Brown' },
-      { label: 'Fur Pattern', value: 'Husky' },
-      { label: 'Head', value: 'Small Ears' },
-      { label: 'Eyes', value: 'Red' },
-    ],
-    rarity: 5455,
-  },
-};
-
-function imgUrl(id) {
-  return `https://market.doginaldogs.com/api/content/${dogs[id].inscription}`;
-}
-function marketUrl(id) {
-  return `https://market.doginaldogs.com/inscription/${dogs[id].inscription}`;
-}
-
-const mainDog = 6095;
-const pairs = [
-  [4821, 9500],
-  [2422, 3738],
-  [9640, 1107],
-  [1294, 5530],
+const dogs = [
+  { id: 6095,  inscription: 'f3e1174ba880735bf1fe0f07d904a23b7e164edf224203d9b8f6aacc6f207870i0', rarity: 5093  },
+  { id: 4821,  inscription: 'f51ba6025ac30c70fa5d47dcfbcb51e3f03add69f2a21da0de5bd93fdbf7f9b5i0', rarity: 114   },
+  { id: 9500,  inscription: '037e760b9cad620a2401342850be829cc9558cd524f55ffe5d2c182fac7ed885i0', rarity: 8368  },
+  { id: 2422,  inscription: '664cdd0ac22d72f9f5cf3f375277e17f44254088f20fcaea34b328868d5e24a1i0', rarity: 6127  },
+  { id: 3738,  inscription: '02ffb945fbbf8abce195b155ec9c27a66d2ad47b43e37ac3a52714a75e16989di0', rarity: 5788  },
+  { id: 9640,  inscription: '067c20d7ffd0d058c59a605ccc3ba7830d9313e41c0afed9cfbf974c088d46ebi0', rarity: 3503  },
+  { id: 1107,  inscription: 'da3dce8f4c904dd4908627a0a278735b075428007064f1f62320e63d88543b8ei0', rarity: 61    },
+  { id: 1294,  inscription: 'b150b7c436b88dd421d9b6caeac0d0b4863001e0b9c19b7a717d915ff59328dci0', rarity: 9762  },
+  { id: 5530,  inscription: '0219c115a9077ad55a648283e29ea4d047ca99efb5069c4b0c35b8542906c1afi0', rarity: 2     },
+  { id: 1087,  inscription: '062627e176893da6f30b2d259c3cff3123e5de6826528ceb7651b17cdd3957afi0', rarity: 5455  },
 ];
-const bottomDog = 1087;
 ---
 
 <Layout
@@ -147,295 +23,367 @@ const bottomDog = 1087;
 >
   <Nav slot="nav" />
 
+  {/* ─── Video Background ─── */}
+  <div class="video-bg" aria-hidden="true">
+    <video
+      src="/collection_hero.mp4"
+      autoplay
+      muted
+      loop
+      playsinline
+      class="video-bg__film"
+    ></video>
+    <div class="video-bg__scrim"></div>
+  </div>
+
   <section class="section" aria-labelledby="collection-heading">
     <div class="container">
-      <header class="section-header">
-        <h2 class="section-heading" id="collection-heading">Collection</h2>
-        <p class="section-sub mono-label">
-          Pixel-art dogs inscribed on the Dogecoin blockchain.
+
+      {/* ─── Header ─── */}
+      <header class="collection-header">
+        <h2 class="collection-heading" id="collection-heading">Collection</h2>
+        <p class="collection-sub mono-label">
+          Pixel-art dogs inscribed on the Dogecoin blockchain.&nbsp;
           <a
             href="https://market.doginaldogs.com"
             target="_blank"
             rel="noopener noreferrer"
             class="link-accent"
-          >
-            market.doginaldogs.com ↗
-          </a>
+          >market.doginaldogs.com ↗</a>
         </p>
       </header>
 
-      {/* ─── Main Dog (Featured) ─── */}
-      <article class="dog-card dog-card--main" aria-label={`Doginal Dog #${mainDog}`}>
-        <div class="dog-main-layout">
-          <div class="dog-img-wrap dog-img-wrap--main">
-            <img
-              src={imgUrl(mainDog)}
-              alt={`Doginal Dog #${mainDog}`}
-              width="400"
-              height="400"
-              class="dog-img"
-              loading="eager"
-              decoding="async"
-              data-dog-id={mainDog}
-            />
-          </div>
-          <div class="dog-details">
-            <div class="dog-details-header">
-              <h3 class="dog-title">Doginal Dog #{mainDog}</h3>
-              <span class="dog-owner mono-label text-muted">Owner: Leah</span>
-              <span class="dog-trait-count mono-label">{dogs[mainDog].traits.length} traits</span>
-            </div>
-            <div class="traits-grid">
-              {dogs[mainDog].traits.map(t => (
-                <div class="trait-card">
-                  <span class="trait-label mono-label text-muted">{t.label}</span>
-                  <span class="trait-value">{t.value}</span>
-                </div>
-              ))}
-            </div>
-            <div class="rarity-bar">
-              <span class="rarity-label mono-label text-muted">Rarity Rank</span>
-              <span class="rarity-value">#{dogs[mainDog].rarity.toLocaleString()} / 10,000</span>
-            </div>
-            <div class="color-strip" data-palette-for={mainDog}>
-              <span class="strip-label mono-label text-muted">Color strip for Doginal Dog #{mainDog}</span>
-              <div class="strip-colors" data-dog-id={mainDog}></div>
-            </div>
+      {/* ─── Grid ─── */}
+      <ul class="dog-grid" role="list">
+        {dogs.map((dog, i) => (
+          <li
+            class="dog-card"
+            style={`--delay: ${i * 60}ms`}
+            aria-label={`Doginal Dog #${dog.id}`}
+          >
+            {/* Image */}
             <a
-              href={marketUrl(mainDog)}
+              href={`https://market.doginaldogs.com/inscription/${dog.inscription}`}
               target="_blank"
               rel="noopener noreferrer"
-              class="btn btn-outline dog-btn"
+              class="dog-img-link"
+              tabindex="-1"
+              aria-hidden="true"
             >
-              View on Market ↗
+              <div class="dog-img-wrap">
+                <img
+                  src={`https://market.doginaldogs.com/api/content/${dog.inscription}`}
+                  alt={`Doginal Dog #${dog.id}`}
+                  width="400"
+                  height="400"
+                  class="dog-img"
+                  loading={i < 4 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  crossorigin="anonymous"
+                  data-dog-id={dog.id}
+                />
+              </div>
             </a>
-          </div>
-        </div>
-      </article>
 
-      {/* ─── Pairs ─── */}
-      {pairs.map(([left, right], i) => (
-        <div class="dog-pair" aria-label={`Pair ${i + 1}`}>
-          {[left, right].map(id => (
-            <article class="dog-card dog-card--pair" aria-label={`Doginal Dog #${id}`}>
-              <div class="dog-pair-layout">
-                <div class="dog-img-wrap dog-img-wrap--pair">
-                  <img
-                    src={imgUrl(id)}
-                    alt={`Doginal Dog #${id}`}
-                    width="300"
-                    height="300"
-                    class="dog-img"
-                    loading="lazy"
-                    decoding="async"
-                    data-dog-id={id}
-                  />
-                </div>
-                <div class="dog-details dog-details--compact">
-                  <div class="dog-details-header">
-                    <h3 class="dog-title">Doginal Dog #{id}</h3>
-                    <span class="dog-owner mono-label text-muted">Owner: Leah</span>
-                    <span class="dog-trait-count mono-label">{dogs[id].traits.length} traits</span>
-                  </div>
-                  <div class="traits-grid traits-grid--compact">
-                    {dogs[id].traits.map(t => (
-                      <div class="trait-card trait-card--compact">
-                        <span class="trait-label mono-label text-muted">{t.label}</span>
-                        <span class="trait-value">{t.value}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div class="rarity-bar rarity-bar--compact">
-                    <span class="rarity-label mono-label text-muted">Rarity Rank</span>
-                    <span class="rarity-value">#{dogs[id].rarity.toLocaleString()} / 10,000</span>
-                  </div>
-                  <div class="color-strip color-strip--compact" data-palette-for={id}>
-                    <span class="strip-label mono-label text-muted">Color strip for Doginal Dog #{id}</span>
-                    <div class="strip-colors" data-dog-id={id}></div>
-                  </div>
-                  <a
-                    href={marketUrl(id)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="btn btn-outline dog-btn dog-btn--compact"
-                  >
-                    View ↗
-                  </a>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-      ))}
-
-      {/* ─── Bottom Center Dog ─── */}
-      <div class="dog-bottom">
-        <article class="dog-card dog-card--bottom" aria-label={`Doginal Dog #${bottomDog}`}>
-          <div class="dog-pair-layout">
-            <div class="dog-img-wrap dog-img-wrap--pair">
-              <img
-                src={imgUrl(bottomDog)}
-                alt={`Doginal Dog #${bottomDog}`}
-                width="300"
-                height="300"
-                class="dog-img"
-                loading="lazy"
-                decoding="async"
-                data-dog-id={bottomDog}
-              />
+            {/* Color strip */}
+            <div
+              class="dog-palette"
+              data-palette-id={dog.id}
+              aria-hidden="true"
+            >
+              {/* swatches injected by JS */}
             </div>
-            <div class="dog-details dog-details--compact">
-              <div class="dog-details-header">
-                <h3 class="dog-title">Doginal Dog #{bottomDog}</h3>
-                <span class="dog-owner mono-label text-muted">Owner: Leah</span>
-                <span class="dog-trait-count mono-label">{dogs[bottomDog].traits.length} traits</span>
-              </div>
-              <div class="traits-grid traits-grid--compact">
-                {dogs[bottomDog].traits.map(t => (
-                  <div class="trait-card trait-card--compact">
-                    <span class="trait-label mono-label text-muted">{t.label}</span>
-                    <span class="trait-value">{t.value}</span>
-                  </div>
-                ))}
-              </div>
-              <div class="rarity-bar rarity-bar--compact">
-                <span class="rarity-label mono-label text-muted">Rarity Rank</span>
-                <span class="rarity-value">#{dogs[bottomDog].rarity.toLocaleString()} / 10,000</span>
-              </div>
-              <div class="color-strip color-strip--compact" data-palette-for={bottomDog}>
-                <span class="strip-label mono-label text-muted">Color strip for Doginal Dog #{bottomDog}</span>
-                <div class="strip-colors" data-dog-id={bottomDog}></div>
+
+            {/* Footer: ID + rarity + market link */}
+            <div class="dog-foot">
+              <div class="dog-meta">
+                <span class="dog-id">#{dog.id}</span>
+                <span class="dog-rarity mono-label">rank&nbsp;#{dog.rarity.toLocaleString()}</span>
               </div>
               <a
-                href={marketUrl(bottomDog)}
+                href={`https://market.doginaldogs.com/inscription/${dog.inscription}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="btn btn-outline dog-btn dog-btn--compact"
-              >
-                View ↗
-              </a>
+                class="dog-market-link mono-label"
+                aria-label={`View Doginal Dog #${dog.id} on market`}
+              >View ↗</a>
             </div>
-          </div>
-        </article>
-      </div>
+          </li>
+        ))}
+      </ul>
+
     </div>
   </section>
 </Layout>
 
+{/* ─── Client-side palette extraction ─── */}
 <script>
-  // Client-side color palette extraction
-  function extractPalette(img, count = 6) {
+  function quantize(v: number, step = 24) {
+    return Math.round(v / step) * step;
+  }
+
+  function extractPalette(img: HTMLImageElement, count = 8): string[] {
+    const size = 64;
     const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = 50;
-    canvas.height = 50;
-    ctx.drawImage(img, 0, 0, 50, 50);
-    
-    const data = ctx.getImageData(0, 0, 50, 50).data;
-    const colorMap = new Map();
-    
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d')!;
+    ctx.drawImage(img, 0, 0, size, size);
+
+    const { data } = ctx.getImageData(0, 0, size, size);
+    const freq = new Map<string, number>();
+
     for (let i = 0; i < data.length; i += 4) {
-      const r = data[i], g = data[i+1], b = data[i+2];
-      const brightness = (r + g + b) / 3;
-      if (brightness < 30 || brightness > 240) continue;
-      
-      const qr = Math.round(r / 16) * 16;
-      const qg = Math.round(g / 16) * 16;
-      const qb = Math.round(b / 16) * 16;
-      const key = `${qr},${qg},${qb}`;
-      colorMap.set(key, (colorMap.get(key) || 0) + 1);
+      const a = data[i + 3];
+      if (a < 200) continue;                       // skip transparent
+      const r = data[i], g = data[i + 1], b = data[i + 2];
+      const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+      if (lum < 20 || lum > 242) continue;         // skip near-black / near-white
+      const key = `${quantize(r)},${quantize(g)},${quantize(b)}`;
+      freq.set(key, (freq.get(key) ?? 0) + 1);
     }
-    
-    const sorted = Array.from(colorMap.entries())
+
+    return [...freq.entries()]
       .sort((a, b) => b[1] - a[1])
-      .slice(0, count);
-    
-    return sorted.map(([key]) => {
-      const [r, g, b] = key.split(',').map(Number);
-      return `rgb(${r},${g},${b})`;
-    });
+      .slice(0, count)
+      .map(([k]) => {
+        const [r, g, b] = k.split(',').map(Number);
+        return `rgb(${r},${g},${b})`;
+      });
   }
 
-  function renderPalette(img) {
+  function paintPalette(img: HTMLImageElement) {
     const id = img.dataset.dogId;
-    const container = document.querySelector(`.strip-colors[data-dog-id="${id}"]`);
-    if (!container || container.children.length > 0) return;
-    
+    if (!id) return;
+    const strip = document.querySelector<HTMLElement>(`.dog-palette[data-palette-id="${id}"]`);
+    if (!strip || strip.childElementCount > 0) return;
+
     try {
-      const colors = extractPalette(img, 6);
+      const colors = extractPalette(img);
+      if (!colors.length) return;
       colors.forEach(color => {
-        const swatch = document.createElement('div');
-        swatch.className = 'color-swatch';
-        swatch.style.backgroundColor = color;
-        swatch.title = color;
-        container.appendChild(swatch);
+        const sw = document.createElement('span');
+        sw.className = 'swatch';
+        sw.style.background = color;
+        strip.appendChild(sw);
       });
-    } catch (e) {
-      console.error('Palette extraction failed for dog', id, e);
+      strip.classList.add('is-ready');
+    } catch {
+      /* CORS blocked — strip stays hidden (graceful) */
     }
   }
 
-  function renderPalettes() {
-    document.querySelectorAll('.dog-img').forEach(img => {
-      if (img.complete) renderPalette(img);
-      else img.addEventListener('load', () => renderPalette(img));
+  function initPalettes() {
+    document.querySelectorAll<HTMLImageElement>('.dog-img').forEach(img => {
+      if (img.complete && img.naturalWidth) paintPalette(img);
+      else img.addEventListener('load', () => paintPalette(img), { once: true });
     });
   }
 
-  document.addEventListener('astro:page-load', renderPalettes);
-  if (document.readyState === 'complete') renderPalettes();
-  else window.addEventListener('load', renderPalettes);
+  /* Run on Astro View Transitions and hard loads */
+  document.addEventListener('astro:page-load', initPalettes);
+  if (document.readyState === 'complete') initPalettes();
+  else window.addEventListener('load', initPalettes, { once: true });
 </script>
 
+<style is:global>
+  /* Swatch elements are injected by JS — must be global */
+  .dog-palette .swatch {
+    flex: 1;
+    display: block;
+    height: 100%;
+    min-width: 0;
+    transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: default;
+  }
+
+  .dog-palette .swatch:hover {
+    transform: scaleY(1.4);
+    z-index: 2;
+    position: relative;
+  }
+
+  /* Entrance animation (JS-injected nodes need global too) */
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
 <style>
-  .section-sub {
-    color: var(--clr-text-muted);
-    margin-top: var(--space-2);
-  }
-
-  .dog-card {
-    background: var(--clr-bg-elevated, var(--clr-bg-card, #1a1a2e));
-    border: 1px solid var(--clr-border, rgba(255,255,255,0.08));
-    border-radius: var(--radius-md, 12px);
+  /* ─── Video Background ─── */
+  .video-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
     overflow: hidden;
-    margin-bottom: var(--space-6);
   }
 
-  .dog-card--main {
-    margin-bottom: var(--space-8);
+  .video-bg__film {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
-  .dog-main-layout {
+  /* Dark tinted scrim so text stays legible — stays true to the water palette */
+  .video-bg__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(0, 10, 20, 0.55) 0%,
+        rgba(0, 20, 38, 0.45) 50%,
+        rgba(0, 10, 20, 0.65) 100%
+      );
+  }
+
+  /* ─── Section ─── */
+  .section {
+    min-height: 100vh;
+    padding-block: calc(64px + 4rem) 5rem;   /* clear fixed nav */
+  }
+
+  .container {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: clamp(1rem, 5vw, 3rem);
+  }
+
+  /* ─── Header ─── */
+  .collection-header {
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .collection-heading {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin: 0 0 0.5rem;
+    /* subtle shimmer on the heading to echo water */
+    background: linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #b3d9f0 45%,
+      #ffffff 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .collection-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.65);
+    margin: 0;
+  }
+
+  .collection-sub .link-accent {
+    color: #7ecef0;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(126, 206, 240, 0.4);
+    transition: color 150ms ease, border-color 150ms ease;
+  }
+
+  .collection-sub .link-accent:hover {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  /* ─── Grid: 4 col → 2 col → 1 col ─── */
+  .dog-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-6);
-    padding: var(--space-6);
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(1rem, 2vw, 1.5rem);
   }
 
-  @media (max-width: 768px) {
-    .dog-main-layout {
-      grid-template-columns: 1fr;
+  @media (max-width: 900px) {
+    .dog-grid {
+      grid-template-columns: repeat(2, 1fr);
     }
+  }
+
+  @media (max-width: 420px) {
+    .dog-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+  }
+
+  /* ─── Dog Card ─── */
+  .dog-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(14px) saturate(1.6);
+    -webkit-backdrop-filter: blur(14px) saturate(1.6);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    /* Entrance */
+    animation: fadeSlideUp 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: var(--delay, 0ms);
+
+    transition:
+      transform 250ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 250ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 250ms ease;
+  }
+
+  .dog-card:hover {
+    transform: translateY(-4px) scale(1.015);
+    box-shadow:
+      0 20px 40px rgba(0, 0, 0, 0.35),
+      0 0 0 1px rgba(126, 206, 240, 0.25);
+    border-color: rgba(126, 206, 240, 0.35);
+  }
+
+  /* Shimmer sweep on hover */
+  .dog-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.07) 50%,
+      transparent 70%
+    );
+    transform: translateX(-100%);
+    transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  .dog-card:hover::before {
+    transform: translateX(100%);
+  }
+
+  /* Card needs position for pseudo */
+  .dog-card {
+    position: relative;
+  }
+
+  /* ─── Image ─── */
+  .dog-img-link {
+    display: block;
+    text-decoration: none;
+    overflow: hidden;
   }
 
   .dog-img-wrap {
-    background: var(--clr-bg-off, #0f0f1a);
-    border-radius: var(--radius-sm, 8px);
-    overflow: hidden;
     aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .dog-img-wrap--main {
-    max-width: 400px;
-    margin: 0 auto;
-  }
-
-  .dog-img-wrap--pair {
-    max-width: 280px;
-    margin: 0 auto;
+    background: rgba(0, 0, 0, 0.25);
+    overflow: hidden;
   }
 
   .dog-img {
@@ -444,186 +392,96 @@ const bottomDog = 1087;
     object-fit: contain;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
-    transition: transform var(--dur-slow, 400ms) var(--ease-out);
+    display: block;
+    transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .dog-card:hover .dog-img {
-    transform: scale(1.02);
+    transform: scale(1.05);
   }
 
-  .dog-details {
+  /* ─── Palette Strip ─── */
+  .dog-palette {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-  }
-
-  .dog-details-header {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: var(--space-2) var(--space-4);
-    padding-bottom: var(--space-3);
-    border-bottom: 1px solid var(--clr-border, rgba(255,255,255,0.08));
-  }
-
-  .dog-title {
-    font-size: var(--fs-xl, 1.5rem);
-    font-weight: 700;
-    margin: 0;
-  }
-
-  .dog-owner,
-  .dog-trait-count {
-    font-size: var(--fs-sm, 0.875rem);
-  }
-
-  .traits-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-3);
-  }
-
-  .traits-grid--compact {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-2);
-  }
-
-  @media (max-width: 480px) {
-    .traits-grid,
-    .traits-grid--compact {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .trait-card {
-    background: var(--clr-bg-surface, rgba(255,255,255,0.04));
-    border: 1px solid var(--clr-border, rgba(255,255,255,0.06));
-    border-radius: var(--radius-sm, 8px);
-    padding: var(--space-3);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-  }
-
-  .trait-card--compact {
-    padding: var(--space-2);
-  }
-
-  .trait-label {
-    font-size: var(--fs-xs, 0.75rem);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .trait-value {
-    font-size: var(--fs-base, 1rem);
-    font-weight: 600;
-  }
-
-  .rarity-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--space-3) var(--space-4);
-    background: var(--clr-bg-surface, rgba(255,255,255,0.04));
-    border: 1px solid var(--clr-border, rgba(255,255,255,0.06));
-    border-radius: var(--radius-sm, 8px);
-  }
-
-  .rarity-bar--compact {
-    padding: var(--space-2) var(--space-3);
-  }
-
-  .rarity-value {
-    font-size: var(--fs-lg, 1.125rem);
-    font-weight: 700;
-    color: var(--clr-accent, #f59e0b);
-  }
-
-  .color-strip {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-  }
-
-  .color-strip--compact {
-    gap: var(--space-1);
-  }
-
-  .strip-label {
-    font-size: var(--fs-xs, 0.75rem);
-  }
-
-  .strip-colors {
-    display: flex;
-    gap: 2px;
-    height: 24px;
-    border-radius: var(--radius-sm, 8px);
+    height: 6px;
+    background: rgba(255, 255, 255, 0.06);
     overflow: hidden;
+    /* Initially invisible until JS populates it */
+    opacity: 0;
+    transition: opacity 300ms ease;
   }
 
-  .color-swatch {
-    flex: 1;
-    height: 100%;
-    min-width: 20px;
-    transition: transform 0.2s ease;
+  .dog-palette.is-ready {
+    opacity: 1;
   }
 
-  .color-swatch:hover {
-    transform: scaleY(1.3);
-    z-index: 1;
-  }
-
-  .dog-btn {
-    width: 100%;
-    justify-content: center;
-    padding-block: var(--space-3);
-    font-size: var(--fs-sm, 0.875rem);
-  }
-
-  .dog-btn--compact {
-    padding-block: var(--space-2);
-    font-size: var(--fs-xs, 0.75rem);
-  }
-
-  .dog-pair {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-5);
-    margin-bottom: var(--space-6);
-  }
-
-  @media (max-width: 768px) {
-    .dog-pair {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .dog-pair-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-4);
-    padding: var(--space-4);
-  }
-
-  @media (max-width: 640px) {
-    .dog-pair-layout {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .dog-bottom {
+  /* ─── Footer ─── */
+  .dog-foot {
     display: flex;
-    justify-content: center;
-    margin-top: var(--space-4);
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.65rem 0.85rem 0.75rem;
+    gap: 0.5rem;
   }
 
-  .dog-card--bottom {
-    max-width: 600px;
-    width: 100%;
+  .dog-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
   }
 
-  .text-muted {
-    color: var(--clr-text-muted);
+  .dog-id {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #ffffff;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  .dog-rarity {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.45);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .dog-market-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #7ecef0;
+    text-decoration: none;
+    border: 1px solid rgba(126, 206, 240, 0.35);
+    border-radius: 6px;
+    padding: 0.28rem 0.55rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition:
+      color 150ms ease,
+      background 150ms ease,
+      border-color 150ms ease;
+  }
+
+  .dog-market-link:hover,
+  .dog-market-link:focus-visible {
+    color: #0a0a0a;
+    background: #7ecef0;
+    border-color: #7ecef0;
+  }
+
+  /* ─── Reduced motion ─── */
+  @media (prefers-reduced-motion: reduce) {
+    .dog-card {
+      animation: none;
+    }
+    .dog-card,
+    .dog-card::before,
+    .dog-img {
+      transition: none;
+    }
   }
 </style>
