@@ -1,14 +1,21 @@
 {
   "nextKickoff": {
-    "date": "2026-05-14",
-    "dayLabel": "Thu, 14 May 2026",
+    "date": "2026-05-15",
+    "dayLabel": "Fri, 15 May 2026",
     "utc": "10:00 AM UTC",
     "est": "5:00 AM EST",
     "cst": "4:00 AM CST",
-    "url": "https://t.co/imdtArkoHM",
-    "startedAt": "2026-05-14T11:58:59.078055+00:00"
+    "url": null,
+    "startedAt": null
   },
   "archive": [
+    {
+      "date": "2026-05-14",
+      "title": "The Kickoff",
+      "duration": "~50m",
+      "summary": "Thursday's session ran ~50m. Leah covered Bitcoin dominance, altseason signals, and Nigeria crypto adoption updates.",
+      "url": "https://t.co/imdtArkoHM"
+    },
     {
       "date": "2026-05-13",
       "title": "The Kickoff",
@@ -22,14 +29,7 @@
       "duration": "1h 11m",
       "summary": "The Kickoff for Tuesday: 1h 11m of market commentary, ETF flows, and Doginal Dogs community updates.",
       "url": "https://t.co/4thRafmpgr"
-    },
-    {
-      "date": "2025-01-10",
-      "title": "Bitcoin ETF Inflows & What They Mean for Altseason",
-      "duration": "58m",
-      "summary": "AI episode summary coming soon…",
-      "url": "https://twitter.com/i/spaces/placeholder-1"
     }
   ],
-  "lastAdvancedAt": "2026-05-13"
+  "lastAdvancedAt": "2026-05-14"
 }
