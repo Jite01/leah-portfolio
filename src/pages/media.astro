@@ -1,103 +1,121 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
+import mediaData from '../data/media.json';
 
-const mediaItems = [
-  {
-    type: 'day-in-finance',
-    date: '2025-01-10',
-    headline: 'BTC holds $96K as ETF inflows hit $500M weekly',
-    url: 'https://twitter.com/leahbluewater/status/placeholder-1',
-  },
-  {
-    type: 'how-to',
-    title: 'Buy Doginal Dogs in Under 5 Minutes',
-    desc: 'Step-by-step guide to your first inscription purchase on Dogecoin.',
-    url: 'https://twitter.com/leahbluewater/status/placeholder-2',
-  },
-  {
-    type: 'article',
-    title: 'Why WAT Is the New Trading Session You Should Watch',
-    excerpt: 'West African retail volume is quietly moving markets. Here\'s the data.',
-    url: 'https://twitter.com/leahbluewater/status/placeholder-3',
-  },
-];
+const { dayInFinance, highlights, previousDayInFinance } = mediaData;
 ---
 
-<Layout
+<<Layout
   title="Media — Leah Bluewater"
-  description="Leah Bluewater's content: Day in Finance, How-To Guides, and Articles."
+  description="Day in Finance updates, curated highlights, and market commentary from @leahbluewater."
 >
   <Nav slot="nav" />
 
-  <section class="section" aria-labelledby="media-heading">
+  <!-- Hero background -->
+  <div class="media-hero-bg" aria-hidden="true"></div>
+
+  <section class="section media-section" aria-labelledby="media-heading">
     <div class="container">
       <header class="section-header">
         <h2 class="section-heading" id="media-heading">Media</h2>
+        <p class="section-sub mono-label">Market updates · Curated picks · Commentary</p>
       </header>
 
       <div class="media-grid">
-        {mediaItems.map(item => (
-          <article class="card media-card" data-type={item.type}>
-            <span class="media-type-tag badge badge-accent">
-              {item.type === 'day-in-finance' ? 'Day in Finance'
-               : item.type === 'how-to'       ? 'How-To'
-               :                                'Article'}
-            </span>
+        <!-- Card 1: Latest Day in Finance -->
+        <article class="card media-card" data-type="day-in-finance">
+          <span class="media-type-tag badge badge-accent">Day in Finance</span>
+          <p class="media-date mono-label text-muted">{dayInFinance.date}</p>
+          <p class="media-headline">{dayInFinance.headline}</p>
+          <a
+            href={dayInFinance.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="link-accent media-cta"
+          >
+            Read on X ↗
+          </a>
+        </article>
 
-            {item.type === 'day-in-finance' && (
-              <>
-                <p class="media-date mono-label text-muted">{item.date}</p>
-                <p class="media-headline">{item.headline}</p>
-              </>
-            )}
+        <!-- Card 2: Highlights (visually distinct) -->
+        <article class="card media-card media-card--highlight" data-type="highlights">
+          <span class="media-type-tag badge badge-dark">Highlights</span>
+          <h3 class="media-title">{highlights.title}</h3>
+          <p class="media-desc text-muted">{highlights.desc}</p>
+          <a
+            href={highlights.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="link-accent media-cta"
+          >
+            Read on X ↗
+          </a>
+        </article>
 
-            {item.type === 'how-to' && (
-              <>
-                <h3 class="media-title">{item.title}</h3>
-                <p class="media-desc text-muted">{item.desc}</p>
-              </>
-            )}
-
-            {item.type === 'article' && (
-              <>
-                <h3 class="media-title">{item.title}</h3>
-                <p class="media-desc text-muted">{item.excerpt}</p>
-              </>
-            )}
-
-            <a
-              href={item.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="link-accent media-cta"
-            >
-              Read on X ↗
-            </a>
-          </article>
-        ))}
+        <!-- Card 3: Previous Day in Finance -->
+        <article class="card media-card" data-type="day-in-finance">
+          <span class="media-type-tag badge badge-accent">Day in Finance</span>
+          <p class="media-date mono-label text-muted">{previousDayInFinance.date}</p>
+          <p class="media-headline">{previousDayInFinance.headline}</p>
+          <a
+            href={previousDayInFinance.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="link-accent media-cta"
+          >
+            Read on X ↗
+          </a>
+        </article>
       </div>
     </div>
   </section>
 </Layout>
 
 <style>
-  .media-heading-row {
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
+  .media-hero-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background-image: url('/media_hero.jpg');
+    background-size: cover;
+    background-position: center center;
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .media-section {
+    position: relative;
+    z-index: 1;
   }
 
   .media-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: var(--space-5);
+  }
+
+  @media (max-width: 768px) {
+    .media-grid {
+      grid-template-columns: 1fr;
+    }
   }
 
   .media-card {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
+    padding: var(--space-6);
+  }
+
+  .media-card--highlight {
+    border-color: var(--clr-text);
+    box-shadow: 0 0 0 1px var(--clr-text);
+  }
+
+  .media-card--highlight:hover {
+    border-color: var(--clr-accent);
+    box-shadow: 0 0 0 1px var(--clr-accent);
   }
 
   .media-type-tag {
