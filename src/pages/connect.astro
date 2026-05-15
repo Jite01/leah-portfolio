@@ -10,6 +10,10 @@ import Nav from '../components/Nav.astro';
   <Nav slot="nav" />
 
   <main class="connect">
+
+    <!-- Dark base so the night-sky GIF has somewhere to live -->
+    <div class="connect-backdrop" aria-hidden="true"></div>
+
     <div class="connect-hero" aria-hidden="true">
       <img
         src="/hero_4fps.gif"
@@ -19,6 +23,9 @@ import Nav from '../components/Nav.astro';
         draggable="false"
       />
     </div>
+
+    <!-- Gradient scrim: dark at bottom so text sits on it cleanly -->
+    <div class="connect-scrim" aria-hidden="true"></div>
 
     <div class="connect-body">
       <h1 class="connect-h1">Connect</h1>
@@ -70,13 +77,23 @@ import Nav from '../components/Nav.astro';
     text-align: center;
     padding: var(--space-8) var(--space-4);
     overflow: hidden;
+    /* Dark canvas so the night scene reads */
+    background-color: #0d0e18;
   }
 
-  .connect-hero {
+  /* Solid dark base behind everything */
+  .connect-backdrop {
     position: absolute;
     inset: 0;
     z-index: 0;
-    opacity: 0.12;
+    background: #0d0e18;
+  }
+
+  /* GIF layer — visible, anchored to show the characters */
+  .connect-hero {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
     pointer-events: none;
   }
 
@@ -84,17 +101,41 @@ import Nav from '../components/Nav.astro';
     width: 100%;
     height: 100%;
     object-fit: cover;
+    /* Pull frame up so characters are centred vertically */
+    object-position: center 40%;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
+    opacity: 0.72;
   }
 
+  /*
+    Two-stop scrim:
+    - Transparent at top (sky stays visible)
+    - Dark at bottom-centre (text is legible)
+  */
+  .connect-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+      radial-gradient(
+        ellipse 80% 55% at 50% 80%,
+        rgba(10, 11, 22, 0.82) 0%,
+        rgba(10, 11, 22, 0.0) 100%
+      );
+  }
+
+  /* Content sits above scrim */
   .connect-body {
     position: relative;
-    z-index: 1;
+    z-index: 3;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: var(--space-6);
+    /* Push content into lower third where scrim is darkest */
+    margin-top: 28vh;
   }
 
   .connect-h1 {
@@ -103,7 +144,8 @@ import Nav from '../components/Nav.astro';
     font-size: var(--fs-3xl);
     letter-spacing: -0.03em;
     line-height: 1;
-    color: var(--clr-text);
+    /* White so it pops off the dark scrim */
+    color: #ffffff;
   }
 
   .connect-links {
@@ -112,11 +154,11 @@ import Nav from '../components/Nav.astro';
     gap: var(--space-3);
     font-family: var(--font-mono);
     font-size: var(--fs-sm);
-    color: var(--clr-text-muted);
+    color: rgba(255, 255, 255, 0.55);
   }
 
   .connect-link {
-    color: var(--clr-text);
+    color: rgba(255, 255, 255, 0.80);
     transition: color var(--dur-fast) var(--ease-out);
   }
 
@@ -125,7 +167,7 @@ import Nav from '../components/Nav.astro';
   }
 
   .connect-divider {
-    color: var(--clr-text-faint);
+    color: rgba(255, 255, 255, 0.3);
     user-select: none;
   }
 
@@ -149,14 +191,14 @@ import Nav from '../components/Nav.astro';
     bottom: var(--space-6);
     left: 0;
     right: 0;
-    z-index: 1;
+    z-index: 3;
     text-align: center;
   }
 
   .connect-copyright {
     font-family: var(--font-mono);
     font-size: var(--fs-xs);
-    color: var(--clr-text-faint);
+    color: rgba(255, 255, 255, 0.25);
     letter-spacing: 0.05em;
   }
 </style>
