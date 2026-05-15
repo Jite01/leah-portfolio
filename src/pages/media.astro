@@ -5,17 +5,13 @@ import mediaData from '../data/media.json';
 
 const { dayInFinance, highlights, previousDayInFinance } = mediaData;
 
-// Extract last digit of day for blinking effect
 function lastDigitOfDay(dateStr) {
   const day = dateStr.split('-')[2];
-  return {
-    prefix: day.slice(0, -1),
-    blink: day.slice(-1)
-  };
+  return { prefix: day.slice(0, -1), blink: day.slice(-1) };
 }
 
 const latestDay = lastDigitOfDay(dayInFinance.date);
-const prevDay = lastDigitOfDay(previousDayInFinance.date);
+const prevDay   = lastDigitOfDay(previousDayInFinance.date);
 ---
 
 <Layout
@@ -30,64 +26,76 @@ const prevDay = lastDigitOfDay(previousDayInFinance.date);
     <div class="container">
       <header class="section-header">
         <h2 class="section-heading" id="media-heading">Media</h2>
-        <p class="section-sub mono-label">Market updates · Curated picks · Commentary</p>
+        <p class="section-sub mono-label">
+          <span class="sub-item" data-sub>Market updates</span>
+          <span class="sub-sep">·</span>
+          <span class="sub-item" data-sub>Curated picks</span>
+          <span class="sub-sep">·</span>
+          <span class="sub-item" data-sub>Commentary</span>
+        </p>
       </header>
 
       <div class="media-grid">
+
         <!-- Card 1: Latest Day in Finance -->
         <article class="card media-card" data-type="day-in-finance">
-          <span class="media-type-tag badge badge-accent">Day in Finance</span>
+          <span class="media-type-tag badge badge-accent badge--travel">
+            Day in Finance
+            <svg class="badge-svg" aria-hidden="true" focusable="false">
+              <rect class="badge-rect badge-rect--trail" pathLength="1" />
+              <rect class="badge-rect badge-rect--dot"   pathLength="1" />
+            </svg>
+          </span>
           <p class="media-date mono-label text-muted">
             {dayInFinance.date.slice(0, 8)}{latestDay.prefix}<span class="blink-digit">{latestDay.blink}</span>
           </p>
           <div class="ticker-headline" id="ticker-headline" data-headline={dayInFinance.headline}></div>
-          <a
-            href={dayInFinance.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="link-accent media-cta"
-          >
+          <a href={dayInFinance.url} target="_blank" rel="noopener noreferrer" class="link-accent media-cta">
             Watch on X ↗
           </a>
         </article>
 
-        <!-- Card 2: Highlights (1.75× taller) -->
+        <!-- Card 2: Highlights (1.75× taller, badge travels in reverse) -->
         <article class="card media-card media-card--highlight" data-type="highlights">
-          <span class="media-type-tag badge badge-dark">Highlights</span>
+          <span class="media-type-tag badge badge-dark badge--travel badge--reverse">
+            Highlights
+            <svg class="badge-svg" aria-hidden="true" focusable="false">
+              <rect class="badge-rect badge-rect--trail" pathLength="1" />
+              <rect class="badge-rect badge-rect--dot"   pathLength="1" />
+            </svg>
+          </span>
           <h3 class="media-title">{highlights.title}</h3>
           <p class="media-desc text-muted">{highlights.desc}</p>
-          <a
-            href={highlights.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="link-accent media-cta"
-          >
+          <a href={highlights.url} target="_blank" rel="noopener noreferrer" class="link-accent media-cta">
             Read on X ↗
           </a>
         </article>
 
         <!-- Card 3: Previous Day in Finance -->
         <article class="card media-card" data-type="day-in-finance">
-          <span class="media-type-tag badge badge-accent">Day in Finance</span>
+          <span class="media-type-tag badge badge-accent badge--travel">
+            Day in Finance
+            <svg class="badge-svg" aria-hidden="true" focusable="false">
+              <rect class="badge-rect badge-rect--trail" pathLength="1" />
+              <rect class="badge-rect badge-rect--dot"   pathLength="1" />
+            </svg>
+          </span>
           <p class="media-date mono-label text-muted">
             {previousDayInFinance.date.slice(0, 8)}{prevDay.prefix}<span class="blink-digit">{prevDay.blink}</span>
           </p>
           <p class="media-headline" style="white-space: pre-line;">{previousDayInFinance.headline}</p>
-          <a
-            href={previousDayInFinance.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="link-accent media-cta"
-          >
+          <a href={previousDayInFinance.url} target="_blank" rel="noopener noreferrer" class="link-accent media-cta">
             Watch on X ↗
           </a>
         </article>
+
       </div>
     </div>
   </section>
 </Layout>
 
 <style>
+  /* ─── Hero bg: breathing opacity ─── */
   .media-hero-bg {
     position: fixed;
     inset: 0;
@@ -95,15 +103,43 @@ const prevDay = lastDigitOfDay(previousDayInFinance.date);
     background-image: url('/media_hero.jpg');
     background-size: cover;
     background-position: center center;
-    opacity: 0.70;
     pointer-events: none;
+    animation: bg-breathe 7s ease-in-out infinite alternate;
   }
 
+  @keyframes bg-breathe {
+    from { opacity: 0.65; }
+    to   { opacity: 0.87; }
+  }
+
+  /* ─── Section ─── */
   .media-section {
     position: relative;
     z-index: 1;
   }
 
+  /* ─── Subtitle cycling ─── */
+  .sub-sep {
+    margin-inline: 0.35em;
+    color: var(--clr-text-muted);
+  }
+
+  .sub-item {
+    border-radius: 4px;
+    padding: 0.1em 0.25em;
+    transition:
+      background-color 350ms cubic-bezier(0.16, 1, 0.3, 1),
+      color            350ms cubic-bezier(0.16, 1, 0.3, 1),
+      padding          350ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .sub-item.is-lit {
+    background-color: #0077b6;
+    color: #ffffff;
+    padding: 0.1em 0.55em;
+  }
+
+  /* ─── Media grid ─── */
   .media-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -113,9 +149,7 @@ const prevDay = lastDigitOfDay(previousDayInFinance.date);
   }
 
   @media (max-width: 768px) {
-    .media-grid {
-      grid-template-columns: 1fr;
-    }
+    .media-grid { grid-template-columns: 1fr; }
   }
 
   .media-card {
@@ -129,7 +163,6 @@ const prevDay = lastDigitOfDay(previousDayInFinance.date);
     border-color: var(--clr-text);
     box-shadow: 0 0 0 1px var(--clr-text);
     min-height: calc(var(--space-6) * 2 + 1.75 * 200px);
-    /* 1.75× the approximate content height of a standard card */
   }
 
   .media-card--highlight:hover {
@@ -137,13 +170,62 @@ const prevDay = lastDigitOfDay(previousDayInFinance.date);
     box-shadow: 0 0 0 1px var(--clr-accent);
   }
 
-  .media-type-tag {
-    align-self: flex-start;
+  /* ─── Travelling badge border ─── */
+  .badge--travel {
+    position: relative;
+    overflow: visible; /* let SVG ride on top of badge edge */
   }
 
-  .media-date {
-    font-size: var(--fs-xs);
+  .badge-svg {
+    position: absolute;
+    /* sit exactly on the badge border */
+    inset: -1px;
+    width: calc(100% + 2px);
+    height: calc(100% + 2px);
+    pointer-events: none;
+    overflow: visible;
   }
+
+  /* Shared rect geometry */
+  .badge-rect {
+    x: 1px;
+    y: 1px;
+    width: calc(100% - 2px);
+    height: calc(100% - 2px);
+    rx: 999px; /* pill — matches any badge radius */
+    fill: none;
+    stroke-linecap: round;
+  }
+
+  /* Trail: short blue dash, no glow */
+  .badge-rect--trail {
+    stroke: rgba(0, 119, 182, 0.45);
+    stroke-width: 1.5;
+    stroke-dasharray: 0.22 0.78;
+    animation: badge-travel 1.8s linear infinite;
+  }
+
+  /* Dot: bright blue, sharp */
+  .badge-rect--dot {
+    stroke: #0077b6;
+    stroke-width: 2;
+    stroke-dasharray: 0.025 0.975;
+    animation: badge-travel 1.8s linear infinite;
+  }
+
+  /* Reverse direction for Highlights */
+  .badge--reverse .badge-rect--trail,
+  .badge--reverse .badge-rect--dot {
+    animation-direction: reverse;
+  }
+
+  @keyframes badge-travel {
+    to { stroke-dashoffset: -1; }
+  }
+
+  /* ─── Badge layout helpers ─── */
+  .media-type-tag { align-self: flex-start; }
+  .media-date     { font-size: var(--fs-xs); }
 
   .blink-digit {
     animation: blink 1s step-end infinite;
@@ -171,11 +253,9 @@ const prevDay = lastDigitOfDay(previousDayInFinance.date);
     flex: 1;
   }
 
-  .media-cta {
-    margin-top: auto;
-  }
+  .media-cta { margin-top: auto; }
 
-  /* ── Ticker ── */
+  /* ─── Ticker ─── */
   .ticker-headline {
     font-family: var(--font-heading);
     font-size: var(--fs-md);
@@ -201,35 +281,56 @@ const prevDay = lastDigitOfDay(previousDayInFinance.date);
     color: var(--clr-accent);
     margin-left: 2px;
   }
+
+  /* ─── Reduced motion ─── */
+  @media (prefers-reduced-motion: reduce) {
+    .media-hero-bg    { animation: none; opacity: 0.75; }
+    .badge-rect--trail,
+    .badge-rect--dot  { animation: none; }
+    .sub-item         { transition: none; }
+  }
 </style>
 
 <script>
-  (function() {
+  /* ── Subtitle cycling ── */
+  (function () {
+    const items = Array.from(document.querySelectorAll('[data-sub]'));
+    if (!items.length) return;
+    let idx = 0;
+    function light() {
+      items.forEach(el => el.classList.remove('is-lit'));
+      items[idx].classList.add('is-lit');
+      idx = (idx + 1) % items.length;
+    }
+    light();
+    setInterval(light, 2200);
+  })();
+
+  /* ── Ticker typewriter ── */
+  (function () {
     const container = document.getElementById('ticker-headline');
     if (!container) return;
 
     const headline = container.dataset.headline || '';
     const lines = headline.split('\n').filter(l => l.trim().length > 0);
-    if (lines.length === 0) return;
+    if (!lines.length) return;
 
     const lineEls = lines.map(text => {
       const span = document.createElement('span');
       span.className = 'ticker-line';
       container.appendChild(span);
-      return { el: span, text: text.trim(), chars: Array.from(text.trim()) };
+      return { el: span, chars: Array.from(text.trim()) };
     });
 
     let activeIndex = 0;
-    let charIndex = 0;
-    let phase = 'typing';
-    let pauseTimer = null;
+    let charIndex   = 0;
+    let phase       = 'typing';
 
-    const TYPE_SPEED = 60;
+    const TYPE_SPEED     = 60;
     const PAUSE_DURATION = 1200;
 
     function tick() {
       const active = lineEls[activeIndex];
-
       if (phase === 'typing') {
         active.el.classList.add('is-active');
         if (charIndex < active.chars.length) {
@@ -239,23 +340,18 @@ const prevDay = lastDigitOfDay(previousDayInFinance.date);
         } else {
           active.el.classList.remove('is-active');
           phase = 'pause';
-          pauseTimer = setTimeout(() => {
-            phase = 'erasing';
-            tick();
-          }, PAUSE_DURATION);
+          setTimeout(() => { phase = 'erasing'; tick(); }, PAUSE_DURATION);
         }
       } else if (phase === 'erasing') {
-        active.el.style.opacity = '0';
+        active.el.style.opacity    = '0';
         active.el.style.transition = 'opacity 0.3s ease';
-        
         setTimeout(() => {
-          active.el.textContent = '';
-          active.el.style.opacity = '1';
+          active.el.textContent    = '';
+          active.el.style.opacity  = '1';
           active.el.style.transition = '';
-          
           activeIndex = (activeIndex + 1) % lineEls.length;
-          charIndex = 0;
-          phase = 'typing';
+          charIndex   = 0;
+          phase       = 'typing';
           tick();
         }, 300);
       }
