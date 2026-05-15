@@ -1,14 +1,21 @@
 {
   "nextKickoff": {
-    "date": "2026-05-15",
-    "dayLabel": "Fri, 15 May 2026",
+    "date": "2026-05-16",
+    "dayLabel": "Sat, 16 May 2026",
     "utc": "10:00 AM UTC",
     "est": "5:00 AM EST",
     "cst": "4:00 AM CST",
-    "url": "https://t.co/AFzMtFRDEs",
-    "startedAt": "2026-05-15T11:26:20.015616+00:00"
+    "url": null,
+    "startedAt": null
   },
   "archive": [
+    {
+      "date": "2026-05-15",
+      "title": "The Kickoff",
+      "duration": "~50m",
+      "summary": "Leah hosted The Kickoff on Friday, covering the day's crypto market moves and on-chain narratives in a ~50m session.",
+      "url": "https://t.co/AFzMtFRDEs"
+    },
     {
       "date": "2026-05-14",
       "title": "The Kickoff",
@@ -22,14 +29,7 @@
       "duration": "23h 10m",
       "summary": "Leah broke down the crypto week so far on Wednesday — 23h 10m of charts, sentiment, and space culture.",
       "url": "https://t.co/4thRafmpgr"
-    },
-    {
-      "date": "2026-05-12",
-      "title": "The Kickoff",
-      "duration": "1h 11m",
-      "summary": "The Kickoff for Tuesday: 1h 11m of market commentary, ETF flows, and Doginal Dogs community updates.",
-      "url": "https://t.co/4thRafmpgr"
     }
   ],
-  "lastAdvancedAt": "2026-05-14"
+  "lastAdvancedAt": "2026-05-15"
 }
