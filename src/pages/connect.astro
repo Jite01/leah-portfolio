@@ -11,9 +11,6 @@ import Nav from '../components/Nav.astro';
 
   <main class="connect">
 
-    <!-- Dark base so the night-sky GIF has somewhere to live -->
-    <div class="connect-backdrop" aria-hidden="true"></div>
-
     <div class="connect-hero" aria-hidden="true">
       <img
         src="/hero_4fps.gif"
@@ -23,9 +20,6 @@ import Nav from '../components/Nav.astro';
         draggable="false"
       />
     </div>
-
-    <!-- Gradient scrim: dark at bottom so text sits on it cleanly -->
-    <div class="connect-scrim" aria-hidden="true"></div>
 
     <div class="connect-body">
       <h1 class="connect-h1">Connect</h1>
@@ -63,79 +57,69 @@ import Nav from '../components/Nav.astro';
     <footer class="connect-footer">
       <p class="connect-copyright">© 2026 Leah Bluewater. All rights reserved.</p>
     </footer>
+
   </main>
 </Layout>
 
 <style>
   .connect {
-    position: relative;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    padding-bottom: var(--space-8);
+    background: var(--clr-bg, #ffffff);
     text-align: center;
-    padding: var(--space-8) var(--space-4);
-    overflow: hidden;
-    /* Dark canvas so the night scene reads */
-    background-color: #0d0e18;
   }
 
-  /* Solid dark base behind everything */
-  .connect-backdrop {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background: #0d0e18;
-  }
-
-  /* GIF layer — visible, anchored to show the characters */
+  /* ── GIF container ─────────────────────────────────────── */
   .connect-hero {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
+    width: 100%;
+    max-width: 860px;
+    max-height: 52vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    /*
+      Radial oval mask dissolves the rectangular GIF into the white page.
+      Opaque in centre, fully transparent at all four edges.
+      Mimics the dithered pixel-border look.
+    */
+    -webkit-mask-image: radial-gradient(
+      ellipse 78% 72% at 50% 52%,
+      black 38%,
+      transparent 100%
+    );
+    mask-image: radial-gradient(
+      ellipse 78% 72% at 50% 52%,
+      black 38%,
+      transparent 100%
+    );
   }
 
   .connect-hero img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    /* Pull frame up so characters are centred vertically */
-    object-position: center 40%;
+    height: auto;
+    display: block;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
-    opacity: 0.72;
+    object-fit: cover;
+    /* Pull frame down slightly so characters sit at mask centre */
+    object-position: center 55%;
   }
 
-  /*
-    Two-stop scrim:
-    - Transparent at top (sky stays visible)
-    - Dark at bottom-centre (text is legible)
-  */
-  .connect-scrim {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    pointer-events: none;
-    background:
-      radial-gradient(
-        ellipse 80% 55% at 50% 80%,
-        rgba(10, 11, 22, 0.82) 0%,
-        rgba(10, 11, 22, 0.0) 100%
-      );
-  }
-
-  /* Content sits above scrim */
+  /* ── Text — lives below the GIF ────────────────────────── */
   .connect-body {
-    position: relative;
-    z-index: 3;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-6);
-    /* Push content into lower third where scrim is darkest */
-    margin-top: 28vh;
+    gap: var(--space-5);
+    /* Slight negative pull so text feels attached to image bottom */
+    margin-top: calc(var(--space-6) * -1);
+    padding: 0 var(--space-4);
+    position: relative;
+    z-index: 1;
   }
 
   .connect-h1 {
@@ -144,8 +128,7 @@ import Nav from '../components/Nav.astro';
     font-size: var(--fs-3xl);
     letter-spacing: -0.03em;
     line-height: 1;
-    /* White so it pops off the dark scrim */
-    color: #ffffff;
+    color: var(--clr-text);
   }
 
   .connect-links {
@@ -154,11 +137,11 @@ import Nav from '../components/Nav.astro';
     gap: var(--space-3);
     font-family: var(--font-mono);
     font-size: var(--fs-sm);
-    color: rgba(255, 255, 255, 0.55);
+    color: var(--clr-text-muted);
   }
 
   .connect-link {
-    color: rgba(255, 255, 255, 0.80);
+    color: var(--clr-text);
     transition: color var(--dur-fast) var(--ease-out);
   }
 
@@ -167,7 +150,7 @@ import Nav from '../components/Nav.astro';
   }
 
   .connect-divider {
-    color: rgba(255, 255, 255, 0.3);
+    color: var(--clr-text-faint);
     user-select: none;
   }
 
@@ -178,7 +161,6 @@ import Nav from '../components/Nav.astro';
     color: var(--clr-accent);
     border-bottom: 2px solid currentColor;
     padding-bottom: 2px;
-    margin-top: var(--space-2);
     transition: opacity var(--dur-fast) var(--ease-out);
   }
 
@@ -186,19 +168,37 @@ import Nav from '../components/Nav.astro';
     opacity: 0.6;
   }
 
+  /* ── Footer ────────────────────────────────────────────── */
   .connect-footer {
-    position: absolute;
-    bottom: var(--space-6);
-    left: 0;
-    right: 0;
-    z-index: 3;
-    text-align: center;
+    margin-top: auto;
+    padding-top: var(--space-10);
   }
 
   .connect-copyright {
     font-family: var(--font-mono);
     font-size: var(--fs-xs);
-    color: rgba(255, 255, 255, 0.25);
+    color: var(--clr-text-faint);
     letter-spacing: 0.05em;
+  }
+
+  /* ── Mobile ────────────────────────────────────────────── */
+  @media (max-width: 480px) {
+    .connect-hero {
+      max-height: 44vh;
+      -webkit-mask-image: radial-gradient(
+        ellipse 92% 70% at 50% 52%,
+        black 28%,
+        transparent 100%
+      );
+      mask-image: radial-gradient(
+        ellipse 92% 70% at 50% 52%,
+        black 28%,
+        transparent 100%
+      );
+    }
+
+    .connect-body {
+      margin-top: calc(var(--space-4) * -1);
+    }
   }
 </style>
