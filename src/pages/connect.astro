@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 ---
 
-<Layout
+<<Layout
   title="Connect — Leah Bluewater"
   description="Connect with Leah Bluewater. Crypto & finance voice on X."
 >
@@ -68,6 +68,7 @@ import Nav from '../components/Nav.astro';
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    padding-top: 20vh;          /* ← moves everything down */
     padding-bottom: var(--space-8);
     background: var(--clr-bg, #ffffff);
     text-align: center;
