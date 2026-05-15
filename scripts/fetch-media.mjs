@@ -7,6 +7,10 @@ const MEDIA_JSON = './src/data/media.json';
 const LEAH_HANDLE = 'leahbluewater';
 const KEYWORD = 'In Finance Today';
 
+function todayUtcIso() {
+  return new Date().toISOString().split('T')[0];
+}
+
 async function loadCookies() {
   try {
     const raw = await fs.readFile(COOKIES_PATH, 'utf-8');
@@ -26,32 +30,42 @@ async function main() {
   const scraper = new Scraper();
   await scraper.setCookies(cookies);
 
-  // Fetch Leah's recent tweets
   const tweets = [];
-  for await (const tweet of scraper.getUserTweets(LEAH_HANDLE, 20)) {
+  for await (const tweet of scraper.getUserTweets(LEAH_HANDLE, 30)) {
     tweets.push(tweet);
   }
 
-  // Find first tweet containing "In Finance Today"
+  const today = todayUtcIso();
+
   const match = tweets.find(t => {
     const text = t.rawContent || t.text || '';
-    return text.toLowerCase().includes(KEYWORD.toLowerCase());
+    if (!text.toLowerCase().includes(KEYWORD.toLowerCase())) return false;
+    const tweetDate = t.createdAt ? new Date(t.createdAt).toISOString().split('T')[0] : null;
+    return tweetDate === today;
   });
 
   if (!match) {
-    console.log('No "In Finance Today" post found.');
+    console.log(`No "In Finance Today" post found for ${today}.`);
     return;
   }
 
-  // Extract data
   const url = `https://twitter.com/${LEAH_HANDLE}/status/${match.id}`;
-  const date = new Date(match.createdAt || Date.now()).toISOString().split('T')[0];
-  const headline = (match.rawContent || match.text || '')
-    .replace(/In Finance Today/gi, '')
-    .trim()
-    .substring(0, 120);
+  const date = today;
 
-  // Read current media.json
+  let rawText = match.rawContent || match.text || '';
+
+  // Strip trailing URL (https://t.co/...)
+  rawText = rawText.replace(/https?:\/\/t\.co\/[A-Za-z0-9]+\.{0,3}\s*$/i, '').trim();
+
+  // Strip "In Finance Today⚡️" (with optional lightning bolt and variants)
+  rawText = rawText.replace(/In Finance Today[⚡️⚡]?\s*$/i, '').trim();
+
+  // Split by double newlines to get individual headlines
+  const headlines = rawText.split(/\n\s*\n/).map(h => h.trim()).filter(h => h.length > 0);
+
+  // Join with single \n for JSON
+  const headline = headlines.join('\n');
+
   let media = {};
   try {
     const raw = await fs.readFile(MEDIA_JSON, 'utf-8');
@@ -60,25 +74,24 @@ async function main() {
     media = { dayInFinance: {}, highlights: {}, previousDayInFinance: {} };
   }
 
-  // Only update if this is a new post (different URL)
   if (media.dayInFinance?.url === url) {
     console.log('Already have this post. No update needed.');
     return;
   }
 
-  // Archive current → previous
   if (media.dayInFinance?.url) {
     media.previousDayInFinance = { ...media.dayInFinance };
   }
 
-  // Write new
   media.dayInFinance = { date, headline, url };
 
   await fs.mkdir(path.dirname(MEDIA_JSON), { recursive: true });
   await fs.writeFile(MEDIA_JSON, JSON.stringify(media, null, 2) + '\n');
 
   console.log('Updated media.json:');
-  console.log(`  Latest: ${date} — ${headline}`);
+  console.log(`  Date: ${date}`);
+  console.log(`  Lines: ${headlines.length}`);
+  headlines.forEach((h, i) => console.log(`    ${i + 1}. ${h}`));
   console.log(`  Previous: ${media.previousDayInFinance?.date || 'none'}`);
 }
 
