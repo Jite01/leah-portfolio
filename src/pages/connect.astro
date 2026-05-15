@@ -73,50 +73,43 @@ import Nav from '../components/Nav.astro';
     text-align: center;
   }
 
-  /* ── GIF container ─────────────────────────────────────── */
+  /* ── GIF container — NO overflow:hidden, let mask do all the work ── */
   .connect-hero {
     width: 100%;
     max-width: 860px;
-    max-height: 52vh;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    /*
-      Radial oval mask dissolves the rectangular GIF into the white page.
-      Opaque in centre, fully transparent at all four edges.
-      Mimics the dithered pixel-border look.
-    */
-    -webkit-mask-image: radial-gradient(
-      ellipse 78% 72% at 50% 52%,
-      black 38%,
-      transparent 100%
-    );
-    mask-image: radial-gradient(
-      ellipse 78% 72% at 50% 52%,
-      black 38%,
-      transparent 100%
-    );
   }
 
+  /*
+    Mask lives on the <img> directly.
+    overflow:hidden was killing the fade — removed entirely.
+    Ellipse is opaque at centre, fades to transparent at all edges.
+  */
   .connect-hero img {
     width: 100%;
     height: auto;
     display: block;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
-    object-fit: cover;
-    /* Pull frame down slightly so characters sit at mask centre */
-    object-position: center 55%;
+
+    -webkit-mask-image: radial-gradient(
+      ellipse 70% 65% at 50% 50%,
+      black 25%,
+      transparent 75%
+    );
+    mask-image: radial-gradient(
+      ellipse 70% 65% at 50% 50%,
+      black 25%,
+      transparent 75%
+    );
   }
 
-  /* ── Text — lives below the GIF ────────────────────────── */
+  /* ── Text below ─────────────────────────────────────────── */
   .connect-body {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: var(--space-5);
-    /* Slight negative pull so text feels attached to image bottom */
-    margin-top: calc(var(--space-6) * -1);
+    margin-top: calc(var(--space-8) * -1);
     padding: 0 var(--space-4);
     position: relative;
     z-index: 1;
@@ -168,7 +161,7 @@ import Nav from '../components/Nav.astro';
     opacity: 0.6;
   }
 
-  /* ── Footer ────────────────────────────────────────────── */
+  /* ── Footer ─────────────────────────────────────────────── */
   .connect-footer {
     margin-top: auto;
     padding-top: var(--space-10);
@@ -181,24 +174,23 @@ import Nav from '../components/Nav.astro';
     letter-spacing: 0.05em;
   }
 
-  /* ── Mobile ────────────────────────────────────────────── */
+  /* ── Mobile ─────────────────────────────────────────────── */
   @media (max-width: 480px) {
-    .connect-hero {
-      max-height: 44vh;
+    .connect-hero img {
       -webkit-mask-image: radial-gradient(
-        ellipse 92% 70% at 50% 52%,
-        black 28%,
-        transparent 100%
+        ellipse 80% 60% at 50% 50%,
+        black 20%,
+        transparent 72%
       );
       mask-image: radial-gradient(
-        ellipse 92% 70% at 50% 52%,
-        black 28%,
-        transparent 100%
+        ellipse 80% 60% at 50% 50%,
+        black 20%,
+        transparent 72%
       );
     }
 
     .connect-body {
-      margin-top: calc(var(--space-4) * -1);
+      margin-top: calc(var(--space-6) * -1);
     }
   }
 </style>
