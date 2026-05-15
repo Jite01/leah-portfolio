@@ -39,12 +39,12 @@ const prevDay   = lastDigitOfDay(previousDayInFinance.date);
 
         <!-- Card 1: Latest Day in Finance -->
         <article class="card media-card" data-type="day-in-finance">
-          <span class="media-type-tag badge badge-accent badge--travel">
-            Day in Finance
+          <div class="badge-wrap">
+            <span class="media-type-tag badge badge-accent">Day in Finance</span>
             <svg class="badge-svg" aria-hidden="true" focusable="false">
               <rect class="badge-snake badge-snake--ccw" pathLength="1" />
             </svg>
-          </span>
+          </div>
           <p class="media-date mono-label text-muted">
             {dayInFinance.date.slice(0, 8)}{latestDay.prefix}<span class="blink-digit">{latestDay.blink}</span>
           </p>
@@ -56,12 +56,12 @@ const prevDay   = lastDigitOfDay(previousDayInFinance.date);
 
         <!-- Card 2: Highlights — clockwise (anti-counter-clockwise) -->
         <article class="card media-card media-card--highlight" data-type="highlights">
-          <span class="media-type-tag badge badge-dark badge--travel">
-            Highlights
+          <div class="badge-wrap">
+            <span class="media-type-tag badge badge-dark">Highlights</span>
             <svg class="badge-svg" aria-hidden="true" focusable="false">
               <rect class="badge-snake badge-snake--cw" pathLength="1" />
             </svg>
-          </span>
+          </div>
           <h3 class="media-title">{highlights.title}</h3>
           <p class="media-desc text-muted">{highlights.desc}</p>
           <a href={highlights.url} target="_blank" rel="noopener noreferrer" class="link-accent media-cta">
@@ -71,12 +71,12 @@ const prevDay   = lastDigitOfDay(previousDayInFinance.date);
 
         <!-- Card 3: Previous Day in Finance -->
         <article class="card media-card" data-type="day-in-finance">
-          <span class="media-type-tag badge badge-accent badge--travel">
-            Day in Finance
+          <div class="badge-wrap">
+            <span class="media-type-tag badge badge-accent">Day in Finance</span>
             <svg class="badge-svg" aria-hidden="true" focusable="false">
               <rect class="badge-snake badge-snake--ccw" pathLength="1" />
             </svg>
-          </span>
+          </div>
           <p class="media-date mono-label text-muted">
             {previousDayInFinance.date.slice(0, 8)}{prevDay.prefix}<span class="blink-digit">{prevDay.blink}</span>
           </p>
@@ -167,50 +167,47 @@ const prevDay   = lastDigitOfDay(previousDayInFinance.date);
     box-shadow: 0 0 0 1px var(--clr-accent);
   }
 
-  /* ─── Travelling badge border — snake typewriter ─── */
-  .badge--travel {
+  /* ─── Badge wrapper + typewriter border ─── */
+  .badge-wrap {
     position: relative;
-    overflow: visible;
+    display: inline-flex;
+    align-self: flex-start;
+  }
+
+  /* Kill the badge's own border — the SVG IS the border */
+  .media-section .badge-wrap .badge {
+    border-color: transparent;
   }
 
   .badge-svg {
     position: absolute;
-    inset: -1px;
-    width: calc(100% + 2px);
-    height: calc(100% + 2px);
+    inset: 0;
+    width: 100%;
+    height: 100%;
     pointer-events: none;
     overflow: visible;
   }
 
   .badge-snake {
-    x: 1px;
-    y: 1px;
-    width: calc(100% - 2px);
-    height: calc(100% - 2px);
+    x: 0.75px;
+    y: 0.75px;
+    width: calc(100% - 1.5px);
+    height: calc(100% - 1.5px);
     rx: 999px;
     fill: none;
     stroke: #0077b6;
     stroke-width: 1.5;
-    /* ~70% of perimeter visible — long enough to read as "the border" */
-    stroke-dasharray: 0.70 0.30;
+    stroke-dasharray: 0.72 0.28;
     stroke-linecap: butt;
   }
 
-  /* Counter-clockwise: dashoffset goes positive */
-  .badge-snake--ccw {
-    animation: snake-ccw 2.4s linear infinite;
-  }
-
-  /* Clockwise: dashoffset goes negative */
-  .badge-snake--cw {
-    animation: snake-cw 2.4s linear infinite;
-  }
+  .badge-snake--ccw { animation: snake-ccw 2.4s linear infinite; }
+  .badge-snake--cw  { animation: snake-cw  2.4s linear infinite; }
 
   @keyframes snake-ccw {
     from { stroke-dashoffset: 0; }
     to   { stroke-dashoffset: 1; }
   }
-
   @keyframes snake-cw {
     from { stroke-dashoffset: 0; }
     to   { stroke-dashoffset: -1; }
