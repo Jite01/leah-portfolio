@@ -4,9 +4,21 @@ import Nav from '../components/Nav.astro';
 import mediaData from '../data/media.json';
 
 const { dayInFinance, highlights, previousDayInFinance } = mediaData;
+
+// Extract last digit of day for blinking effect
+function lastDigitOfDay(dateStr) {
+  const day = dateStr.split('-')[2];
+  return {
+    prefix: day.slice(0, -1),
+    blink: day.slice(-1)
+  };
+}
+
+const latestDay = lastDigitOfDay(dayInFinance.date);
+const prevDay = lastDigitOfDay(previousDayInFinance.date);
 ---
 
-<Layout
+<<Layout
   title="Media — Leah Bluewater"
   description="Day in Finance updates, curated highlights, and market commentary from @leahbluewater."
 >
@@ -22,10 +34,12 @@ const { dayInFinance, highlights, previousDayInFinance } = mediaData;
       </header>
 
       <div class="media-grid">
-        <!-- Card 1: Latest Day in Finance (with ticker) -->
+        <!-- Card 1: Latest Day in Finance -->
         <article class="card media-card" data-type="day-in-finance">
           <span class="media-type-tag badge badge-accent">Day in Finance</span>
-          <p class="media-date mono-label text-muted">{dayInFinance.date}</p>
+          <p class="media-date mono-label text-muted">
+            {dayInFinance.date.slice(0, 8)}{latestDay.prefix}<span class="blink-digit">{latestDay.blink}</span>
+          </p>
           <div class="ticker-headline" id="ticker-headline" data-headline={dayInFinance.headline}></div>
           <a
             href={dayInFinance.url}
@@ -33,11 +47,11 @@ const { dayInFinance, highlights, previousDayInFinance } = mediaData;
             rel="noopener noreferrer"
             class="link-accent media-cta"
           >
-            Read on X ↗
+            Watch on X ↗
           </a>
         </article>
 
-        <!-- Card 2: Highlights -->
+        <!-- Card 2: Highlights (1.75× taller) -->
         <article class="card media-card media-card--highlight" data-type="highlights">
           <span class="media-type-tag badge badge-dark">Highlights</span>
           <h3 class="media-title">{highlights.title}</h3>
@@ -55,7 +69,9 @@ const { dayInFinance, highlights, previousDayInFinance } = mediaData;
         <!-- Card 3: Previous Day in Finance -->
         <article class="card media-card" data-type="day-in-finance">
           <span class="media-type-tag badge badge-accent">Day in Finance</span>
-          <p class="media-date mono-label text-muted">{previousDayInFinance.date}</p>
+          <p class="media-date mono-label text-muted">
+            {previousDayInFinance.date.slice(0, 8)}{prevDay.prefix}<span class="blink-digit">{prevDay.blink}</span>
+          </p>
           <p class="media-headline" style="white-space: pre-line;">{previousDayInFinance.headline}</p>
           <a
             href={previousDayInFinance.url}
@@ -63,7 +79,7 @@ const { dayInFinance, highlights, previousDayInFinance } = mediaData;
             rel="noopener noreferrer"
             class="link-accent media-cta"
           >
-            Read on X ↗
+            Watch on X ↗
           </a>
         </article>
       </div>
@@ -79,7 +95,7 @@ const { dayInFinance, highlights, previousDayInFinance } = mediaData;
     background-image: url('/media_hero.jpg');
     background-size: cover;
     background-position: center center;
-    opacity: 0.45;
+    opacity: 0.70;
     pointer-events: none;
   }
 
@@ -91,7 +107,9 @@ const { dayInFinance, highlights, previousDayInFinance } = mediaData;
   .media-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: minmax(0, auto);
     gap: var(--space-5);
+    align-items: start;
   }
 
   @media (max-width: 768px) {
@@ -110,6 +128,8 @@ const { dayInFinance, highlights, previousDayInFinance } = mediaData;
   .media-card--highlight {
     border-color: var(--clr-text);
     box-shadow: 0 0 0 1px var(--clr-text);
+    min-height: calc(var(--space-6) * 2 + 1.75 * 200px);
+    /* 1.75× the approximate content height of a standard card */
   }
 
   .media-card--highlight:hover {
@@ -123,6 +143,15 @@ const { dayInFinance, highlights, previousDayInFinance } = mediaData;
 
   .media-date {
     font-size: var(--fs-xs);
+  }
+
+  .blink-digit {
+    animation: blink 1s step-end infinite;
+    color: var(--clr-accent);
+  }
+
+  @keyframes blink {
+    50% { opacity: 0; }
   }
 
   .media-headline,
@@ -151,19 +180,19 @@ const { dayInFinance, highlights, previousDayInFinance } = mediaData;
     font-family: var(--font-heading);
     font-size: var(--fs-md);
     font-weight: var(--fw-bold);
-    line-height: 1.4;
+    line-height: 1.5;
     letter-spacing: -0.01em;
-    min-height: calc(1.4em * 3);
+    min-height: calc(1.5em * 3);
     display: flex;
     flex-direction: column;
-    gap: 0.25em;
+    gap: 0.3em;
   }
 
   .ticker-line {
     display: block;
     white-space: nowrap;
     overflow: hidden;
-    min-height: 1.4em;
+    min-height: 1.5em;
   }
 
   .ticker-line.is-active::after {
@@ -171,10 +200,6 @@ const { dayInFinance, highlights, previousDayInFinance } = mediaData;
     animation: blink 1s step-end infinite;
     color: var(--clr-accent);
     margin-left: 2px;
-  }
-
-  @keyframes blink {
-    50% { opacity: 0; }
   }
 </style>
 
@@ -187,7 +212,6 @@ const { dayInFinance, highlights, previousDayInFinance } = mediaData;
     const lines = headline.split('\n').filter(l => l.trim().length > 0);
     if (lines.length === 0) return;
 
-    // Create line elements
     const lineEls = lines.map(text => {
       const span = document.createElement('span');
       span.className = 'ticker-line';
@@ -197,11 +221,11 @@ const { dayInFinance, highlights, previousDayInFinance } = mediaData;
 
     let activeIndex = 0;
     let charIndex = 0;
-    let phase = 'typing'; // typing | pause | erasing
+    let phase = 'typing';
     let pauseTimer = null;
 
-    const TYPE_SPEED = 60;   // ms per char
-    const PAUSE_DURATION = 1200; // ms all lines visible
+    const TYPE_SPEED = 60;
+    const PAUSE_DURATION = 1200;
 
     function tick() {
       const active = lineEls[activeIndex];
@@ -213,7 +237,6 @@ const { dayInFinance, highlights, previousDayInFinance } = mediaData;
           charIndex++;
           setTimeout(tick, TYPE_SPEED);
         } else {
-          // Line complete
           active.el.classList.remove('is-active');
           phase = 'pause';
           pauseTimer = setTimeout(() => {
@@ -222,7 +245,6 @@ const { dayInFinance, highlights, previousDayInFinance } = mediaData;
           }, PAUSE_DURATION);
         }
       } else if (phase === 'erasing') {
-        // Fade out current line, then move to next
         active.el.style.opacity = '0';
         active.el.style.transition = 'opacity 0.3s ease';
         
@@ -239,7 +261,6 @@ const { dayInFinance, highlights, previousDayInFinance } = mediaData;
       }
     }
 
-    // Start
     tick();
   })();
 </script>
