@@ -3,97 +3,160 @@ import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 ---
 
-<Layout
+<<Layout
   title="Connect — Leah Bluewater"
   description="Connect with Leah Bluewater. Crypto & finance voice on X."
 >
   <Nav slot="nav" />
 
-  <section class="section" aria-labelledby="connect-heading">
-    <div class="container-narrow">
-      <header class="section-header">
-        <h2 class="section-heading" id="connect-heading">Connect</h2>
-      </header>
-
-      <ul class="connect-list" role="list">
-        <li class="connect-row">
-          <span class="connect-label mono-label text-muted">X / Twitter</span>
-          <a
-            href="https://twitter.com/leahbluewater"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="connect-link"
-          >
-            @leahbluewater ↗
-          </a>
-        </li>
-        <li class="connect-row">
-          <span class="connect-label mono-label text-muted">Community</span>
-          <a
-            href="https://twitter.com/doginaldogsx"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="connect-link"
-          >
-            @doginaldogsx ↗
-          </a>
-        </li>
-        <li class="connect-row">
-          <span class="connect-label mono-label text-muted">TypeMedia</span>
-          <a
-            href="https://typemedia.xyz"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="connect-link"
-          >
-            typemedia.xyz ↗
-          </a>
-        </li>
-        <li class="connect-row">
-          <span class="connect-label mono-label text-muted">DM</span>
-          <span class="connect-link">Open on X — DMs on</span>
-        </li>
-      </ul>
+  <main class="connect">
+    <div class="connect-hero" aria-hidden="true">
+      <img
+        src="/hero_4fps.gif"
+        alt=""
+        loading="eager"
+        decoding="async"
+        draggable="false"
+      />
     </div>
-  </section>
+
+    <div class="connect-body">
+      <h1 class="connect-h1">Connect</h1>
+
+      <nav class="connect-links" aria-label="Social links">
+        <a
+          href="https://x.com/leahbluewater"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="connect-link"
+        >
+          @leahbluewater
+        </a>
+        <span class="connect-divider" aria-hidden="true">·</span>
+        <a
+          href="https://x.com/doginaldogs"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="connect-link"
+        >
+          Doginal Dogs
+        </a>
+      </nav>
+
+      <a
+        href="https://x.com/messages/compose?recipient_id=555216272"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="connect-dm"
+      >
+        Slide into DMs ↗
+      </a>
+    </div>
+
+    <footer class="connect-footer">
+      <p class="connect-copyright">© 2026 Leah Bluewater. All rights reserved.</p>
+    </footer>
+  </main>
 </Layout>
 
 <style>
-  .connect-list {
+  .connect {
+    position: relative;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    border-top: 1px solid var(--clr-border);
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--space-8) var(--space-4);
+    overflow: hidden;
   }
 
-  .connect-row {
+  .connect-hero {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.12;
+    pointer-events: none;
+  }
+
+  .connect-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+
+  .connect-body {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-6);
+  }
+
+  .connect-h1 {
+    font-family: var(--font-heading);
+    font-weight: var(--fw-extrabold);
+    font-size: var(--fs-3xl);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--clr-text);
+  }
+
+  .connect-links {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--space-5);
-    padding-block: var(--space-5);
-    border-bottom: 1px solid var(--clr-border);
-  }
-
-  .connect-label {
-    min-width: 100px;
+    gap: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    color: var(--clr-text-muted);
   }
 
   .connect-link {
-    font-family: var(--font-heading);
-    font-weight: var(--fw-bold);
-    font-size: var(--fs-lg);
-    letter-spacing: -0.02em;
     color: var(--clr-text);
     transition: color var(--dur-fast) var(--ease-out);
   }
 
-  a.connect-link:hover {
+  .connect-link:hover {
     color: var(--clr-accent);
   }
 
-  @media (max-width: 640px) {
-    .connect-link {
-      font-size: var(--fs-md);
-    }
+  .connect-divider {
+    color: var(--clr-text-faint);
+    user-select: none;
+  }
+
+  .connect-dm {
+    font-family: var(--font-heading);
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-lg);
+    color: var(--clr-accent);
+    border-bottom: 2px solid currentColor;
+    padding-bottom: 2px;
+    margin-top: var(--space-2);
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
+
+  .connect-dm:hover {
+    opacity: 0.6;
+  }
+
+  .connect-footer {
+    position: absolute;
+    bottom: var(--space-6);
+    left: 0;
+    right: 0;
+    z-index: 1;
+    text-align: center;
+  }
+
+  .connect-copyright {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    color: var(--clr-text-faint);
+    letter-spacing: 0.05em;
   }
 </style>
