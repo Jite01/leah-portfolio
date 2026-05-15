@@ -42,8 +42,7 @@ const prevDay   = lastDigitOfDay(previousDayInFinance.date);
           <span class="media-type-tag badge badge-accent badge--travel">
             Day in Finance
             <svg class="badge-svg" aria-hidden="true" focusable="false">
-              <rect class="badge-rect badge-rect--trail" pathLength="1" />
-              <rect class="badge-rect badge-rect--dot"   pathLength="1" />
+              <rect class="badge-snake badge-snake--ccw" pathLength="1" />
             </svg>
           </span>
           <p class="media-date mono-label text-muted">
@@ -55,13 +54,12 @@ const prevDay   = lastDigitOfDay(previousDayInFinance.date);
           </a>
         </article>
 
-        <!-- Card 2: Highlights (1.75× taller, badge travels in reverse) -->
+        <!-- Card 2: Highlights — clockwise (anti-counter-clockwise) -->
         <article class="card media-card media-card--highlight" data-type="highlights">
-          <span class="media-type-tag badge badge-dark badge--travel badge--reverse">
+          <span class="media-type-tag badge badge-dark badge--travel">
             Highlights
             <svg class="badge-svg" aria-hidden="true" focusable="false">
-              <rect class="badge-rect badge-rect--trail" pathLength="1" />
-              <rect class="badge-rect badge-rect--dot"   pathLength="1" />
+              <rect class="badge-snake badge-snake--cw" pathLength="1" />
             </svg>
           </span>
           <h3 class="media-title">{highlights.title}</h3>
@@ -76,8 +74,7 @@ const prevDay   = lastDigitOfDay(previousDayInFinance.date);
           <span class="media-type-tag badge badge-accent badge--travel">
             Day in Finance
             <svg class="badge-svg" aria-hidden="true" focusable="false">
-              <rect class="badge-rect badge-rect--trail" pathLength="1" />
-              <rect class="badge-rect badge-rect--dot"   pathLength="1" />
+              <rect class="badge-snake badge-snake--ccw" pathLength="1" />
             </svg>
           </span>
           <p class="media-date mono-label text-muted">
@@ -134,8 +131,8 @@ const prevDay   = lastDigitOfDay(previousDayInFinance.date);
   }
 
   .sub-item.is-lit {
-    background-color: #0077b6;
-    color: #ffffff;
+    background-color: #ffffff;
+    color: #fcd34d;
     padding: 0.1em 0.55em;
   }
 
@@ -170,15 +167,14 @@ const prevDay   = lastDigitOfDay(previousDayInFinance.date);
     box-shadow: 0 0 0 1px var(--clr-accent);
   }
 
-  /* ─── Travelling badge border ─── */
+  /* ─── Travelling badge border — snake typewriter ─── */
   .badge--travel {
     position: relative;
-    overflow: visible; /* let SVG ride on top of badge edge */
+    overflow: visible;
   }
 
   .badge-svg {
     position: absolute;
-    /* sit exactly on the badge border */
     inset: -1px;
     width: calc(100% + 2px);
     height: calc(100% + 2px);
@@ -186,41 +182,38 @@ const prevDay   = lastDigitOfDay(previousDayInFinance.date);
     overflow: visible;
   }
 
-  /* Shared rect geometry */
-  .badge-rect {
+  .badge-snake {
     x: 1px;
     y: 1px;
     width: calc(100% - 2px);
     height: calc(100% - 2px);
-    rx: 999px; /* pill — matches any badge radius */
+    rx: 999px;
     fill: none;
-    stroke-linecap: round;
-  }
-
-  /* Trail: short blue dash, no glow */
-  .badge-rect--trail {
-    stroke: rgba(0, 119, 182, 0.45);
-    stroke-width: 1.5;
-    stroke-dasharray: 0.22 0.78;
-    animation: badge-travel 1.8s linear infinite;
-  }
-
-  /* Dot: bright blue, sharp */
-  .badge-rect--dot {
     stroke: #0077b6;
-    stroke-width: 2;
-    stroke-dasharray: 0.025 0.975;
-    animation: badge-travel 1.8s linear infinite;
+    stroke-width: 1.5;
+    /* ~70% of perimeter visible — long enough to read as "the border" */
+    stroke-dasharray: 0.70 0.30;
+    stroke-linecap: butt;
   }
 
-  /* Reverse direction for Highlights */
-  .badge--reverse .badge-rect--trail,
-  .badge--reverse .badge-rect--dot {
-    animation-direction: reverse;
+  /* Counter-clockwise: dashoffset goes positive */
+  .badge-snake--ccw {
+    animation: snake-ccw 2.4s linear infinite;
   }
 
-  @keyframes badge-travel {
-    to { stroke-dashoffset: -1; }
+  /* Clockwise: dashoffset goes negative */
+  .badge-snake--cw {
+    animation: snake-cw 2.4s linear infinite;
+  }
+
+  @keyframes snake-ccw {
+    from { stroke-dashoffset: 0; }
+    to   { stroke-dashoffset: 1; }
+  }
+
+  @keyframes snake-cw {
+    from { stroke-dashoffset: 0; }
+    to   { stroke-dashoffset: -1; }
   }
 
   /* ─── Badge layout helpers ─── */
@@ -284,10 +277,9 @@ const prevDay   = lastDigitOfDay(previousDayInFinance.date);
 
   /* ─── Reduced motion ─── */
   @media (prefers-reduced-motion: reduce) {
-    .media-hero-bg    { animation: none; opacity: 0.75; }
-    .badge-rect--trail,
-    .badge-rect--dot  { animation: none; }
-    .sub-item         { transition: none; }
+    .media-hero-bg   { animation: none; opacity: 0.75; }
+    .badge-snake     { animation: none; }
+    .sub-item        { transition: none; }
   }
 </style>
 
