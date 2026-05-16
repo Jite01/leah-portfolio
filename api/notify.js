@@ -1,64 +1,47 @@
 import webpush from 'web-push';
-import fs from 'fs/promises';
-import path from 'path';
 
-const SUBS_PATH = path.join(process.cwd(), 'src', 'data', 'push-subs.json');
-
-const VAPID_PUBLIC = process.env.VAPID_PUBLIC_KEY;
-const VAPID_PRIVATE = process.env.VAPID_PRIVATE_KEY;
+const GIST_ID   = process.env.GITHUB_GIST_ID;
+const GH_TOKEN  = process.env.GITHUB_TOKEN;
+const GIST_FILE = 'push-subs.json';
+const NOTIFY_SECRET = process.env.NOTIFY_SECRET; // simple shared secret to protect this endpoint
 
 webpush.setVapidDetails(
-  'mailto:leahbluewater@example.com',
-  VAPID_PUBLIC,
-  VAPID_PRIVATE
+  'mailto:jamesoyibode968@gmail.com,      
+  process.env.VAPID_PUBLIC_KEY,
+  process.env.VAPID_PRIVATE_KEY,
 );
 
-async function loadSubs() {
-  try {
-    const raw = await fs.readFile(SUBS_PATH, 'utf-8');
-    const obj = JSON.parse(raw);
-    return Object.values(obj);
-  } catch {
-    return [];
-  }
+async function readSubs() {
+  const res  = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+    headers: {
+      Authorization: `token ${GH_TOKEN}`,
+      Accept: 'application/vnd.github+json',
+    },
+  });
+  const data = await res.json();
+  const raw  = data.files?.[GIST_FILE]?.content ?? '{}';
+  return Object.values(JSON.parse(raw));
 }
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  // Guard: only allow calls from your GitHub workflow
+  if (req.headers['x-notify-secret'] !== NOTIFY_SECRET) {
+    return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const { url, title, body } = req.body;
-  if (!url) {
-    return res.status(400).json({ error: 'Missing URL' });
-  }
+  const { title = 'The Kickoff is live', body = 'Join the Space now', url } = req.body;
 
-  const subs = await loadSubs();
-
-  if (subs.length === 0) {
-    return res.status(200).json({ sent: 0, message: 'No subscribers' });
-  }
-
-  const payload = JSON.stringify({
-    title: title || 'The Kickoff is live',
-    body: body || 'Join the Space now',
-    url
-  });
+  const subs   = await readSubs();
+  const payload = JSON.stringify({ title, body, url });
 
   const results = await Promise.allSettled(
     subs.map(sub => webpush.sendNotification(sub, payload))
   );
 
-  const sent = results.filter(r => r.status === 'fulfilled').length;
+  const sent   = results.filter(r => r.status === 'fulfilled').length;
   const failed = results.filter(r => r.status === 'rejected').length;
 
-  results.forEach((result, i) => {
-    if (result.status === 'rejected' && result.reason?.statusCode === 410) {
-      // Expired subscription — would need to remove from JSON
-      // But we can't write to repo from serverless function easily
-      // Leave for now, or add a cleanup endpoint
-    }
-  });
-
-  return res.status(200).json({ sent, failed, total: subs.length });
+  res.status(200).json({ sent, failed });
 }
