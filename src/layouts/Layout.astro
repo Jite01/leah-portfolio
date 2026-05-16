@@ -1,5 +1,6 @@
 ---
 import { ClientRouter } from 'astro:transitions';
+import PushSubscribe from '../components/PushSubscribe.astro';
 
 interface Props {
   title?: string;
@@ -49,6 +50,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
   </head>
   <body>
     <slot name="nav" />
+    <PushSubscribe />
     <main id="main-content">
       <slot />
     </main>
@@ -72,8 +74,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
         navigator.serviceWorker.register('/sw.js').catch(console.error);
       }
     </script>
-  </body>
-
   </body>
 </html>
 
@@ -586,6 +586,5 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
 @keyframes spin-ring {
   to { --ring-angle: 360deg; }
 }
-
 
 </style>
