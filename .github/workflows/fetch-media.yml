@@ -2,7 +2,7 @@ name: Fetch Media
 
 on:
   schedule:
-    - cron: '*/2 7,8,9* * *'
+    - cron: '*/2 7,8,9 * * *'
   workflow_dispatch:
 
 permissions:
