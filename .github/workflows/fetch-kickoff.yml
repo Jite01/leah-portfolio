@@ -1,41 +1,32 @@
-name: Fetch Kickoff URL
-
+name: Fetch Kickoff
 on:
   schedule:
-    # 10:52, 10:55, 10:58, 11:00, 11:02, 11:05, 11:10 UTC
-    # = 11:52, 11:55, 11:58, 12:00, 12:02, 12:05, 12:10 WAT
-    # Compensates for ~1h GitHub Actions cron drift
-    - cron: '*/2 8,9 * * *'
-
+    - cron: '*/2 7,8,9 * * *'
   workflow_dispatch:
-
-permissions:
-  contents: write
 
 jobs:
   fetch:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
-      - name: Install twscrape
-        run: pip install twscrape
-
-      - name: Write cookies from secret
-        run: echo '${{ secrets.X_COOKIES_JSON }}' > cookies.json
-
-      - name: Fetch kickoff URL
-        id: fetch
-        run: python scripts/fetch-kickoff.py
-
-      - name: Commit kickoffs.json if changed
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: 'chore: update kickoff URL'
-          file_pattern: src/data/kickoffs.json
+      - run: pip install twscrape
+      - run: python scripts/fetch-kickoff.py
+        env:
+          TWITTER_COOKIES: ${{ secrets.TWITTER_COOKIES }}
+      - name: Commit if changed
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/data/kickoffs.json
+          git diff --cached --quiet || (git commit -m "auto: update kickoff" && git push && echo "changed=true" >> $GITHUB_OUTPUT)
+      - name: Notify subscribers
+        if: steps.commit.outputs.changed == 'true'
+        run: |
+          URL=$(jq -r '.nextKickoff.url' src/data/kickoffs.json)
+          curl -X POST "${{ secrets.VERCEL_URL }}/api/notify" \
+            -H "Content-Type: application/json" \
+            -d "{\"url\":\"$URL\",\"title\":\"The Kickoff is live\",\"body\":\"Join the Space now\"}"
