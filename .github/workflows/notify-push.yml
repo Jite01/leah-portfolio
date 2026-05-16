@@ -15,4 +15,5 @@ jobs:
         run: |
           curl -X POST "${{ secrets.VERCEL_URL }}/api/notify" \
             -H "Content-Type: application/json" \
+            -H "x-notify-secret: ${{ secrets.NOTIFY_SECRET }}" \
             -d "{\"url\":\"${{ github.event.workflow_run.outputs.space_url }}\",\"title\":\"The Kickoff is live\",\"body\":\"Join the Space now\"}"
