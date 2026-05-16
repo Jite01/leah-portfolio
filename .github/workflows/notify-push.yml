@@ -1,0 +1,18 @@
+name: Notify Push Subscribers
+on:
+  workflow_run:
+    workflows: ["Fetch Kickoff"]
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Call Vercel notify API
+        run: |
+          curl -X POST "${{ secrets.VERCEL_URL }}/api/notify" \
+            -H "Content-Type: application/json" \
+            -d "{\"url\":\"${{ github.event.workflow_run.outputs.space_url }}\",\"title\":\"The Kickoff is live\",\"body\":\"Join the Space now\"}"
