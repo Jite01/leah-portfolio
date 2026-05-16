@@ -67,6 +67,13 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? "https://leah-por
         </div>
       </footer>
     </slot>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(console.error);
+      }
+    </script>
+  </body>
+
   </body>
 </html>
 
