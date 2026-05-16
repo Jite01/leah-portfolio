@@ -1,0 +1,146 @@
+---
+const VAPID_PUBLIC = import.meta.env.VAPID_PUBLIC_KEY || '';
+---
+
+<button
+  class="push-bell"
+  id="push-bell"
+  aria-label="Subscribe to Kickoff notifications"
+  aria-pressed="false"
+>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+  </svg>
+  <span class="push-label mono-label">Notify me</span>
+</button>
+
+<style>
+  .push-bell {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: transparent;
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-sm);
+    color: var(--clr-text);
+    cursor: pointer;
+    transition: all var(--dur-fast) var(--ease-out);
+  }
+
+  .push-bell:hover {
+    border-color: var(--clr-accent);
+    color: var(--clr-accent);
+  }
+
+  .push-bell.is-subscribed {
+    border-color: var(--clr-accent);
+    color: var(--clr-accent);
+  }
+
+  .push-bell svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .push-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.04em;
+  }
+</style>
+
+<script>
+  const VAPID_PUBLIC_KEY = 'YOUR_VAPID_PUBLIC_KEY_HERE';
+
+  function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const rawData = atob(base64);
+    return Uint8Array.from([...rawData].map(char => char.charCodeAt(0)));
+  }
+
+  async function subscribe() {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+      alert('Push notifications not supported in this browser.');
+      return;
+    }
+
+    const reg = await navigator.serviceWorker.ready;
+    const existing = await reg.pushManager.getSubscription();
+
+    if (existing) {
+      // Already subscribed — update UI
+      updateUI(true);
+      return;
+    }
+
+    try {
+      const sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+      });
+
+      // Send subscription to server
+      await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(sub)
+      });
+
+      updateUI(true);
+    } catch (err) {
+      console.error('Push subscription failed:', err);
+      alert('Could not enable notifications. Check browser permissions.');
+    }
+  }
+
+  async function unsubscribe() {
+    const reg = await navigator.serviceWorker.ready;
+    const sub = await reg.pushManager.getSubscription();
+    if (sub) {
+      await sub.unsubscribe();
+      await fetch('/api/subscribe', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ endpoint: sub.endpoint })
+      });
+    }
+    updateUI(false);
+  }
+
+  function updateUI(isSubscribed) {
+    const btn = document.getElementById('push-bell');
+    if (!btn) return;
+    btn.classList.toggle('is-subscribed', isSubscribed);
+    btn.setAttribute('aria-pressed', String(isSubscribed));
+    btn.querySelector('.push-label').textContent = isSubscribed ? 'Subscribed' : 'Notify me';
+  }
+
+  async function init() {
+    const btn = document.getElementById('push-bell');
+    if (!btn) return;
+
+    // Check current state
+    if ('serviceWorker' in navigator) {
+      const reg = await navigator.serviceWorker.ready;
+      const sub = await reg.pushManager.getSubscription();
+      updateUI(!!sub);
+    }
+
+    btn.addEventListener('click', () => {
+      const isSubscribed = btn.classList.contains('is-subscribed');
+      if (isSubscribed) {
+        unsubscribe();
+      } else {
+        subscribe();
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+</script>
