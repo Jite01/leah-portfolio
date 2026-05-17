@@ -1,14 +1,21 @@
 {
   "nextKickoff": {
-    "date": "2026-05-18",
-    "dayLabel": "Mon, 18 May 2026",
+    "date": "2026-05-19",
+    "dayLabel": "Tue, 19 May 2026",
     "utc": "10:00 AM UTC",
     "est": "5:00 AM EST",
     "cst": "4:00 AM CST",
-    "url": "https://t.co/0dyhvlVl6d",
-    "startedAt": "2026-05-17T10:37:57.218568+00:00"
+    "url": null,
+    "startedAt": null
   },
   "archive": [
+    {
+      "date": "2026-05-18",
+      "title": "The Kickoff",
+      "duration": "~50m",
+      "summary": "Leah broke down the crypto week so far on Monday — ~50m of charts, sentiment, and space culture.",
+      "url": "https://t.co/0dyhvlVl6d"
+    },
     {
       "date": "2026-05-16",
       "title": "The Kickoff",
@@ -22,14 +29,7 @@
       "duration": "~50m",
       "summary": "Leah hosted The Kickoff on Friday, covering the day's crypto market moves and on-chain narratives in a ~50m session.",
       "url": "https://t.co/AFzMtFRDEs"
-    },
-    {
-      "date": "2026-05-14",
-      "title": "The Kickoff",
-      "duration": "~50m",
-      "summary": "Thursday's session ran ~50m. Leah covered Bitcoin dominance, altseason signals, and crypto adoption updates.",
-      "url": "https://t.co/imdtArkoHM"
     }
   ],
-  "lastAdvancedAt": "2026-05-16"
+  "lastAdvancedAt": "2026-05-17"
 }
