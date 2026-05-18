@@ -1,7 +1,7 @@
 {
   "nextKickoff": {
-    "date": "2026-05-18",
-    "dayLabel": "Mon, 18 May 2026",
+    "date": "2026-05-19",
+    "dayLabel": "Tue, 19 May 2026",
     "utc": "10:00 AM UTC",
     "est": "5:00 AM EST",
     "cst": "4:00 AM CST",
@@ -31,5 +31,5 @@
       "url": "https://t.co/AFzMtFRDEs"
     }
   ],
-  "lastAdvancedAt": "2026-05-17"
+  "lastAdvancedAt": "2026-05-18"
 }
