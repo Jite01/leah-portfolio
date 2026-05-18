@@ -17,6 +17,7 @@
     "@types/react-dom": "^19.2.3",
     "@upstash/redis": "^1.38.0",
     "astro": "^6.2.2",
+    "notify.js": "^0.0.3",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "web-push": "^3.6.7"
