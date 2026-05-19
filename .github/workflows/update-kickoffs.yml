@@ -1,9 +1,5 @@
 name: Update Kickoffs
-
 on:
-  schedule:
-    # 10:15 UTC = 11:15 WAT (buffer after ~50m space)
-    - cron: '15 11 * * *'
   workflow_dispatch:
 
 permissions:
@@ -13,18 +9,12 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Run update script
-        run: node scripts/update-kickoffs.mjs
-
-      - name: Commit kickoffs.json if changed
+      - run: node scripts/update-kickoffs.mjs
+      - name: Commit if changed
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: 'chore: archive kickoff and advance date'
