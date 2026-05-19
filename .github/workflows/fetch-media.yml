@@ -1,8 +1,5 @@
 name: Fetch Media
-
 on:
-  schedule:
-    - cron: '*/2 7,8,9 * * *'
   workflow_dispatch:
 
 permissions:
@@ -13,18 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
       - run: pip install twscrape
-
       - name: Write cookies from secret
         run: echo '${{ secrets.X_COOKIES_JSON }}' > cookies.json
-
       - run: python scripts/fetch-media.py
-
       - name: Commit if changed
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
