@@ -1,7 +1,5 @@
 name: Fetch Kickoff
 on:
-  schedule:
-    - cron: '*/2 7,8,9 * * *'
   workflow_dispatch:
 
 jobs:
